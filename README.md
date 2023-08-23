@@ -7,6 +7,29 @@
 # with its graphical representation of the data.
 #
 #
+# Opening the program:
+# Download the code as a .zip file from the "<>Code" tab in git. 
+#   1. [BlueJ] From here you can directly open it in BlueJ by going to "Project" -> "Open ZIP/JAR" 
+# and selecting the zip file. You'll likely get a pop-up about "Package line mismatches", you 
+# can click continue and it simply adds the statement "package src;" to each file. 
+#   2. [Eclipse] If you're using eclipse you will need to extract the .zip file to a new folder.
+# You can then create a new java project in eclipse and right click on it, selecting "Import" -> 
+# "File system" and navigate to the "src" directory within your new folder, then click "select 
+# folder". Select the java source files in eclipse and make sure to set the "into folder" as 
+# "[your_project_name]/src. Then click "finish".
+#   3. [VSC] If you're using Visual Studio Code then you just need to extract the .zip file to a new 
+# folder. Then navigate to "File" -> "Open Folder", then, navigate to the directory of the folder
+# you've just created and select the "src" folder. Then click "Select folder" and it will open the 
+# source files in VSC. 
+#
+#
+# Running the program:
+# The program is run via the main method which is located in the "Main" class. 
+# In order to run your own expressions navigate to the "Main" class, in the main method there is 
+# a local string variable called "expression". Enter your own expressions here string and run 
+# the main method, this will execute your own expressions.  
+#   
+#
 # Sets:
 #   A set is a collection of unique elements that represent a group of data. In this application
 # the user does not need to provide any data as it is predetermined.
@@ -39,8 +62,8 @@
 # 4. Compliment (U\A):
 #       - The complement operator defines all the elements all the elements of U minus all the
 #         elements of A. It must be followed by ONE (A) argument enclosed in brackets
-
-
+#
+#
 # How to use the application:
 #   The user can formulate an expression that consists of operators and sets, when writing
 # an expression operators MUST be written using their english name, NOT mathematical notation

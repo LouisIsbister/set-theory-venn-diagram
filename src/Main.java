@@ -10,11 +10,26 @@ import java.util.Set;
  * 
  */
 public class Main {
+
+	/**
+	 * Valid expressions to test:
+	 * "union(intersect(A B) intersect(C D))"
+	 * "union(A intersect(B C))"
+	 * "intersect(A difference(B C))"
+	 * "difference(intersect(C union(A B)) intersect(A B))"
+	 * "union(intersect(C D) difference(A intersect(union(B C) union(D E))))"
+	 * "complement(A)"
+	 * "complement(difference(B C))"
+	 * "union(intersect(A complement(union(B C))) intersect(B C))"
+	 */
+		
+
 	public static void main(String args[]) {
 		BTNode root = new BTNode();
 		BuildTree tree = new BuildTree();
 		Set<Coordinate> highlightCoords = new HashSet<>();
 
+		// ENTER your expression here, a default expression has been given:
 		String expression = "union(intersect(C D) difference(A intersect(union(B C) union(D E))))";
 		
 		try {
@@ -38,7 +53,7 @@ public class Main {
 	 * and its children.
 	 * @param root, the root node
 	 */
-	public static void dfs(BTNode root) {
+	public static void bfs(BTNode root) {
 		Queue<BTNode> queue = new ArrayDeque<BTNode>();
 		queue.offer(root);
 
