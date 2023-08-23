@@ -28,11 +28,11 @@ public class BuildTree {
 	/**
 	 * Pattern that represents each of the possible operators in an expression
 	 */
-	private static Pattern OP_PAT = Pattern.compile("(union|intersect|difference|complement)");
+	private static Pattern OPERATOR_PAT = Pattern.compile("(union|intersect|difference|complement)");
 	
 	/**
-	 * The complement of the node A is equal to the universal set (U) of nodes minue this node.
-	 * This is expressed as U-A or the U\A. The universal set represents all the data available
+	 * The complement of a set node, call it A, is equal to the universal set (U) minus this set.
+	 * This can be expressed as U-A or U\A. The universal set represents all the data available
 	 * and is constant. 
 	 */
 	private static final SetNode universalSet = new SetNode("Universal data") {
@@ -46,85 +46,91 @@ public class BuildTree {
 			return allCoords;
 		}
 	};
-		
-	public static Collection<SetNode> setNodes(){
+	
+	/**
+	 * Retrieves all the set nodes (leaf nodes)
+	 * 
+	 * @return, a collection of set nodes
+	 */
+	public Collection<SetNode> setNodes(){
 		return setNodes.values();
 	}
 	
-	public static BTNode createTree(String equ) {
-		Scanner scan = new Scanner(equ);
+	/**
+	 * This method intialises the creation of the tree structure.
+	 * It first calls the recursive method to build the binary tree, it then checks for formatting
+	 * errors, these cases are when the user has provided too many arguments, not enough arguments, 
+	 * or invalid set identifiers.
+	 * It then calls the propagateSetNodes method that fills the sets with pixels/data before 
+	 * returning the root of the binary tree.
+	 * 
+	 * @param expression, the expression that is to be evaluated
+	 * @return, the root node of binary tree representation of the expression
+	 */
+	public BTNode createTree(String expression) throws Exception{
+		Scanner scan = new Scanner(expression);
 		scan.useDelimiter("(?<=\\()|(?>=\\))|\\s+");	
 		BTNode root = null;
 
-		try {
-			root = recursion(scan);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			return null;
-		}
+		// recursively create the binary tree
+		root = recursion(scan);
 		
-		while(scan.hasNext()) {
-			BuildTree.reportError("Invalid format: too many arguements are provided.");
-			return null;
-		}
+		// user provided an too many, or no arguments
+		if(scan.hasNext()) throw new Exception("'Invalid format: too many arguments were provided.'");
+		if(setNodes.size() < 1) throw new Exception("'Invalid format: no arguments were provided.'");
+		
+		// user entered incorrect set identifiers
+		boolean validSetIdentifiers = setNodes.keySet().stream()
+					.allMatch(elem-> Pattern.matches("[a-zA-Z]", elem));
+		if(!validSetIdentifiers) throw new Exception("'Invalid format: make sure sets are in the from a-z or A-Z'");
 
-		BuildTree.propagateSetNodes();
-				
-		scan.close();		
+		this.propagateSetNodes();
+		
+		scan.close();
 		return root;
 	}
 	
 	/**
-	 * 
+	 * This method recursively builds the binary tree of the expression.
+	 * It retrieves the next element from the scanner and checks whether it 
+	 * is an operator. If so, create a new parent node and set its left and right children.
+	 * Otherwise, find or create a new set node (leaf) and return it.
 	 * 
 	 * @param scan, the scanner that traverses the expression
 	 * @return, the root node of the binary tree
-	 * @throws Exception throws an exception in the case of invalid formatting
 	 */
-	private static BTNode recursion(Scanner scan) throws Exception {
+	private BTNode recursion(Scanner scan) {
 		if(!scan.hasNext()) return null;
 		String str = scan.next().trim();
-		
-		if(str.isBlank()) return null;
-		
+				
 		String[] subNodes = str.split("(\\(|\\))");
-		if(subNodes.length > 1 || subNodes.length <= 0) {
-			throw new Exception("Error in BuildTree/recursion: Invalid format!");
-		}
-		
+
 		String element = subNodes[0];
 		
-		if(OP_PAT.matcher(element).matches()) {
+		if(OPERATOR_PAT.matcher(element).matches()) {
 			Operator op = parseOperator(element);
-			
-			if(op == null) {
-				throw new Exception("Error in Tree/BuildTree/recursion: the operator '"+ element +"', is not supported yet!");
-			}
-			
 			BTNode node = new BTNode(op);
-			node.setLeft(recursion(scan));
 			
-			if(op instanceof Complement) {
-				node.setRight(universalSet);
-			} else {
-				node.setRight(recursion(scan));
-			}
+			node.setLeft(recursion(scan));
 
+			// if the operator is a complement then the right node must be the universal set
+			if(op instanceof Complement) node.setRight(universalSet);
+			else node.setRight(recursion(scan));
+			
 			return node;
 		}
 		else {
-			SetNode sn = new SetNode(element);
+			element = element.toUpperCase();
 			if(!setNodes.containsKey(element)) {
-				setNodes.put(element, sn);
-				return sn;
-			} else {
-				return setNodes.get(element);
+				setNodes.put(element, new SetNode(element));
 			}
+			return setNodes.get(element);
 		}
 	}
 	
 	/**
-	 * checks to see if an element is an operator, otherwise returns null
+	 * Returns a new instance of a specific operator.
+	 * 
 	 * @param operator, the type of operator
 	 * @return, the operator if it exists
 	 */
@@ -141,7 +147,8 @@ public class BuildTree {
 		else if(operator.equalsIgnoreCase("complement")) {
 			return new Complement();
 		}
-		return null;
+		// this case will never be reached
+		throw new IllegalArgumentException();
 	}	
 	
 		
@@ -151,18 +158,15 @@ public class BuildTree {
 	 * collection of pixels in that set. 
 	 * Each pixel represents a piece of data within the set. 
 	 */
-	private static void propagateSetNodes() {
-		int NUMBER_OF_SETS = setNodes.size();
-		
-		if(NUMBER_OF_SETS < 1) return;
-		
-		int RADIUS = SetNode.DIMEN/2;
+	private void propagateSetNodes() {
+		int NUMBER_OF_SETS = setNodes.size();		
+		int RADIUS = SetNode.DIAMETER/2;
 				
 		// the angle difference of each circle from the center 
 		double ANGLE_OFFSET = 360/NUMBER_OF_SETS;
 				
 		int setCount = 0;
-		for(SetNode sn : setNodes.values()) {
+		for(SetNode setNode : setNodes.values()) {
 			// get the angle of the sets circle
 			double angle = (setCount * ANGLE_OFFSET) - 90;
 			double angleInRadians = angle * (Math.PI/180);
@@ -172,22 +176,20 @@ public class BuildTree {
 			int yCoord = BuildTree.startY + (int)(Math.sin(angleInRadians) * RADIUS/2);
 			
 			Coordinate coord = new Coordinate(xCoord, yCoord);
-			sn.setCenter(coord);
-			
-			
+			setNode.setCenter(coord);
+						
 			// ---- get the position for the sets identifying string on the panel
 			int strX = xCoord + (int) (Math.cos(angleInRadians) * RADIUS/1.25);
 			int strY = yCoord + (int) (Math.sin(angleInRadians) * RADIUS/1.25);
 			Coordinate stringCoord = new Coordinate(strX, strY);
-			sn.setStringPosition(stringCoord);
+			setNode.setStringPosition(stringCoord);
 			// ----
-			
-			
+						
 			// p = {(x,y) : (x-mX)^2 + (y-mY)^2 <= r^2}
 			for(int x = xCoord-RADIUS; x < xCoord+RADIUS; x++) {
 				for(int y = yCoord-RADIUS; y < yCoord+RADIUS; y++) {
-					int xDifference = x - sn.center().x();	// x-mX
-					int yDifference = y - sn.center().y();	// y-mY
+					int xDifference = x - setNode.center().x();	// x-mX
+					int yDifference = y - setNode.center().y();	// y-mY
 					
 					int value = xDifference * xDifference + yDifference * yDifference;
 					int radiusSquared = RADIUS * RADIUS;
@@ -195,16 +197,11 @@ public class BuildTree {
 					// (x-mX)^2 + (y-mY)^2 <= r^2
 					if(value <= radiusSquared) {
 						Coordinate c = new Coordinate(x, y);
-						sn.addPixel(c);
+						setNode.addPixel(c);
 					}					
 				}
 			}
 			setCount++;
 		}
-	}
-	
-	private static void reportError(String message) {
-		System.out.println("----- ERROR -----");
-		System.out.println(message);
 	}
 }

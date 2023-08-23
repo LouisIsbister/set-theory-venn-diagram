@@ -38,7 +38,8 @@ public class Panel extends JPanel{
 		// draw the outlines of the set "regions"
 		g2D.setColor(Color.black);
 		for(SetNode sn : setNodes) {
-			g2D.drawOval(sn.center().x() - SetNode.DIMEN/2, sn.center().y() - SetNode.DIMEN/2, SetNode.DIMEN, SetNode.DIMEN);
+			g2D.drawOval(sn.center().x() - SetNode.DIAMETER/2, sn.center().y() - SetNode.DIAMETER/2, 
+						SetNode.DIAMETER, SetNode.DIAMETER);
 			g2D.drawRect(0, 0, 2*BuildTree.startX, 2*BuildTree.startX);
 			g2D.drawString(sn.toString(), sn.stringPosition().x(), sn.stringPosition().y());
 		}

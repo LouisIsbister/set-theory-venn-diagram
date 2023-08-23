@@ -1,7 +1,6 @@
 package Tree;
 
-public record Coordinate (int x, int y) {
-	public String toString(){
-		return "Coordinate, x = " + x + ", y = " + y;
-	}
-}
+/**
+ * Record that represents a pixel in the graphical representation.
+ */
+public record Coordinate (int x, int y) {}

@@ -12,44 +12,29 @@ import Tree.Coordinate;
 import Tree.SetNode;
 
 /**
+ * 
  * @author Louis Isbister
  * 
- * (C ∩ D) U (A \ ((B U C) ∩ (D U E)))
- * 
- * The following are a series of valid equations:
-	# "union(intersect(A B) intersect(C D))"
-	# "union(A intersect(B C))"
-	# "intersect(A difference(B C))"
-	# "difference(intersect(C union(A B)) intersect(A B))"
-	# "union(intersect(C D) difference(A intersect(union(B C) union(D E))))"
-	# "complement(A)
-	# "complement(difference(B C))"
-	# "union(intersect(A complement(union(B C))) intersect(B C))"
-	# 
-	# Invalid cases:
-	# "complement(A difference(B C))"
-	# "union(intersect(A C D))"
  */
-
 public class Main {
 	public static void main(String args[]) {
-		BTNode root = BuildTree.createTree("union(intersect(union(B C) A) intersect(B C))");
-				
-		if(root == null) {
-			System.out.println("NullPointer in Main: Parsing error, please check your format.");
-			return;
-		}
-		
+		BTNode root = new BTNode();
+		BuildTree tree = new BuildTree();
 		Set<Coordinate> highlightCoords = new HashSet<>();
+
+		String expression = "union(intersect(C D) difference(A intersect(union(B C) union(D E))))";
+		
 		try {
+			root = tree.createTree(expression);
 			highlightCoords = root.evaluate();
 		} catch(Exception err) {
 			System.out.println("----- ERROR -----");
+			System.out.println("Occurred when parsing and evaluating the expression.\nPlease check your format.");
 			System.out.println("Error message: " + err.getMessage());
 			return;
 		}
 		
-		Collection<SetNode> nodes = BuildTree.setNodes();
+		Collection<SetNode> nodes = tree.setNodes();
 				
 		new Frame(highlightCoords, nodes);
 	}

@@ -7,15 +7,24 @@ import Operators.*;
 public class BTNode {
 	
 	/**
-	 * Operator field, can be intersect or union for the moment 
+	 * The operator of this node. 
 	 */
 	private Operator operator;
+
+	/**
+	 * The left child of this node.
+	 */
 	private BTNode left = null;
+
+	/**
+	 * The right child of this node.
+	 */
 	private BTNode right = null;
 	
 	/**
-	 * creating a new node with only an operator
-	 * @param operator, the action to be performed upon the sets
+	 * Creats a new binary tree node with an operator.
+	 * 
+	 * @param operator, the operator/action to be performed upon sets
 	 */
 	public BTNode(Operator operator) {
 		this.operator = operator;
@@ -27,12 +36,14 @@ public class BTNode {
 	public BTNode() {}
 	
 	/**
+	 * Calls the evaluate method of its operator, the operator will then evaluate the two sets.
+	 * 
 	 * @return, the set of coordinates when two nodes are evaluated by an operator
-	 * @throws Exception 
+	 * @throws Exception, if either the left or right node is null then throw an exception.
 	 */
 	public Set<Coordinate> evaluate() throws Exception{
 		if(left == null || right == null) {
-			throw new Exception(this.toString() + ": an argument is null, please reformat your experssion");
+			throw new IllegalArgumentException(this.toString() + ": an argument is undefined, please reformat your experssion.");
 		}
 		
 		return this.operator.evaluate(left, right);
