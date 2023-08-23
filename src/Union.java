@@ -1,10 +1,5 @@
-package Operators;
-
 import java.util.HashSet;
 import java.util.Set;
-
-import Tree.BTNode;
-import Tree.Coordinate;
 
 public class Union implements Operator{
 

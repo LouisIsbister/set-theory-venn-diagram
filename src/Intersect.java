@@ -1,11 +1,6 @@
-package Operators;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import Tree.BTNode;
-import Tree.Coordinate;
 
 public class Intersect implements Operator{
 

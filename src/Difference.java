@@ -1,11 +1,6 @@
-package Operators;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import Tree.BTNode;
-import Tree.Coordinate;
 /**
  * Set difference class, will be use in the for A\B
  * "Find all the coordinates in A and not B

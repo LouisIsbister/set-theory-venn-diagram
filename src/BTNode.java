@@ -1,8 +1,4 @@
-package Tree;
-
 import java.util.Set;
-
-import Operators.*;
 
 public class BTNode {
 	

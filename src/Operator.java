@@ -1,7 +1,3 @@
-package Operators;
-
-import Tree.BTNode;
-import Tree.Coordinate;
 import java.util.Set;
 
 public interface Operator {

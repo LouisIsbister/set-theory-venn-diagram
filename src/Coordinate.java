@@ -1,5 +1,3 @@
-package Tree;
-
 /**
  * Record that represents a pixel in the graphical representation.
  */

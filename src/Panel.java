@@ -1,5 +1,3 @@
-package Controller;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -8,10 +6,6 @@ import java.util.Collection;
 import java.util.Set;
 
 import javax.swing.JPanel;
-
-import Tree.BuildTree;
-import Tree.Coordinate;
-import Tree.SetNode;
 
 public class Panel extends JPanel{
 	

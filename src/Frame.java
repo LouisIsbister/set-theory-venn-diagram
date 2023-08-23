@@ -1,13 +1,8 @@
-package Controller;
-
 import java.awt.FlowLayout;
 import java.util.Collection;
 import java.util.Set;
 
 import javax.swing.JFrame;
-
-import Tree.Coordinate;
-import Tree.SetNode;
 
 public class Frame extends JFrame {
 	
