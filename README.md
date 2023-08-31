@@ -3,19 +3,19 @@
 
 # About:
 This application evaluates expressions in set theory and graphically represents the result
-using Venn diagrams. That is, a user can enter an expression in set theory and be presented
-with its graphical representation of the data.
+using Venn Diagrams. That is, a user can enter an expression in set theory and be presented
+with the graphical representation of the data.
 
 
 
 # Opening the program:
-- Download the code as a .zip file from the "<>Code" tab in git.
+Download the code as a .zip file from the "<>Code" tab in git.
 ## BlueJ
 From here you can directly open it in BlueJ by going to "Project" -> "Open ZIP/JAR" and selecting the zip file.
 You'll likely get a pop-up about "Package line mismatches", you can click continue and it simply adds the statement "package src;" to each file. 
-## [Eclipse]
- - If you're using eclipse you will need to extract the .zip file to a new folder. You can then create a new java project in eclipse and right click on it, selecting "Import" ->  "File system" and navigate to the "src" directory within your new folder, then click "select folder". Select the java source files in eclipse and make sure to set the "into folder" as "[your_project_name]/src. Then click "finish".
-## [VSC]
+## Eclipse
+If you're using eclipse you will need to extract the .zip file to a new folder. You can then create a new java project in eclipse and right click on it, selecting "Import" ->  "File system" and navigate to the "src" directory within your new folder, then click "select folder". Select the java source files in eclipse and make sure to set the "into folder" as "[your_project_name]/src. Then click "finish".
+## VSC
 If you're using Visual Studio Code then you just need to extract the .zip file to a new folder. Then navigate to "File" -> "Open Folder", then, navigate to the directory of the folder you've just created and select the "src" folder. Then click "Select folder" and it will open the source files in VSC. 
 
 # Running the program:
@@ -30,11 +30,11 @@ Then, if you want to run a new expression navigate to the "Menu" icon in the top
 A set is a collection of unique elements that represent a group of data. In this application the user does not need to provide any data as it is predetermined.
 ## Set identifiers:
 For the sake of cleaness and simplicity, the user must express sets as lower or upper case
-letters in their expression. However, lowercase letters will automatically be converted to
-uppercase (so `A` will be the same as `a`. For example:
+letters in their expression. However, uppercase letters will automatically be converted to
+lowercase (so `A` will be the same as `a`).
 `A, b, c, x, Y, z` are all valid identifiers. But, `ab, [empty string], BC, aCCD` are all invalid.
 Furthermore, using the same letter in either upper or lowercase form at different points in
-an expression will result in them pointing to the same set. For example: ... a .... A .... A, each of these sets are equal (a == A == A)
+an expression will result in them pointing to the same set. For example: `... a .... A .... A`, each of these sets are equal `(a == A == A)`.
 # The universal set:
 A set that contains all data in the domain (in this case the domain is all the pixels in the graphical view).
 
@@ -46,9 +46,9 @@ Let A and B be sets, let U represent the universal set.
 - The intersect operator defines all the unique elements that are members of both A and B. It must be followed by TWO arguments (A B) enclosed in brackets.
 # Union (∪):
 - The union operator defines all the elements that are members of A plus all the elements that are members of B. It must be followed by TWO arguments (A B) enclosed   in brackets
-# 3. Difference (\):
+# Difference (A\B):
 - The difference operator defines all the elements that are in A but not in B. Bust be followed by TWO arguments (A B) enclosed in brackets
-# 4. Compliment (U\A):
+# Compliment (U\A):
 - The complement operator defines all the elements all the elements of U minus all the elements of A. It must be followed by ONE (A) argument enclosed in brackets
 
 
