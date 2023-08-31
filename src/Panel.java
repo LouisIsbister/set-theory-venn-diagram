@@ -34,7 +34,7 @@ public class Panel extends JPanel{
 		for(SetNode sn : setNodes) {
 			g2D.drawOval(sn.center().x() - SetNode.DIAMETER/2, sn.center().y() - SetNode.DIAMETER/2, 
 						SetNode.DIAMETER, SetNode.DIAMETER);
-			g2D.drawRect(0, 0, 2*BuildTree.startX, 2*BuildTree.startX);
+			g2D.drawRect(0, 0, 2 * BuildTree.START_X, 2 * BuildTree.START_Y);
 			g2D.drawString(sn.toString(), sn.stringPosition().x(), sn.stringPosition().y());
 		}
 	}

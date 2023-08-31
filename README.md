@@ -25,10 +25,12 @@
 #
 # Running the program:
 # The program is run via the main method which is located in the "Main" class. 
-# In order to run your own expressions navigate to the "Main" class, in the main method there is 
-# a local string variable called "expression". Enter your own expressions here string and run 
-# the main method, this will execute your own expressions.  
-#   
+# To run your own expressions simply run the main method, you will greeted with a dialog box that 
+# asks you to enter an expression, once you have entered your expression, click "confirm", this will
+# parse and display your expression if it is valid. 
+# Then, if you want to run a new expression navigate to the "Menu" icon in the top left 
+# and select the "Enter new expression" item. This will allow you to enter a new expression.
+#
 #
 # Sets:
 #   A set is a collection of unique elements that represent a group of data. In this application
@@ -109,7 +111,7 @@
 # "union(intersect(A complement(union(B C))) intersect(B C))"
 #
 # Invalid cases:
-# "complement(A difference(B C))" reason: complement must take one argument!
-# "union(intersect(A C D))" reason: union and intersect must take two arguments.
-# "" reason: no expression provided.
-# "intersect(AA B)" reason: invalid set identifier.
+# "complement(A difference(B C))", reason: complement can only take one argument.
+# "union(intersect(A C D))", reason: union and intersect must take two arguments.
+# "", reason: no expression provided.
+# "intersect(AA B)", reason: invalid set identifier.

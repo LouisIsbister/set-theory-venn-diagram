@@ -2,15 +2,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Set intersect class, in mathmatical notaion (x ∩ y)
+ * "Find all the coordinates in x that also in y"
+ */
 public class Intersect implements Operator{
 
 	/**
-	 * Method that evaluates an ntersect operator, returns all the members of 
-	 * the left node that are also in the right node.
+	 * Find the set intersect between of two nodes. 
+	 * returns all the values in left that also in 
+	 * right. 
 	 * 
-	 * @param left, the left node of the operator
-	 * @param right, the right node of the operator
-	 * @return, the set of all common coordinates
+	 * @param left, left child node
+	 * @param right, right child node
+	 * @return, the intersect of left and right nodes
 	 */
 	@Override
 	public Set<Coordinate> evaluate(BTNode left, BTNode right) throws Exception {

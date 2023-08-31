@@ -35,7 +35,8 @@ public class BTNode {
 	 * Calls the evaluate method of its operator, the operator will then evaluate the two sets.
 	 * 
 	 * @return, the set of coordinates when two nodes are evaluated by an operator
-	 * @throws Exception, if either the left or right node is null then throw an exception.
+	 * @throws Exception, if either the left or right node is null then throw an 
+	 * IllegalArgumentException.
 	 */
 	public Set<Coordinate> evaluate() throws Exception{
 		if(left == null || right == null) {

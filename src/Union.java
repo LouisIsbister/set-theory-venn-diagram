@@ -1,14 +1,20 @@
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Set union class, in mathmatical notaion (x U y)
+ * "Find all the coordinates in x that are also in y"
+ */
 public class Union implements Operator{
 
 	/**
-	 * Method that evaluates a union operator, return all the elements in the two sets.
+	 * Find the set union between of two nodes. 
+	 * returns all the values in left that are also in 
+	 * right. 
 	 * 
-	 * @param left, the left node of the operator
-	 * @param right, the right node of the operator
-	 * @return, all the coordinates of the left and right nodes
+	 * @param left, left child node
+	 * @param right, right child node
+	 * @return, the union of left and right nodes
 	 */
 	@Override
 	public Set<Coordinate> evaluate(BTNode left, BTNode right) throws Exception {

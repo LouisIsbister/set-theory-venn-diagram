@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -6,26 +7,19 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-
 public class BuildTree {
 	
 	/**
 	 * The starting x and y coordinates of the Venn diagram, is used to determine the pixels (data)
 	 * that is contained within a set.
 	 */
-	public static final int startX = 250;
-	public static final int startY = 250;
+	public static final int START_X = 250;
+	public static final int START_Y = 250;
 
 	/**
-	 * Map of all the set nodes in the expression, a map is required as nodes may need to be 
-	 * retrieved multiple times.
+	 * Map of all the set nodes in the expression
 	 */
-	private static Map<String, SetNode> setNodes = new HashMap<>();
-	
-	/**
-	 * Pattern that represents each of the possible operators in an expression
-	 */
-	private static Pattern OPERATOR_PAT = Pattern.compile("(union|intersect|difference|complement)");
+	private Map<String, SetNode> setNodes = new HashMap<>();
 	
 	/**
 	 * The complement of a set node, call it A, is equal to the universal set (U) minus this set.
@@ -35,8 +29,8 @@ public class BuildTree {
 	private static final SetNode universalSet = new SetNode("Universal data") {
 		public Set<Coordinate> evaluate(){
 			HashSet<Coordinate> allCoords = new HashSet<>();
-			for(int i = 0; i < 2*BuildTree.startX; i++) {
-				for(int j = 0; j < 2*BuildTree.startY; j++) {
+			for(int i = 0; i < 2 * BuildTree.START_Y; i++) {
+				for(int j = 0; j < 2*BuildTree.START_X; j++) {
 					allCoords.add(new Coordinate(i, j));
 				}
 			}
@@ -72,13 +66,13 @@ public class BuildTree {
 		// recursively create the binary tree
 		root = recursion(scan);
 		
-		// user provided an too many, or no arguments
+		// user provided too many or no arguments
 		if(scan.hasNext()) throw new Exception("'Invalid format: too many arguments were provided.'");
 		if(setNodes.size() < 1) throw new Exception("'Invalid format: no arguments were provided.'");
 		
 		// user entered incorrect set identifiers
 		boolean validSetIdentifiers = setNodes.keySet().stream()
-					.allMatch(elem-> Pattern.matches("[a-zA-Z]", elem));
+					.allMatch(sn-> Pattern.matches("[a-zA-Z]", sn));
 		if(!validSetIdentifiers) throw new Exception("'Invalid format: make sure sets are in the from a-z or A-Z'");
 
 		this.propagateSetNodes();
@@ -101,10 +95,12 @@ public class BuildTree {
 		String str = scan.next().trim();
 				
 		String[] subNodes = str.split("(\\(|\\))");
-
-		String element = subNodes[0];
 		
-		if(OPERATOR_PAT.matcher(element).matches()) {
+		String element = subNodes[0];
+		element = element.toLowerCase();
+		
+		// if an operator has been found
+		if(element.length() > 1) { 
 			Operator op = parseOperator(element);
 			BTNode node = new BTNode(op);
 			
@@ -117,7 +113,6 @@ public class BuildTree {
 			return node;
 		}
 		else {
-			element = element.toUpperCase();
 			if(!setNodes.containsKey(element)) {
 				setNodes.put(element, new SetNode(element));
 			}
@@ -144,8 +139,7 @@ public class BuildTree {
 		else if(operator.equalsIgnoreCase("complement")) {
 			return new Complement();
 		}
-		// this case will never be reached
-		throw new IllegalArgumentException();
+		throw new IllegalArgumentException("The operator '" + operator + "' is not supported.");
 	}	
 	
 		
@@ -169,8 +163,8 @@ public class BuildTree {
 			double angleInRadians = angle * (Math.PI/180);
 			
 			// get the center coordinates of this sets spherical representation 
-			int xCoord = BuildTree.startX + (int)(Math.cos(angleInRadians) * RADIUS/2);
-			int yCoord = BuildTree.startY + (int)(Math.sin(angleInRadians) * RADIUS/2);
+			int xCoord = BuildTree.START_X + (int)(Math.cos(angleInRadians) * RADIUS/2);
+			int yCoord = BuildTree.START_Y + (int)(Math.sin(angleInRadians) * RADIUS/2);
 			
 			Coordinate coord = new Coordinate(xCoord, yCoord);
 			setNode.setCenter(coord);
