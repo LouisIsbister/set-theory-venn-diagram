@@ -40,16 +40,16 @@ A set that contains all data in the domain (in this case the domain is all the p
 
 
 # Operators:
-There are four different operators: intersect, union, difference, and compliment, each perform unique operations on sets.
+There are four different operators: intersect, union, difference, and complement, each perform unique operations on sets.
 Let A and B be sets, let U represent the universal set.
-# Intersection (∩):
+# Intersect (∩):
 - The intersect operator defines all the unique elements that are members of both A and B. It must be followed by TWO arguments (A B) enclosed in brackets.
 # Union (∪):
-- The union operator defines all the elements that are members of A plus all the elements that are members of B. It must be followed by TWO arguments (A B) enclosed   in brackets
+- The union operator defines all the elements that are members of A plus all the elements that are members of B. It must be followed by TWO arguments (A B) enclosed in brackets.
 # Difference (A\B):
-- The difference operator defines all the elements that are in A but not in B. Bust be followed by TWO arguments (A B) enclosed in brackets
-# Compliment (U\A):
-- The complement operator defines all the elements all the elements of U minus all the elements of A. It must be followed by ONE (A) argument enclosed in brackets
+- The difference operator defines all the elements that are in A but not in B. Must be followed by TWO arguments (A B) enclosed in brackets.
+# Complement (U\A):
+- The complement operator defines all the elements of U minus all the elements of A. It must be followed by ONE (A) argument enclosed in brackets.
 
 
 # How to use the application:
