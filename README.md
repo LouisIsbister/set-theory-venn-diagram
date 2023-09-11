@@ -57,7 +57,7 @@ The user can formulate an expression that consists of operators and sets, when w
 (Although I should implement this...) The application evaluates an expression by first parsing it into a binary tree, where the sets themselves are leaf nodes and operators are parent nodes. Because of this expressions must bewritten in Cambridge-Polish notation where the operator is written first followed by its arguments that are enclosed in brackets, note the brackets do not NEED to be closed buuuuuuut it looks nicer if they are.
 
 For example: the equation (A ∩ B) could be written as either of the following:
-intersect(A B), or intersect(A B)
+intersect(A B), or intersect(A B
 
 # Arguments:
 An argument represents a sub-expression within the equation, an argument can be two things; a set, or an operator. Hence, an operator can have further operators as arguments.
@@ -91,4 +91,4 @@ Can be expressed as ∪(∩(∪(B C) A) ∩(B C)), to express it as a readable s
 - "complement(A difference(B C))", reason: complement can only take one argument.
 - "union(intersect(A C D))", reason: union and intersect must take two arguments.
 - "", reason: no expression provided.
-= "intersect(AA B)", reason: invalid set identifier.
+- "intersect(AA B)", reason: invalid set identifier.
