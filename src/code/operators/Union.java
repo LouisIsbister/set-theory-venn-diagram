@@ -1,5 +1,9 @@
+package code.operators;
 import java.util.HashSet;
 import java.util.Set;
+
+import code.binarytree.BTNode;
+import code.binarytree.Coordinate;
 
 /**
  * Set union class, in mathmatical notaion (x U y)

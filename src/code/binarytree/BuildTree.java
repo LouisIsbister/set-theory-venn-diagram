@@ -1,4 +1,4 @@
-import java.util.Arrays;
+package code.binarytree;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.regex.Pattern;
+
+import code.operators.*;
 
 public class BuildTree {
 	

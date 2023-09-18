@@ -1,4 +1,8 @@
+package code.operators;
 import java.util.Set;
+
+import code.binarytree.BTNode;
+import code.binarytree.Coordinate;
 
 /**
  * Operator interface, each operator overrides 

@@ -1,3 +1,4 @@
+package code.controller;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -6,6 +7,10 @@ import java.util.Collection;
 import java.util.Set;
 
 import javax.swing.JPanel;
+
+import code.binarytree.BuildTree;
+import code.binarytree.Coordinate;
+import code.binarytree.SetNode;
 
 public class Panel extends JPanel{
 	

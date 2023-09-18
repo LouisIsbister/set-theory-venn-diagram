@@ -1,4 +1,7 @@
+package code.binarytree;
 import java.util.Set;
+
+import code.operators.Operator;
 
 public class BTNode {
 	

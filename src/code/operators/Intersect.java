@@ -1,6 +1,10 @@
+package code.operators;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import code.binarytree.BTNode;
+import code.binarytree.Coordinate;
 
 /**
  * Set intersect class, in mathmatical notaion (x ∩ y)

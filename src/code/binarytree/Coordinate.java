@@ -1,3 +1,4 @@
+package code.binarytree;
 /**
  * Record that represents a pixel in the graphical representation.
  */
