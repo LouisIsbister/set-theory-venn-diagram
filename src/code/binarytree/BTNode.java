@@ -46,7 +46,7 @@ public class BTNode {
 			throw new IllegalArgumentException(this.toString() + ": an argument is undefined, please reformat your experssion.");
 		}
 		
-		return this.operator.evaluate(left, right);
+		return operator.evaluate(left, right);
 	}
 	
 	// --- getters and setters --- //

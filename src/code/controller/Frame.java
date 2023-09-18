@@ -29,15 +29,15 @@ public class Frame extends JFrame {
 	 * Frame constructor
 	 */
 	public Frame() {
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false);
 		
-		this.initialiseMenu();
-		this.askForExpression();
+		initialiseMenu();
+		askForExpression();
 		
-		this.pack();
-		this.setLocationRelativeTo(null);
-		this.setVisible(true);
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
 	}
 
 	/**
@@ -60,7 +60,7 @@ public class Frame extends JFrame {
 
 		menu.add(item);
 		menuBar.add(menu);
-		this.setJMenuBar(menuBar);
+		setJMenuBar(menuBar);
 	}
 
 	/**
@@ -131,10 +131,10 @@ public class Frame extends JFrame {
 
 		// creates a new panel that will paint the expression
 		Panel panel = new Panel(highlightCoords, nodes);
-		this.add(panel);
+		add(panel);
 
-		this.revalidate();
-		this.repaint();
+		revalidate();
+		repaint();
 		return true;
 	}
 	

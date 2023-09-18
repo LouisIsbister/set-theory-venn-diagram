@@ -77,7 +77,7 @@ public class BuildTree {
 					.allMatch(sn-> Pattern.matches("[a-zA-Z]", sn));
 		if(!validSetIdentifiers) throw new Exception("'Invalid format: make sure sets are in the from a-z or A-Z'");
 
-		this.propagateSetNodes();
+		propagateSetNodes();
 		
 		scan.close();
 		return root;

@@ -12,19 +12,34 @@ import code.binarytree.BuildTree;
 import code.binarytree.Coordinate;
 import code.binarytree.SetNode;
 
+/**
+ * panel that displays the Venn diagrams
+ */
 public class Panel extends JPanel{
 	
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * all the coordinates that are part of the 
+	 * data set. 
+	 */
 	private Set<Coordinate> coords;
+
+	/**
+	 * all the sets in the expression
+	 */
 	private Collection<SetNode> setNodes;
 	
 	public Panel(Set<Coordinate> coords, Collection<SetNode> setNodes) {
 		this.coords = coords;
 		this.setNodes = setNodes;
-		this.setPreferredSize(new Dimension(500, 500));
+		setPreferredSize(new Dimension(500, 500));
 	}
 	
+	/**
+	 * draw the diagrams
+	 * @param g
+	 */
 	public void paint(Graphics g) {
 		Graphics2D g2D = (Graphics2D) g;
 		

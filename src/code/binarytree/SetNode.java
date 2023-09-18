@@ -62,15 +62,15 @@ public class SetNode extends BTNode{
 	}
 	
 	public Coordinate center() {
-		return this.center;
+		return center;
 	}
 	
-	public void setStringPosition(Coordinate c) {
-		this.toStringPosition = c;
+	public void setStringPosition(Coordinate strPosition) {
+		toStringPosition = strPosition;
 	}
 	
 	public Coordinate stringPosition() {
-		return this.toStringPosition;
+		return toStringPosition;
 	}
 		
 	public String toString() {
