@@ -6,6 +6,10 @@ This application evaluates expressions in set theory and graphically represents 
 using Venn Diagrams. That is, a user can enter an expression in set theory and be presented
 with the graphical representation of the data.
 
+For example, the expression "union(intersect(C D) difference(A intersect(union(B C) union(D E))))" 
+generates the following output:
+
+<img width="377" alt="SetTheorySH" src="https://github.com/LouisIsbister/Set-Theory-Venn-Diagram/assets/104889878/d0e393b9-6c02-43e7-a570-7fa3d528f366">
 
 
 # Opening the program:
