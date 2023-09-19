@@ -39,7 +39,8 @@ lowercase (so `A` will be the same as `a`).
 Furthermore, using the same letter in either upper or lowercase form at different points in
 an expression will result in them pointing to the same set. For example: `... a .... A .... A`, each of these sets are equal `(a == A == A)`.
 # The universal set:
-A set that contains all data in the domain (in this case the domain is all the pixels in the graphical view).
+A set that contains all data in the domain (in this case the domain is all the pixels in the graphical view)
+It is denoted by the capital letter "U".
 
 
 # Operators:
