@@ -11,16 +11,6 @@ Example:
 <img width="377" alt="SetTheorySH" src="https://github.com/LouisIsbister/Set-Theory-Venn-Diagram/assets/104889878/d0e393b9-6c02-43e7-a570-7fa3d528f366">
 
 
-# Opening the program:
-Download the code as a .zip file from the "<>Code" tab in git.
-## BlueJ
-From here you can directly open it in BlueJ by going to "Project" -> "Open ZIP/JAR" and selecting the zip file.
-You'll likely get a pop-up about "Package line mismatches", you can click continue and it simply adds new package declarations to each file. 
-## Eclipse
-If you're using eclipse you will need to extract the .zip file to a new folder. You can then create a new java project in eclipse and right click on it, selecting "Import" ->  "File system" and navigate to the "src" directory within your new folder, then click "select folder". Select the java source files in eclipse and make sure to set the "into folder" as "[your_project_name]/src. Then click "finish".
-## VSC
-If you're using Visual Studio Code then you just need to extract the .zip file to a new folder. Then navigate to "File" -> "Open Folder", then, navigate to the directory of the folder you've just created and select "src". Click "Select folder" and it will open the source files in VSC. 
-
 # Running the program:
 The program is run via the main method which is located in the "Main" class. 
 To run your own expressions simply run the main method, you will greeted with a dialog box that 
