@@ -3,21 +3,23 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.JPanel;
 
-import code.binarytree.BuildTree;
 import code.binarytree.Coordinate;
 import code.binarytree.SetNode;
 
 /**
  * panel that displays the Venn diagrams
  */
-public class Panel extends JPanel{
-	
-	private static final long serialVersionUID = 1L;
+public class AppPanel extends JPanel{
+
+	public static final int WIDTH = 500;
+	public static final int HEIGHT = 500;
 	
 	/**
 	 * all the coordinates that are part of the 
@@ -28,19 +30,26 @@ public class Panel extends JPanel{
 	/**
 	 * all the sets in the expression
 	 */
-	private Collection<SetNode> setNodes;
+	private List<SetNode> setNodes;
 	
-	public Panel(Set<Coordinate> coords, Collection<SetNode> setNodes) {
+	public AppPanel() {
+		coords = new HashSet<>();
+		setNodes = new ArrayList<>();
+		setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		setOpaque(true);
+	}
+
+	public void updateDisplayData(Set<Coordinate> coords, List<SetNode> setNodes) {
 		this.coords = coords;
 		this.setNodes = setNodes;
-		setPreferredSize(new Dimension(500, 500));
 	}
 	
 	/**
 	 * draw the diagrams
 	 * @param g
 	 */
-	public void paint(Graphics g) {
+	@Override
+	protected void paintComponent(Graphics g) {
 		Graphics2D g2D = (Graphics2D) g;
 		
 		// draw the shaded coordinates
@@ -54,7 +63,7 @@ public class Panel extends JPanel{
 		for(SetNode sn : setNodes) {
 			g2D.drawOval(sn.center().x() - SetNode.DIAMETER/2, sn.center().y() - SetNode.DIAMETER/2, 
 						SetNode.DIAMETER, SetNode.DIAMETER);
-			g2D.drawRect(0, 0, 2 * BuildTree.START_X, 2 * BuildTree.START_Y);
+			
 			g2D.drawString(sn.toString(), sn.stringPosition().x(), sn.stringPosition().y());
 		}
 	}

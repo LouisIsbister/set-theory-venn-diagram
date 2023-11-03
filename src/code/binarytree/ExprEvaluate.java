@@ -1,5 +1,5 @@
 package code.binarytree;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -7,16 +7,27 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import code.controller.AppPanel;
 import code.operators.*;
 
-public class BuildTree {
+public class ExprEvaluate {
 	
 	/**
 	 * The starting x and y coordinates of the Venn diagram, is used to determine the pixels (data)
 	 * that is contained within a set.
 	 */
-	public static final int START_X = 250;
-	public static final int START_Y = 250;
+	public static final int START_X = AppPanel.WIDTH/2;
+	public static final int START_Y = AppPanel.HEIGHT/2;
+
+	/**
+	 * root node of the binary tree
+	 */
+	private BTNode root;
+
+	/**
+	 * the expression from the user
+	 */
+	private String expression;
 
 	/**
 	 * Map of all the set nodes in the expression
@@ -31,22 +42,37 @@ public class BuildTree {
 	private static final SetNode universalSet = new SetNode("Universal data") {
 		public Set<Coordinate> evaluate(){
 			HashSet<Coordinate> allCoords = new HashSet<>();
-			for(int i = 0; i < 2 * BuildTree.START_Y; i++) {
-				for(int j = 0; j < 2*BuildTree.START_X; j++) {
+			for (int i = 0; i < 2 * START_Y; i++) {
+				for (int j = 0; j < 2 * START_X; j++) {
 					allCoords.add(new Coordinate(i, j));
 				}
 			}
+			
 			return allCoords;
 		}
 	};
+
+	public ExprEvaluate(String expression) throws Exception {
+		root = null;
+		this.expression = expression;
+		createTree();
+		propagateSetNodes();
+	}
+
+	/**
+	 * @return, the root node of the binary tree
+	 */
+	public BTNode root() {
+		return root;
+	}
 	
 	/**
 	 * Retrieves all the set nodes (leaf nodes)
 	 * 
 	 * @return, a collection of set nodes
 	 */
-	public Collection<SetNode> setNodes(){
-		return setNodes.values();
+	public ArrayList<SetNode> setNodes(){
+		return new ArrayList<SetNode>(setNodes.values());
 	}
 	
 	/**
@@ -60,25 +86,22 @@ public class BuildTree {
 	 * @param expression, the expression that is to be evaluated
 	 * @return, the root node of binary tree representation of the expression
 	 */
-	public BTNode createTree(String expression) throws Exception{
+	public BTNode createTree() throws Exception {
 		Scanner scan = new Scanner(expression);
 		scan.useDelimiter("(?<=\\()|(?>=\\))|\\s+");	
-		BTNode root = null;
-
+		
 		// recursively create the binary tree
 		root = recursion(scan);
 		
 		// user provided too many or no arguments
-		if(scan.hasNext()) throw new Exception("'Invalid format: too many arguments were provided.'");
-		if(setNodes.size() < 1) throw new Exception("'Invalid format: no arguments were provided.'");
+		if (scan.hasNext()) throw new Exception("'Invalid format: too many arguments were provided.'");
+		if (setNodes.size() < 1) throw new Exception("'Invalid format: no arguments were provided.'");
 		
 		// user entered incorrect set identifiers
 		boolean validSetIdentifiers = setNodes.keySet().stream()
 					.allMatch(sn-> Pattern.matches("[a-zA-Z]", sn));
-		if(!validSetIdentifiers) throw new Exception("'Invalid format: make sure sets are in the from a-z or A-Z'");
+		if (!validSetIdentifiers) throw new Exception("'Invalid format: make sure sets are in the from a-z or A-Z'");
 
-		propagateSetNodes();
-		
 		scan.close();
 		return root;
 	}
@@ -93,7 +116,7 @@ public class BuildTree {
 	 * @return, the root node of the binary tree
 	 */
 	private BTNode recursion(Scanner scan) {
-		if(!scan.hasNext()) return null;
+		if (!scan.hasNext()) return null;
 		String str = scan.next().trim();
 				
 		String[] subNodes = str.split("(\\(|\\))");
@@ -102,7 +125,7 @@ public class BuildTree {
 		element = element.toLowerCase();
 		
 		// if an operator has been found
-		if(element.length() > 1) { 
+		if (element.length() > 1) { 
 			Operator op = parseOperator(element);
 			BTNode node = new BTNode(op);
 			
@@ -129,19 +152,18 @@ public class BuildTree {
 	 * @return, the operator if it exists
 	 */
 	private static Operator parseOperator(String operator){
-		if(operator.equalsIgnoreCase("union")) {
-			return new Union();
+		switch (operator) {
+			case "union":
+				return new Union();
+			case "intersect":
+				return new Intersect();
+			case "difference":
+				return new Difference();
+			case "complement":
+				return new Complement();
+			default:
+				throw new IllegalArgumentException("The operator '" + operator + "' is not supported.");
 		}
-		else if(operator.equalsIgnoreCase("intersect")) {
-			return new Intersect();
-		}
-		else if(operator.equalsIgnoreCase("difference")) {
-			return new Difference();
-		}
-		else if(operator.equalsIgnoreCase("complement")) {
-			return new Complement();
-		}
-		throw new IllegalArgumentException("The operator '" + operator + "' is not supported.");
 	}	
 	
 		
@@ -165,8 +187,8 @@ public class BuildTree {
 			double angleInRadians = angle * (Math.PI/180);
 			
 			// get the center coordinates of this sets spherical representation 
-			int xCoord = BuildTree.START_X + (int)(Math.cos(angleInRadians) * RADIUS/2);
-			int yCoord = BuildTree.START_Y + (int)(Math.sin(angleInRadians) * RADIUS/2);
+			int xCoord = START_X + (int)(Math.cos(angleInRadians) * RADIUS/2);
+			int yCoord = START_Y + (int)(Math.sin(angleInRadians) * RADIUS/2);
 			
 			Coordinate coord = new Coordinate(xCoord, yCoord);
 			setNode.setCenter(coord);

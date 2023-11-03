@@ -1,12 +1,14 @@
 package code.controller;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayDeque;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -21,24 +23,42 @@ import javax.swing.SwingConstants;
 
 import code.binarytree.*;
 
-public class Frame extends JFrame {
-	
-	private static final long serialVersionUID = 1L;
+public class AppFrame extends JFrame {
 	
 	/**
-	 * Frame constructor
+	 * the panel that displays the diagrams 
 	 */
-	public Frame() {
+	private static AppPanel GUIPanel = new AppPanel();
+	
+	public AppFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setResizable(false);
+		//setResizable(false);
 		
+		getContentPane().add(GUIPanel);
 		initialiseMenu();
-		askForExpression();
 		
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
+
+		askForExpression();
 	}
+
+	/*
+	 * How the program currently runs:
+	 * 1. create the menu item
+	 * 
+	 * 2. ask for an expression
+	 * 3. take the expression and retrieve the info from it
+	 * 4. then parse it to an instance of Panel.java
+	 * 5. add the panel to the frame (this is what packs out the frame)
+	 * 
+	 * What should happen:
+	 * 1. open the window then ask for an expression
+	 * 
+	 * 
+	 *  
+	 */
 
 	/**
 	 * Creates a new menu bar for the frame. 
@@ -89,8 +109,8 @@ public class Frame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String text = expressionField.getText();
-				boolean valid = evaluateExpression(text);
-				if(valid){
+				
+				if (evaluateExpression(text)) {
 					dialogBox.dispose();
 				}
 			}
@@ -115,25 +135,23 @@ public class Frame extends JFrame {
 	 * @return, whether the parsing of the expression was successful 
 	 */
 	private boolean evaluateExpression(String text){
-		BTNode root = new BTNode();
-		BuildTree tree = new BuildTree();
+		ExprEvaluate tree = null;
 		Set<Coordinate> highlightCoords = new HashSet<>();
+		List<SetNode> nodes = new ArrayList<>();
 
 		try {
-			root = tree.createTree(text);
-			highlightCoords = root.evaluate();
+			//root = tree.createTree(text);
+			tree = new ExprEvaluate(text);
+			highlightCoords = tree.root().evaluate();
+			nodes = tree.setNodes();
 		} catch(Exception err) {
 			displayException(err);
 			return false;
 		}
 		
-		Collection<SetNode> nodes = tree.setNodes();
+		GUIPanel.updateDisplayData(highlightCoords, nodes);
+		add(GUIPanel);
 
-		// creates a new panel that will paint the expression
-		Panel panel = new Panel(highlightCoords, nodes);
-		add(panel);
-
-		revalidate();
 		repaint();
 		return true;
 	}
