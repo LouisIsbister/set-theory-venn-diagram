@@ -18,7 +18,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import code.binarytree.*;
@@ -91,39 +90,7 @@ public class AppFrame extends JFrame {
 	 * expression will be rendered. 
 	 */
 	private void askForExpression(){
-		JDialog dialogBox = new JDialog(this, "Enter your Expression", true);
-
-		JPanel panel = new JPanel();
-		panel.setVisible(true);
-		panel.setPreferredSize(new Dimension(250, 100));
-		panel.setLayout(null);
-
-		JTextField expressionField = new JTextField();
-		JButton confirmButton = new JButton("Confirm Expression");
-
-		expressionField.setBounds(10, 10, 230, 25);
-		confirmButton.setBounds(50, 45, 150, 25);
-
-		// confirm button, if the expression is valid then program proceeds. 
-		confirmButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String text = expressionField.getText();
-				
-				if (evaluateExpression(text)) {
-					dialogBox.dispose();
-				}
-			}
-		});
-
-		panel.add(expressionField);
-		panel.add(confirmButton);
-
-		dialogBox.add(panel);
-
-        dialogBox.pack();
-        dialogBox.setLocationRelativeTo(this);
-        dialogBox.setVisible(true);
+		new ExpressionInterface(this);
 	}
 
 	/**
@@ -134,7 +101,7 @@ public class AppFrame extends JFrame {
 	 * @param text, the expression to be parsed
 	 * @return, whether the parsing of the expression was successful 
 	 */
-	private boolean evaluateExpression(String text){
+	public boolean evaluateExpression(String text){
 		ExprEvaluate tree = null;
 		Set<Coordinate> highlightCoords = new HashSet<>();
 		List<SetNode> nodes = new ArrayList<>();
@@ -145,6 +112,8 @@ public class AppFrame extends JFrame {
 			highlightCoords = tree.root().evaluate();
 			nodes = tree.setNodes();
 		} catch(Exception err) {
+			err.printStackTrace();
+			
 			displayException(err);
 			return false;
 		}
