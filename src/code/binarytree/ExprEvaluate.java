@@ -56,11 +56,11 @@ public class ExprEvaluate {
 		}
 	};
 
-	public ExprEvaluate(String expression) throws Exception {
+	public ExprEvaluate(String expr) throws Exception {
 		root = null;
-		this.expression = new StructureExpr(expression).restructuredString();
+		expression = new StructureExpr(expr).get();    // get the correct representation of the expression
 		
-		createTree();
+		parseExpression();
 		propagateSetNodes();
 	}
 
@@ -95,7 +95,7 @@ public class ExprEvaluate {
 	 *                    @return, the root node of binary tree representation of
 	 *                    the expression
 	 */
-	public BTNode createTree() throws Exception {
+	public BTNode parseExpression() throws Exception {
 		Scanner scan = new Scanner(expression);
 
 		scan.useDelimiter("([\\(\s])");
@@ -132,16 +132,8 @@ public class ExprEvaluate {
 	private BTNode parseTree(Scanner scan) {
 		if (!scan.hasNext())
 			return null;
-		String next = scan.next().trim();
-		next = next.toLowerCase();
 
-		System.out.println("|" + next + "|");
-		// String[] subNodes = str.split("(\\()");
-
-		// String element = subNodes[0];
-		// String element = str;
-		// element = element.toLowerCase();
-
+		String next = scan.next().trim().toLowerCase();
 		boolean isSetNode = next.matches("[a-z]");
 
 		// if an operator has been found
@@ -184,7 +176,7 @@ public class ExprEvaluate {
 				return new Complement();
 			default:
 				throw new IllegalArgumentException(
-						"CLIENT ERROR 401: The operator '" + c + "' is not supported.");
+						"4XX CLIENT ERROR: The operator '" + c + "' is not supported.");
 		}
 	}
 

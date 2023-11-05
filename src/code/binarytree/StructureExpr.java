@@ -9,7 +9,7 @@ public class StructureExpr {
         restructureExpression(expr);
     }
 
-    public String restructuredString() {
+    public String get() {
         return ret;
     }
 

@@ -3,10 +3,8 @@ package code.controller;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Queue;
 import java.util.Set;
 import java.util.List;
 
@@ -39,25 +37,7 @@ public class AppFrame extends JFrame {
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
-
-		askForExpression();
 	}
-
-	/*
-	 * How the program currently runs:
-	 * 1. create the menu item
-	 * 
-	 * 2. ask for an expression
-	 * 3. take the expression and retrieve the info from it
-	 * 4. then parse it to an instance of Panel.java
-	 * 5. add the panel to the frame (this is what packs out the frame)
-	 * 
-	 * What should happen:
-	 * 1. open the window then ask for an expression
-	 * 
-	 * 
-	 *  
-	 */
 
 	/**
 	 * Creates a new menu bar for the frame. 
@@ -67,8 +47,8 @@ public class AppFrame extends JFrame {
 	private void initialiseMenu(){
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Menu");
-		JMenuItem item = new JMenuItem("Enter new expression");
-		item.addActionListener(new ActionListener() {
+		JMenuItem newExpr = new JMenuItem("Enter new expression");
+		newExpr.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// clear the pane and ask user for another expression 
@@ -77,7 +57,17 @@ public class AppFrame extends JFrame {
 			}
 		});
 
-		menu.add(item);
+		AppFrame comp = this;
+		JMenuItem exit = new JMenuItem("Exit");
+		exit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				comp.dispose();
+			}
+		});
+
+		menu.add(newExpr);
+		menu.add(exit);
 		menuBar.add(menu);
 		setJMenuBar(menuBar);
 	}
@@ -168,29 +158,5 @@ public class AppFrame extends JFrame {
         dialogBox.pack();
         dialogBox.setLocationRelativeTo(this);
         dialogBox.setVisible(true);
-	}	
-
-	/**
-	 * DEBUGGING METHOD: 
-	 * Performs a breadth first traversal of the binary tree, printing the parent node 
-	 * and its children.
-	 * 
-	 * @param root, the root node
-	 */
-	public static void bfs(BTNode root) {
-		Queue<BTNode> queue = new ArrayDeque<BTNode>();
-		queue.offer(root);
-
-		while(!queue.isEmpty()) {
-			BTNode node = queue.poll();
-			System.out.println("Parent: " + node + " -> left: " + node.left()+ ", right: " + node.right());
-			
-			if(node.left() != null) {
-				queue.add(node.left());
-			}
-			if(node.right() != null){
-				queue.add(node.right());
-			}
-		}
 	}
 }
