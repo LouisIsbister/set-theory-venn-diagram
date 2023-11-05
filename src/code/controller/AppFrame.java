@@ -21,37 +21,37 @@ import javax.swing.SwingConstants;
 import code.binarytree.*;
 
 public class AppFrame extends JFrame {
-	
+
 	/**
-	 * the panel that displays the diagrams 
+	 * the panel that displays the diagrams
 	 */
 	private static AppPanel GUIPanel = new AppPanel();
-	
+
 	public AppFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//setResizable(false);
-		
+		// setResizable(false);
+
 		getContentPane().add(GUIPanel);
 		initialiseMenu();
-		
+
 		pack();
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 
 	/**
-	 * Creates a new menu bar for the frame. 
+	 * Creates a new menu bar for the frame.
 	 * Adds a new menu that contains one menu item
-	 * to allow the user to enter a new expression  
+	 * to allow the user to enter a new expression
 	 */
-	private void initialiseMenu(){
+	private void initialiseMenu() {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Menu");
 		JMenuItem newExpr = new JMenuItem("Enter new expression");
 		newExpr.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// clear the pane and ask user for another expression 
+				// clear the pane and ask user for another expression
 				getContentPane().removeAll();
 				askForExpression();
 			}
@@ -73,56 +73,56 @@ public class AppFrame extends JFrame {
 	}
 
 	/**
-	 * Creates a new JDialog box popup, this box contains a 
-	 * text field for users to enter their expression and a 
-	 * button to confirm it. If the expression is valid 
-	 * then the dialog box will disappear and the user 
-	 * expression will be rendered. 
+	 * Creates a new JDialog box popup, this box contains a
+	 * text field for users to enter their expression and a
+	 * button to confirm it. If the expression is valid
+	 * then the dialog box will disappear and the user
+	 * expression will be rendered.
 	 */
-	private void askForExpression(){
+	private void askForExpression() {
 		new ExpressionInterface(this);
 	}
 
 	/**
-	 * Parses the binary tree of the expression, 
+	 * Parses the binary tree of the expression,
 	 * if an error is encountered then return false,
-	 * otherwise return true. 
+	 * otherwise return true.
 	 * 
 	 * @param text, the expression to be parsed
-	 * @return, whether the parsing of the expression was successful 
+	 *              @return, whether the parsing of the expression was successful
 	 */
-	public boolean evaluateExpression(String text){
+	public boolean evaluateExpression(String text) {
 		ExprEvaluate tree = null;
 		Set<Coordinate> highlightCoords = new HashSet<>();
 		List<SetNode> nodes = new ArrayList<>();
 
 		try {
-			//root = tree.createTree(text);
+			// root = tree.createTree(text);
 			tree = new ExprEvaluate(text);
 			highlightCoords = tree.root().evaluate();
 			nodes = tree.setNodes();
-		} catch(Exception err) {
+		} catch (Exception err) {
 			err.printStackTrace();
-			
+
 			displayException(err);
 			return false;
 		}
-		
+
 		GUIPanel.updateDisplayData(highlightCoords, nodes);
 		add(GUIPanel);
 
 		repaint();
 		return true;
 	}
-	
+
 	/**
-	 * Creates a new JDialog box popup that contains 
+	 * Creates a new JDialog box popup that contains
 	 * a notification that the expression parsing failed
 	 * and provides the error message.
 	 * 
 	 * @param err, the exception to be displayed
 	 */
-	private void displayException(Exception err){
+	private void displayException(Exception err) {
 		JDialog dialogBox = new JDialog(this, "Enter your Expression", true);
 
 		JPanel panel = new JPanel();
@@ -131,9 +131,9 @@ public class AppFrame extends JFrame {
 		panel.setLayout(null);
 
 		String errorMsg = "<html><center>----- Error -----" +
-						  "<br>Expression evaluation falied." +
-						  "<br>Please check your format." +
-						  "<br>Error message: " + err.getMessage() + "</center></html>";
+				"<br>Expression evaluation falied." +
+				"<br>Please check your format." +
+				"<br>Error message: " + err.getMessage() + "</center></html>";
 
 		JLabel errorLabel = new JLabel(errorMsg);
 		errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -155,8 +155,8 @@ public class AppFrame extends JFrame {
 
 		dialogBox.add(panel);
 
-        dialogBox.pack();
-        dialogBox.setLocationRelativeTo(this);
-        dialogBox.setVisible(true);
+		dialogBox.pack();
+		dialogBox.setLocationRelativeTo(this);
+		dialogBox.setVisible(true);
 	}
 }

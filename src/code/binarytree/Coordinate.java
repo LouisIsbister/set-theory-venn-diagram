@@ -1,5 +1,7 @@
 package code.binarytree;
+
 /**
  * Record that represents a pixel in the graphical representation.
  */
-public record Coordinate (int x, int y) {}
+public record Coordinate(int x, int y) {
+}

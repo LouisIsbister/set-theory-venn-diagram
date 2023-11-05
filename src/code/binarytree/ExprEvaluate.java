@@ -58,8 +58,8 @@ public class ExprEvaluate {
 
 	public ExprEvaluate(String expr) throws Exception {
 		root = null;
-		expression = new StructureExpr(expr).get();    // get the correct representation of the expression
-		
+		expression = new StructureExpr(expr).get(); // get the correct representation of the expression
+
 		parseExpression();
 		propagateSetNodes();
 	}
