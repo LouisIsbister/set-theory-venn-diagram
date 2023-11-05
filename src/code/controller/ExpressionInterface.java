@@ -101,13 +101,13 @@ public class ExpressionInterface extends JDialog {
             }
         });
 
-        JButton complement = new JButton("U \\");
+        JButton complement = new JButton("~");
         complement.setBounds(190, 40, 50, 50);
         complement.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String txt = expressionField.getText();
-                expressionField.setText(txt + "U \\");
+                expressionField.setText(txt + "~");
             }
         });
 
