@@ -3,29 +3,26 @@
 
 # About:
 This application evaluates expressions in set theory and graphically represents the result
-using Venn Diagrams. That is, a user can enter an expression in set theory and be presented
+using Venn Diagrams. That is, you can enter an expression in set theory and be presented
 with the graphical representation of the data.
 
-Example:
+Example '(c ∩ d) ∪ (a \ ((b ∪ c) ∩ (d ∪ e)))':
 
 <img width="377" alt="SetTheorySH" src="https://github.com/LouisIsbister/Set-Theory-Venn-Diagram/assets/104889878/d0e393b9-6c02-43e7-a570-7fa3d528f366">
 
 
 # Running the program:
 The program is run via the main method which is located in the "Main" class. 
-To run your own expressions simply run the main method, you will greeted with a dialog box that 
-asks you to enter an expression, once you have entered your expression, click "confirm", this will
-parse and display your expression if it is valid. 
-Then, if you want to run a new expression navigate to the "Menu" icon in the top leftand select the "Enter new expression" item. This will allow you to enter a new expression.
+To run your own expressions simply run the main method, a window will pop up where you can navigate to the "menu" icon in the top lefthand corner. Then click of "Enter new expression", this will prompt a dialog box where you can enter an expression, once you have entered your expression, click "confirm". This will parse and display your expression if it is valid.
 
 
 # Sets:
-A set is a collection of unique elements that represent a group of data. In this application the user does not need to provide any data as it is predetermined.
+A set is a collection of elements that represent a group of data. In this application the user does not need to provide any data as this is simply a visualisation.
 ## Set identifiers:
-For the sake of cleaness and simplicity, the user must express sets as lower or upper case
-letters in their expression. However, uppercase letters will automatically be converted to
-lowercase (so `A` will be the same as `a`).
-`A, b, c, x, Y, z` are all valid identifiers. But, `ab, [empty string], BC, aCCD` are all invalid.
+For the sake of cleaness and simplicity, sets must be expressed as lower or upper case
+letters in an expression. However, uppercase letters will automatically be converted to
+lowercase, so `A` will be treated as `a`.
+`A, b, c, x, Y, z` are all valid identifiers. But, `ab, [empty string], BC, aCCD` are not.
 Furthermore, using the same letter in either upper or lowercase form at different points in
 an expression will result in them pointing to the same set. For example: `... a .... A .... A`, each of these sets are equal `(a == A == A)`.
 # The universal set:
@@ -42,47 +39,28 @@ Let A and B be sets, let U represent the universal set.
 - The union operator defines all the elements that are members of A plus all the elements that are members of B. It must be followed by TWO arguments (A B) enclosed in brackets.
 # Difference (A\B):
 - The difference operator defines all the elements that are in A but not in B. Must be followed by TWO arguments (A B) enclosed in brackets.
-# Complement (U\A):
+# Complement (U\A, denoted as ~ in this application):
 - The complement operator defines all the elements of U minus all the elements of A. It must be followed by ONE (A) argument enclosed in brackets.
 
 
 # How to use the application:
-The user can formulate an expression that consists of operators and sets, when writing an expression operators MUST be written using their english name, NOT mathematical notation
-(Although I should implement this...) The application evaluates an expression by first parsing it into a binary tree, where the sets themselves are leaf nodes and operators are parent nodes. Because of this expressions must bewritten in Cambridge-Polish notation where the operator is written first followed by its arguments that are enclosed in brackets, note the brackets do not NEED to be closed buuuuuuut it looks nicer if they are.
+The user can formulate an expression that consists of operators and sets, when writing an expression operators it must be written mathematical notation. The application evaluates an expression by first restructuring it into cambridge polish notation and then parsing it into a binary tree, where the sets themselves are leaf nodes and operators are parent nodes.
 
-For example: the equation (A ∩ B) could be written as either of the following:
-intersect(A B), or intersect(A B
+For example, a valid the equation could be '(A ∩ B)' or 'A ∩ B ∩ C'.  
 
-# Arguments:
-An argument represents a sub-expression within the equation, an argument can be two things; a set, or an operator. Hence, an operator can have further operators as arguments.
+# More valid expressions:  
+a ∪ (b ∩ c)              "a or b and c"  
+(a ∩ b) ∪ (c ∩ d)        "a and b or c and d"  
+((b ∪ c) ∩ a) ∪ (b ∩ c)  "a and b or c or b and c"  
+a ∩ (b \ c)              "a and the difference of b and c"  
+a \ (b ∩ c)              "the difference of a and the intersection of b and c"  
+(c ∩ (a ∪ b)) \ (a ∩ b)  "the difference of the (intersection of c and the union of a and b) and (a and b)"  
+~(a \ b)                 "complement of the difference between a and b"  
+a ∩ b ∩ (~(c ∪ d))       "a and b and the complement of c or d"  
+(c ∩ d) ∪ (a \ ((b ∪ c) ∩ (d ∪ e))) "c and d or the difference between a and the intersection of c and d's union and d and e's union"  
 
-## Converting to Cambridge-Polish notation:
-Take the operator of two arguments and remove it outside the brackets, leaving the arguments inside the brackets. For example:
-```
-                       ((B ∪ C) ∩ A) ∪ (B ∩ C)
-                                     ∪
-                                  /     \
-                               ∩           ∩
-                            /     \     /     \
-                          ∪        A   B       C
-                       /     \
-                     B        C
-```
-Can be expressed as ∪(∩(∪(B C) A) ∩(B C)), to express it as a readable string for this program, convert the operators to their english name: union(intersect(union(B C) A) intersect(B C)) is a valid expression.
-
-
-# Examples of valid expressions:
-- "union(intersect(A B) intersect(C D))"
-- "union(A intersect(B C))"
-- "intersect(A difference(B C))"
-- "difference(intersect(C union(A B)) intersect(A B))"
-- "union(intersect(C D) difference(A intersect(union(B C) union(D E))))", this is the expression used for the example!
-- "complement(A)"
-- "complement(difference(B C))"
-- "union(intersect(A complement(union(B C))) intersect(B C))"
-
-# Examples of Invalid expressions:
-- "complement(A difference(B C))", reason: complement can only take one argument.
-- "union(intersect(A C D))", reason: union and intersect must take two arguments.
-- "", reason: no expression provided.
-- "intersect(AA B)", reason: invalid set identifier.
+# Examples of Invalid expressions:  
+~ (a b \ c), reason: complement can only take one argument.  
+(a ∪ b c), reason: union can only take two arguments.  
+, reason: no expression provided.  
+AA ∪ B, reason: invalid set identifier.  

@@ -73,11 +73,8 @@ public class AppFrame extends JFrame {
 	}
 
 	/**
-	 * Creates a new JDialog box popup, this box contains a
-	 * text field for users to enter their expression and a
-	 * button to confirm it. If the expression is valid
-	 * then the dialog box will disappear and the user
-	 * expression will be rendered.
+	 * Creates a new expression interface that allows the user 
+	 * to enter their expression
 	 */
 	private void askForExpression() {
 		new ExpressionInterface(this);

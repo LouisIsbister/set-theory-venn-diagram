@@ -27,7 +27,7 @@ public class ExpressionInterface extends JDialog {
     private JPanel panel;
 
     public ExpressionInterface(AppFrame frame) {
-        super(frame, "", true);
+        super(frame, "Enter an expression", true);
         this.frame = frame;
 
         display();
@@ -57,9 +57,9 @@ public class ExpressionInterface extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 String text = expressionField.getText();
 
-                if (frame.evaluateExpression(text)) {
+                // if the expression was valid, then dispose of the expression interface
+                if (frame.evaluateExpression(text))
                     dispose();
-                }
             }
         });
 

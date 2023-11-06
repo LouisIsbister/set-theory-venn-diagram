@@ -1,15 +1,16 @@
 package code.binarytree;
 
-public class StructureExpr {
+public class StructuredExpr {
 
     private String ret;
 
-    public StructureExpr(String expr) {
+    public StructuredExpr(String expr) {
         ret = "";
         restructureExpression(expr);
     }
 
     public String get() {
+        System.out.println(ret);
         return ret;
     }
 
@@ -20,9 +21,8 @@ public class StructureExpr {
      */
     public void restructureExpression(String str) {
         str = str.trim();
-        if (str.length() < 1) {
+        if (str.length() < 1) 
             return;
-        }
 
         char[] arr = str.toCharArray();
 
@@ -36,13 +36,12 @@ public class StructureExpr {
                 continue;
 
             char c = arr[i];
-            if (c == '(') {
+            if (c == '(')
                 openBracketCount++;
-            } else if (c == ')') {
+            else if (c == ')')
                 closedBracketCount++;
-            }
             // find the center most opertor
-            else if (!(c + "").matches("[a-zA-Z]") && openBracketCount == closedBracketCount && c != ' ') {
+            else if (!(c + "").matches("[a-zA-Z]") && openBracketCount == closedBracketCount) {
                 mid = i;
                 break;
             }

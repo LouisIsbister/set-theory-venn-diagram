@@ -14,12 +14,12 @@ public class BTNode {
 	/**
 	 * The left child of this node.
 	 */
-	private BTNode left = null;
+	private BTNode left;
 
 	/**
 	 * The right child of this node.
 	 */
-	private BTNode right = null;
+	private BTNode right;
 
 	/**
 	 * Creats a new binary tree node with an operator.

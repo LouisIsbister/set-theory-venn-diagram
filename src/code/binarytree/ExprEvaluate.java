@@ -14,9 +14,7 @@ import code.operators.*;
 public class ExprEvaluate {
 
 	/**
-	 * The starting x and y coordinates of the Venn diagram, is used to determine
-	 * the pixels (data)
-	 * that is contained within a set.
+	 * The central x and y coordinates of the Venn diagram
 	 */
 	public static final int START_X = AppPanel.WIDTH / 2;
 	public static final int START_Y = AppPanel.HEIGHT / 2;
@@ -27,23 +25,20 @@ public class ExprEvaluate {
 	private BTNode root;
 
 	/**
-	 * the expression from the user
+	 * expression from the user
 	 */
 	private String expression;
 
 	/**
-	 * Map of all the set nodes in the expression
+	 * Map of all the sets in the expression
 	 */
 	private Map<String, SetNode> setNodes = new HashMap<>();
 
 	/**
-	 * The complement of a set node, call it A, is equal to the universal set (U)
-	 * minus this set.
-	 * This can be expressed as U-A or U\A. The universal set represents all the
-	 * data available
-	 * and is constant.
+	 * The universal set represents all the available data and is constant.
 	 */
 	private static final SetNode universalSet = new SetNode("Universal data") {
+		@Override
 		public Set<Coordinate> evaluate() {
 			HashSet<Coordinate> allCoords = new HashSet<>();
 			for (int i = 0; i < 2 * START_Y; i++) {
@@ -58,7 +53,7 @@ public class ExprEvaluate {
 
 	public ExprEvaluate(String expr) throws Exception {
 		root = null;
-		expression = new StructureExpr(expr).get(); // get the correct representation of the expression
+		expression = new StructuredExpr(expr).get(); // get the polish notation representation of the expression
 
 		parseExpression();
 		propagateSetNodes();
@@ -151,20 +146,21 @@ public class ExprEvaluate {
 
 			return node;
 		} else {
-			if (!setNodes.containsKey(next)) {
+			if (!setNodes.containsKey(next))
 				setNodes.put(next, new SetNode(next));
-			}
+			
 			return setNodes.get(next);
 		}
 	}
 
 	/**
-	 * returns the string representation of an operator in character form
+	 * returns and instance of the operator that corresponds to
+	 * the given character.
 	 * 
 	 * @param c, the operator
-	 *           @return, its string representation
+	 *           @return, an instance of the operator
 	 */
-	private static Operator parseOperator(char c) {
+	private Operator parseOperator(char c) {
 		switch (c) {
 			case '\u222A':
 				return new Union();
