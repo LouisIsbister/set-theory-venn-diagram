@@ -58,7 +58,7 @@ public class ExpressionInterface extends JDialog {
                 String text = expressionField.getText();
 
                 // if the expression was valid, then dispose of the expression interface
-                if (frame.evaluateExpression(text))
+                if (frame.evaluateExpression(text)) 
                     dispose();
             }
         });
@@ -70,14 +70,20 @@ public class ExpressionInterface extends JDialog {
         add(panel);
     }
 
+    private void updateExprField(String insertString) {
+        StringBuilder txt = new StringBuilder(expressionField.getText());
+        txt.insert(expressionField.getCaretPosition(), insertString);
+        
+        expressionField.setText(txt.toString());
+    }
+
     private void addButtons() {
         JButton intersect = new JButton("\u2229");
         intersect.setBounds(10, 40, 50, 50);
         intersect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String txt = expressionField.getText();
-                expressionField.setText(txt + "\u2229");
+                updateExprField("\u2229");
             }
         });
 
@@ -86,8 +92,7 @@ public class ExpressionInterface extends JDialog {
         union.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String txt = expressionField.getText();
-                expressionField.setText(txt + "\u222A");
+                updateExprField("\u222A");
             }
         });
 
@@ -96,8 +101,7 @@ public class ExpressionInterface extends JDialog {
         difference.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String txt = expressionField.getText();
-                expressionField.setText(txt + "\\");
+                updateExprField("\\");
             }
         });
 
@@ -106,8 +110,7 @@ public class ExpressionInterface extends JDialog {
         complement.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String txt = expressionField.getText();
-                expressionField.setText(txt + "~");
+                updateExprField("~");
             }
         });
 

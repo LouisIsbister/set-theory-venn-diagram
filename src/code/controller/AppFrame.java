@@ -1,6 +1,7 @@
 package code.controller;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -25,13 +26,17 @@ public class AppFrame extends JFrame {
 	/**
 	 * the panel that displays the diagrams
 	 */
-	private static AppPanel GUIPanel = new AppPanel();
+	private static AppPanel guiPanel = new AppPanel();
+
+	/**
+	 * all the tested expressions so far
+	 */
+	private static List<String> exprHistory = new ArrayList<>();
 
 	public AppFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		// setResizable(false);
 
-		getContentPane().add(GUIPanel);
+		getContentPane().add(guiPanel);
 		initialiseMenu();
 
 		pack();
@@ -47,6 +52,7 @@ public class AppFrame extends JFrame {
 	private void initialiseMenu() {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Menu");
+
 		JMenuItem newExpr = new JMenuItem("Enter new expression");
 		newExpr.addActionListener(new ActionListener() {
 			@Override
@@ -66,14 +72,24 @@ public class AppFrame extends JFrame {
 			}
 		});
 
+		JMenuItem expressionHistory = new JMenuItem("View previous expressions");
+		expressionHistory.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				displayExpressionHistory();
+			}
+		});
+
 		menu.add(newExpr);
+		menu.add(expressionHistory);
 		menu.add(exit);
+
 		menuBar.add(menu);
 		setJMenuBar(menuBar);
 	}
 
 	/**
-	 * Creates a new expression interface that allows the user 
+	 * Creates a new expression interface that allows the user
 	 * to enter their expression
 	 */
 	private void askForExpression() {
@@ -104,12 +120,63 @@ public class AppFrame extends JFrame {
 			displayException(err);
 			return false;
 		}
+		exprHistory.add(text);
 
-		GUIPanel.updateDisplayData(highlightCoords, nodes);
-		add(GUIPanel);
+		guiPanel.updateDisplayData(highlightCoords, nodes);
+		add(guiPanel);
 
 		repaint();
 		return true;
+	}
+
+	/**
+	 * displays all the expressions the current user has tested
+	 */
+	private void displayExpressionHistory() {
+		JDialog dialogBox = new JDialog(this, "Your Previous Expressions", true);
+
+		int height = 35;
+		String content = "<html><center>History:";
+		if (exprHistory.size() == 0) {
+			height += 60;
+			content += "<br><i>Not applicable</i>";
+		} else {
+			height += (exprHistory.size() + 1) * 30;
+			for (int i = 0; i < exprHistory.size(); i++)
+				content += "<br>" + exprHistory.get(i);
+		}
+
+		content += "</center></html>";
+
+		JPanel panel = new JPanel();
+		panel.setVisible(true);
+		panel.setPreferredSize(new Dimension(350, height));
+		panel.setLayout(null);
+
+		JLabel label = new JLabel(content);
+		label.setFont(new Font("Arial", 0, 20));
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setBounds(0, 0, 350, height - 35);
+
+		JButton contiueButton = new JButton("Continue");
+		contiueButton.setBounds(100, height - 35, 150, 25);
+
+		// button to dispose the dialog box when user is satisfied
+		contiueButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dialogBox.dispose();
+			}
+		});
+
+		panel.add(label);
+		panel.add(contiueButton);
+
+		dialogBox.add(panel);
+
+		dialogBox.pack();
+		dialogBox.setLocationRelativeTo(this);
+		dialogBox.setVisible(true);
 	}
 
 	/**
