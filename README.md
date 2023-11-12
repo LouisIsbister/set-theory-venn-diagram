@@ -1,4 +1,4 @@
-# Set-Theory-Venn-Diagram, Louis Isbister
+# Set Theory Venn Diagrams
 
 
 # About:
