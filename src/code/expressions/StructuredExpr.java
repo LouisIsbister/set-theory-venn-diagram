@@ -2,18 +2,16 @@ package code.expressions;
 
 public class StructuredExpr {
 
-    private String ret;
+    private static String ret;
 
-    public StructuredExpr(String expr) {
+    /**
+     * @param expr, the user provided expression
+     * @return
+     * @throws InvalidExpressionException
+     */
+    public static String get(String expr) throws InvalidExpressionException {
         ret = "";
-        try {
-            restructureExpression(expr);
-        } catch (InvalidExpressionException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String get() {
+        restructureExpression(expr);
         System.out.println(ret);
         return ret;
     }
@@ -22,19 +20,23 @@ public class StructuredExpr {
      * convert the user provided expression into cambridge polish notation.
      * for every character in the expression, if the character is not a valid
      * set identifier, i.e. [a-zA-Z].
+     * 
      * @throws Exception
      */
-    public void restructureExpression(String str) throws InvalidExpressionException {
+    public static void restructureExpression(String str) throws InvalidExpressionException {
         str = str.trim();
-        if (str.length() < 1) 
+        if (str.length() < 1)
             return;
+
+        while (str.charAt(0) == '(' && str.charAt(str.length() - 1) == ')' && str.length() > 1)
+            str = str.substring(1, str.length() - 1);
 
         // char[] arr = str.toCharArray();
 
         int openBracketCount = 0;
         int closedBracketCount = 0;
 
-        int cen = 0; 
+        int cen = 0;
 
         // for (int i = 0; i < str.length(); i++) {
         for (int i = str.length() - 1; i >= 0; i--) {
@@ -42,7 +44,7 @@ public class StructuredExpr {
 
             if (c == ' ')
                 continue;
-            
+
             if (c == '(')
                 openBracketCount++;
             else if (c == ')')
@@ -50,31 +52,51 @@ public class StructuredExpr {
             // find the center most opertor
             else if (!(c + "").matches("[a-zA-Z]")) {
                 cen = i;
-                if (openBracketCount == closedBracketCount) 
-                    break;               
+                if (openBracketCount == closedBracketCount)
+                    break;
             }
         }
 
-        // if (closedBracketCount != openBracketCount) 
-        //     throw new Exception("Unclosed brackets");
+        if (closedBracketCount != openBracketCount && str.length() > 2)
+            throw new InvalidExpressionException("Unmatching brackets");
 
-        String left = str.substring(0, cen);
-        String right = str.substring(cen + 1, str.length());
+        String left = str.substring(0, cen).trim();
+        String right = str.substring(cen + 1, str.length()).trim();
 
-        // ((B ∪ C) ∩ A) ∪ (B ∩ C)
+        char ch = str.charAt(cen);
+        if (ch != ')' && ch != '(')
+            ret += ch + " ";
 
-        System.out.println("dbg 1: " + str.charAt(cen));
-        System.out.println("dbg 2: " + left);
-        System.out.println("dbg 3: " + right);
-
-        String post = str.charAt(cen) + "";
-
-        if (post.charAt(0) != ')' && post.charAt(0) != '(')
-            ret += post + " ";
-
-        if (left.length() > 0)
+        if (left.length() > 0 && !left.isBlank())
             restructureExpression(left);
-        if (right.length() > 0)
+        if (right.length() > 0 && !right.isBlank())
             restructureExpression(right);
     }
+
+    // private static void formatBracketException(String str) throws InvalidExpressionException {
+    //     int openBrCount = 0;
+    //     int closeBrCount = 0;
+    //     int idx = 0;
+    //     for (int i = 0; i < str.length(); i++) {
+    //         char c = str.charAt(i);
+
+    //         if (c == '(' || c == ')') {
+    //             if (c == '(')
+    //                 openBrCount++;
+    //             else if (c == ')')
+    //                 closeBrCount++;
+    //             // find the center most opertor
+    //             if (openBrCount != closeBrCount) {
+    //                 idx = i;
+    //             }
+    //         }
+    //     }
+    //     System.out.println("mismatch: " + idx);
+    //     String ret = "<br>" + str + "<br>";
+    //     ret += " ".repeat(idx);
+    //     ret += "^";
+    //     ret += " ".repeat(str.length() - idx) + "";
+    //     System.out.println(ret);
+    //     throw new InvalidExpressionException(ret);
+    // }
 }

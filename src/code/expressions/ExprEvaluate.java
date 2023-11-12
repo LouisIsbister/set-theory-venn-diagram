@@ -53,7 +53,8 @@ public class ExprEvaluate {
 
 	public ExprEvaluate(String expr) throws InvalidExpressionException {
 		root = null;
-		expression = new StructuredExpr(expr).get(); // get the polish notation representation of the expression
+		// expression = new StructuredExpr(expr).get(); // get the polish notation representation of the expression
+		expression = StructuredExpr.get(expr);
 
 		parseExpression();
 		propagateSetNodes();
