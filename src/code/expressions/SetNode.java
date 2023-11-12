@@ -1,4 +1,4 @@
-package code.binarytree;
+package code.expressions;
 
 import java.util.Collections;
 import java.util.HashSet;

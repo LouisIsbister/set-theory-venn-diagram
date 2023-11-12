@@ -19,7 +19,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import code.binarytree.*;
+import code.expressions.*;
 
 public class AppFrame extends JFrame {
 

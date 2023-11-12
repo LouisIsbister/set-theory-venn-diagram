@@ -70,13 +70,22 @@ public class ExpressionInterface extends JDialog {
         add(panel);
     }
 
+    /**
+     * 
+     * @param insertString
+     */
     private void updateExprField(String insertString) {
         StringBuilder txt = new StringBuilder(expressionField.getText());
         txt.insert(expressionField.getCaretPosition(), insertString);
         
         expressionField.setText(txt.toString());
+        expressionField.requestFocus();
     }
 
+    /**
+     * Adds the various buttons that allow the user to input the math notation 
+     * into their expressions 
+     */
     private void addButtons() {
         JButton intersect = new JButton("\u2229");
         intersect.setBounds(10, 40, 50, 50);

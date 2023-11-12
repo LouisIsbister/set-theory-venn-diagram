@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import code.binarytree.BTNode;
-import code.binarytree.Coordinate;
+import code.expressions.BTNode;
+import code.expressions.Coordinate;
 
 /**
  * Set difference class, in mathmatical notaion x\y
@@ -23,7 +23,7 @@ public class Difference implements Operator {
 	 *               @return, the difference between left and right nodes
 	 */
 	@Override
-	public Set<Coordinate> evaluate(BTNode left, BTNode right) throws Exception {
+	public Set<Coordinate> evaluate(BTNode left, BTNode right) throws IllegalArgumentException {
 		Set<Coordinate> leftSet = left.evaluate();
 		Set<Coordinate> rightSet = right.evaluate();
 

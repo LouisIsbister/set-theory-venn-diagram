@@ -1,4 +1,4 @@
-package code.binarytree;
+package code.expressions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,7 +51,7 @@ public class ExprEvaluate {
 		}
 	};
 
-	public ExprEvaluate(String expr) throws Exception {
+	public ExprEvaluate(String expr) throws InvalidExpressionException {
 		root = null;
 		expression = new StructuredExpr(expr).get(); // get the polish notation representation of the expression
 
@@ -90,7 +90,7 @@ public class ExprEvaluate {
 	 *                    @return, the root node of binary tree representation of
 	 *                    the expression
 	 */
-	public BTNode parseExpression() throws Exception {
+	public BTNode parseExpression() throws InvalidExpressionException {
 		Scanner scan = new Scanner(expression);
 
 		scan.useDelimiter("([\\(\s])");
@@ -100,15 +100,15 @@ public class ExprEvaluate {
 
 		// user provided too many or no arguments
 		if (scan.hasNext())
-			throw new Exception("'Invalid format: too many arguments were provided.'");
+			throw new InvalidExpressionException("'Invalid format: too many arguments were provided.'");
 		if (setNodes.size() < 1)
-			throw new Exception("'Invalid format: no arguments were provided.'");
+			throw new InvalidExpressionException("'Invalid format: no arguments were provided.'");
 
 		// user entered incorrect set identifiers
 		boolean validSetIdentifiers = setNodes.keySet().stream()
 				.allMatch(sn -> Pattern.matches("[a-zA-Z]", sn));
 		if (!validSetIdentifiers)
-			throw new Exception("'Invalid format: make sure sets are in the from a-z or A-Z'");
+			throw new InvalidExpressionException("'Invalid format: make sure sets are in the from a-z or A-Z'");
 
 		scan.close();
 		return root;

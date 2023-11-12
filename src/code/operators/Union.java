@@ -3,8 +3,8 @@ package code.operators;
 import java.util.HashSet;
 import java.util.Set;
 
-import code.binarytree.BTNode;
-import code.binarytree.Coordinate;
+import code.expressions.BTNode;
+import code.expressions.Coordinate;
 
 /**
  * Set union class, in mathmatical notaion (x U y)
@@ -22,7 +22,7 @@ public class Union implements Operator {
 	 *               @return, the union of left and right nodes
 	 */
 	@Override
-	public Set<Coordinate> evaluate(BTNode left, BTNode right) throws Exception {
+	public Set<Coordinate> evaluate(BTNode left, BTNode right) throws IllegalArgumentException {
 		Set<Coordinate> allCoords = new HashSet<>();
 		allCoords.addAll(left.evaluate());
 		allCoords.addAll(right.evaluate());

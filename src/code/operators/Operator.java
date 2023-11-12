@@ -2,8 +2,8 @@ package code.operators;
 
 import java.util.Set;
 
-import code.binarytree.BTNode;
-import code.binarytree.Coordinate;
+import code.expressions.BTNode;
+import code.expressions.Coordinate;
 
 /**
  * Operator interface, each operator overrides
@@ -11,5 +11,5 @@ import code.binarytree.Coordinate;
  * operation on the sets.
  */
 public interface Operator {
-	public Set<Coordinate> evaluate(BTNode left, BTNode right) throws Exception;
+	public Set<Coordinate> evaluate(BTNode left, BTNode right) throws IllegalArgumentException;
 }

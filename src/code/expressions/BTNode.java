@@ -1,4 +1,4 @@
-package code.binarytree;
+package code.expressions;
 
 import java.util.Set;
 
@@ -41,11 +41,9 @@ public class BTNode {
 	 * the two sets.
 	 * 
 	 * @return, the set of coordinates when two nodes are evaluated by an operator
-	 * 
-	 * @throws Exception, if either the left or right node is null then throw an
-	 *                    IllegalArgumentException.
+	 * @throws IllegalArgumentException, if either the left or right node is null
 	 */
-	public Set<Coordinate> evaluate() throws Exception {
+	public Set<Coordinate> evaluate() throws IllegalArgumentException {
 		if (left == null || right == null) {
 			throw new IllegalArgumentException(
 					this.toString() + ": an argument is undefined, please reformat your experssion.");

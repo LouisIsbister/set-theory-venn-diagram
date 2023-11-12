@@ -11,8 +11,8 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
-import code.binarytree.Coordinate;
-import code.binarytree.SetNode;
+import code.expressions.Coordinate;
+import code.expressions.SetNode;
 
 /**
  * panel that displays the Venn diagrams
