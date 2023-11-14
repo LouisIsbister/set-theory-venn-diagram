@@ -52,7 +52,7 @@ public class ExprEvaluate {
 
 	public ExprEvaluate(String expr) throws InvalidExpressionException {
 		root = null;
-		expression = StructuredExpr.get(expr);
+		expression = StructuredExpr.restructureExpression(expr);
 
 		parseExpression();
 		propagateSetNodes();
