@@ -48,6 +48,18 @@ The user can formulate an expression that consists of operators and sets, when w
 
 For example, a valid the equation could be '(A ∩ B)' or 'A ∩ B ∩ C'.  
 
+# Expression ambiguity:  
+Sometimes it is ambigious as to how an expressions should be executed, for example, there may be mulitple ways that an expression such as `a ∩ b ∪ c \ d` coud be interpreted or executed. It could be read as "a and b, OR, the difference of c and d" and expressed as `(a ∩ b) ∪ (c \ d)`. It could also be read as "a AND the combination of b and the difference of c and d", which is expressed as `a ∩ (b ∪ (c \ d))`.  
+To eleviate this ambiguity all expressions are read from left to right and brackets take precendence in an expression. As a result, the expression `a ∩ b ∪ c \ d` will be executed the same as the expression `a ∩ (b ∪ (c \ d))`.   
+The expression `(a ∩ b) ∪ (c \ d)` could be visualised as, and `a ∩ b ∪ c \ d` as.
+                       `∪`                                       `∩`    
+                    /       \                                  /      \
+                  `∩`       `\`                              `a`      `∪`
+                /     \    /     \                                 /       \        
+              `a`     `b` `c`    `d`                             `b`       `\`
+                                                                         /      \   
+                                                                       `c`      `d`
+
 # More valid expressions:  
 a ∪ (b ∩ c)              "a or b and c"  
 (a ∩ b) ∪ (c ∩ d)        "a and b or c and d"  
