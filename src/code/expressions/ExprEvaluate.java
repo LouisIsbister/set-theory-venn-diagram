@@ -53,6 +53,7 @@ public class ExprEvaluate {
 	public ExprEvaluate(String expr) throws InvalidExpressionException {
 		root = null;
 		expression = StructuredExpr.restructureExpression(expr);
+		System.out.println(expression);
 
 		parseExpression();
 		propagateSetNodes();

@@ -135,45 +135,28 @@ public class AppFrame extends JFrame {
 	private void displayExpressionHistory() {
 		JDialog dialogBox = new JDialog(this, "Your Previous Expressions", true);
 
-		int height = 35;
-		String content = "<html><center>History:";
-		if (exprHistory.size() == 0) {
-			height += 60;
-			content += "<br><i>Not applicable</i>";
-		} else {
-			height += (exprHistory.size() + 1) * 30;
-			for (int i = 0; i < exprHistory.size(); i++)
-				content += "<br>" + exprHistory.get(i);
-		}
-
-		content += "</center></html>";
+		int height = 30 + exprHistory.size() * 50;
 
 		JPanel panel = new JPanel();
 		panel.setVisible(true);
 		panel.setPreferredSize(new Dimension(350, height));
 		panel.setLayout(null);
 
+		for (int i = 0; i < exprHistory.size(); i++) {
+			HistoryExpr expr = new HistoryExpr(exprHistory.get(i), dialogBox);
+			expr.setBounds(0, 20 + i * 50, 350, 50);
+			panel.add(expr);
+		}
+
+		String content = "<html><center>Previous expressions:</center></html>";
 		JLabel label = new JLabel(content);
 		label.setFont(new Font("Monospaced", 1, 20));
 		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setBounds(0, 0, 350, height - 35);
-
-		JButton contiueButton = new JButton("Continue");
-		contiueButton.setBounds(100, height - 35, 150, 25);
-
-		// button to dispose the dialog box when user is satisfied
-		contiueButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dialogBox.dispose();
-			}
-		});
-
+		label.setBounds(0, 0, 350, 25);
+		
 		panel.add(label);
-		panel.add(contiueButton);
 
 		dialogBox.add(panel);
-
 		dialogBox.pack();
 		dialogBox.setLocationRelativeTo(this);
 		dialogBox.setVisible(true);
@@ -222,5 +205,40 @@ public class AppFrame extends JFrame {
 		dialogBox.pack();
 		dialogBox.setLocationRelativeTo(this);
 		dialogBox.setVisible(true);
+	}
+
+	private class HistoryExpr extends JLabel {
+
+		private JDialog dialogBox;
+
+		private JButton button;
+
+		public HistoryExpr(String text, JDialog dialogBox) {
+			super(text);
+			this.dialogBox = dialogBox;
+			button = new JButton("Redo");
+
+			setOpaque(true);
+			setVisible(true);
+			setLayout(null);
+			format();
+
+			add(button);
+		}
+
+		private void format() {
+			button.setBounds(270, 10, 70, 30);
+			
+			setFont(new Font("Monospaced", 1, 20));
+			setHorizontalAlignment(SwingConstants.LEFT);
+
+			button.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					evaluateExpression(getText());
+					dialogBox.dispose();
+				}
+			});
+		}
 	}
 }

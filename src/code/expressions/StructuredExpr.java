@@ -33,8 +33,8 @@ public class StructuredExpr {
         String ret = "";
 
         // remove the unnecassary brackets
-        while (str.charAt(0) == '(' && str.charAt(str.length() - 1) == ')' && str.length() > 2)
-            str = str.substring(1, str.length() - 1);
+        // while (str.charAt(0) == '(' && str.charAt(str.length() - 1) == ')' && str.length() > 2)
+        //     str = str.substring(1, str.length() - 1);
 
         int exprCenter = getCenterIndex(str);
         String left = str.substring(0, exprCenter).trim();
@@ -45,9 +45,9 @@ public class StructuredExpr {
             ret += ch + " ";
 
         if (left.length() > 0 && !left.isBlank())
-            ret += restructureExpression(left);
+            ret += restructure(left);
         if (right.length() > 0 && !right.isBlank())
-            ret += restructureExpression(right);
+            ret += restructure(right);
         
         return ret;
     }
@@ -68,7 +68,7 @@ public class StructuredExpr {
         int closedBracketCount = 0;
         int ret = 0;
 
-        for (int i = str.length() - 1; i >= 0; i--) {
+        for (int i = 0; i < str.length(); i++) {
             if (str.charAt(i) == ' ')
                 continue;
             
@@ -77,18 +77,18 @@ public class StructuredExpr {
                 openBracketCount++;
             else if (c == ')')
                 closedBracketCount++;
-            
             // if an operator has been found
-            if (!(c + "").matches("[a-zA-Z]")) {
+            else if (!(c + "").matches("[a-zA-Z]")) {
                 ret = i;
 
                 // if the brackets match then we've found a center
-                if (openBracketCount == closedBracketCount)    
-                    return ret;
+                if (openBracketCount == closedBracketCount) 
+                    return ret ;
+                
             }
-        }        
+        }
         return 0;
-    }  
+    } 
 
     // private static void formatBracketException(String str) throws InvalidExpressionException {
     //     int openBrCount = 0;
