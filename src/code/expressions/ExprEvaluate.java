@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import code.controller.AppPanel;
 import code.operators.*;
@@ -53,7 +52,6 @@ public class ExprEvaluate {
 
 	public ExprEvaluate(String expr) throws InvalidExpressionException {
 		root = null;
-		// expression = new StructuredExpr(expr).get(); // get the polish notation representation of the expression
 		expression = StructuredExpr.get(expr);
 
 		parseExpression();
@@ -103,14 +101,8 @@ public class ExprEvaluate {
 		if (scan.hasNext())
 			throw new InvalidExpressionException("'Invalid format: too many arguments were provided.'");
 		if (setNodes.size() < 1)
-			throw new InvalidExpressionException("'Invalid format: no arguments were provided.'");
-
-		// user entered incorrect set identifiers
-		boolean validSetIdentifiers = setNodes.keySet().stream()
-				.allMatch(sn -> Pattern.matches("[a-zA-Z]", sn));
-		if (!validSetIdentifiers)
-			throw new InvalidExpressionException("'Invalid format: make sure sets are in the from a-z or A-Z'");
-
+			throw new InvalidExpressionException("'Invalid expression: no arguments were provided.'");
+		
 		scan.close();
 		return root;
 	}
@@ -130,6 +122,14 @@ public class ExprEvaluate {
 			return null;
 
 		String next = scan.next().trim().toLowerCase();
+		// if the an invalid set id was given 
+		if (next.length() > 1) {
+			next = next.length() > 10 ? next.substring(0, 10) + "..." : next;
+			throw new IllegalArgumentException(
+					"CLIENT ERROR:" +
+					"<br>'" + next + "'<br>Is not a valid set id.");
+		}
+
 		boolean isSetNode = next.matches("[a-z]");
 
 		// if an operator has been found
@@ -146,10 +146,11 @@ public class ExprEvaluate {
 				node.setRight(parseTree(scan));
 
 			return node;
-		} else {
+		} 
+		else {
 			if (!setNodes.containsKey(next))
 				setNodes.put(next, new SetNode(next));
-			
+
 			return setNodes.get(next);
 		}
 	}
@@ -173,7 +174,8 @@ public class ExprEvaluate {
 				return new Complement();
 			default:
 				throw new IllegalArgumentException(
-						"4XX CLIENT ERROR: The operator '" + c + "' is not supported.");
+						"4XX CLIENT ERROR:" +
+						"<br>'" + c + "' is not a valid operator.");
 		}
 	}
 

@@ -154,7 +154,7 @@ public class AppFrame extends JFrame {
 		panel.setLayout(null);
 
 		JLabel label = new JLabel(content);
-		label.setFont(new Font("Arial", 0, 20));
+		label.setFont(new Font("Monospaced", 1, 20));
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setBounds(0, 0, 350, height - 35);
 
@@ -195,16 +195,16 @@ public class AppFrame extends JFrame {
 		panel.setLayout(null);
 
 		String errorMsg = "<html><center>----- Error -----" +
-				"<br>Expression evaluation falied." +
-				"<br>Please check your format." +
-				"<br>Error message: " + err.getMessage() + "</center></html>";
+				"<br>Expression evaluation failed." +
+				"<br>Error message:<b><br>" + err.getMessage() + "</center></html>";
 
 		JLabel errorLabel = new JLabel(errorMsg);
 		errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		errorLabel.setBounds(0, 0, 350, 100);
+		errorLabel.setBounds(0, 0, 350, 130);
+		errorLabel.setFont(new Font("Monospaced", 4, 14));
 
 		JButton contiueButton = new JButton("Continue");
-		contiueButton.setBounds(100, 110, 150, 25);
+		contiueButton.setBounds(100, 130, 150, 25);
 
 		// button to dispose the dialog box when user is satisfied
 		contiueButton.addActionListener(new ActionListener() {

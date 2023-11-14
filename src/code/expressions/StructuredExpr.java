@@ -25,18 +25,18 @@ public class StructuredExpr {
      */
     public static void restructureExpression(String str) throws InvalidExpressionException {
         str = str.trim();
-        if (str.length() < 1)
+        if (str.matches("[a-zA-Z]+") || str.isEmpty()) {
+            ret += str + " ";
             return;
+        }
 
-        while (str.charAt(0) == '(' && str.charAt(str.length() - 1) == ')' && str.length() > 1)
+        // remove the unnecassary brackets
+        while (str.charAt(0) == '(' && str.charAt(str.length() - 1) == ')' && str.length() > 2)
             str = str.substring(1, str.length() - 1);
-
-        // char[] arr = str.toCharArray();
 
         int openBracketCount = 0;
         int closedBracketCount = 0;
-
-        int cen = 0;
+        int exprCenter = 0;
 
         // for (int i = 0; i < str.length(); i++) {
         for (int i = str.length() - 1; i >= 0; i--) {
@@ -51,7 +51,7 @@ public class StructuredExpr {
                 closedBracketCount++;
             // find the center most opertor
             else if (!(c + "").matches("[a-zA-Z]")) {
-                cen = i;
+                exprCenter = i;
                 if (openBracketCount == closedBracketCount)
                     break;
             }
@@ -60,10 +60,10 @@ public class StructuredExpr {
         if (closedBracketCount != openBracketCount && str.length() > 2)
             throw new InvalidExpressionException("Unmatching brackets");
 
-        String left = str.substring(0, cen).trim();
-        String right = str.substring(cen + 1, str.length()).trim();
+        String left = str.substring(0, exprCenter).trim();
+        String right = str.substring(exprCenter + 1, str.length()).trim();
 
-        char ch = str.charAt(cen);
+        char ch = str.charAt(exprCenter);
         if (ch != ')' && ch != '(')
             ret += ch + " ";
 
