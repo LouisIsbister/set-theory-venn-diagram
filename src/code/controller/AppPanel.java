@@ -26,23 +26,21 @@ public class AppPanel extends JPanel {
 	 * all the coordinates that are part of the
 	 * data set.
 	 */
-	private Set<Coordinate> coords;
+	private Set<Coordinate> coords = new HashSet<>();
 
 	/**
 	 * all the sets in the expression
 	 */
-	private List<SetNode> setNodes;
+	private List<SetNode> setNodes = new ArrayList<>();
 
 	public AppPanel() {
-		coords = new HashSet<>();
-		setNodes = new ArrayList<>();
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		setOpaque(true);
 	}
 
-	public void updateDisplayData(Set<Coordinate> coords, List<SetNode> setNodes) {
-		this.coords = coords;
-		this.setNodes = setNodes;
+	public void updateDisplayData(Set<Coordinate> c, List<SetNode> s) {
+		coords = c;
+		setNodes = s;
 	}
 
 	/**

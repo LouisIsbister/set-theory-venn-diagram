@@ -120,8 +120,11 @@ public class AppFrame extends JFrame {
 			displayException(err);
 			return false;
 		}
-		exprHistory.add(text);
 
+		if (!exprHistory.contains(text))
+			exprHistory.add(text);
+
+		remove(guiPanel);
 		guiPanel.updateDisplayData(highlightCoords, nodes);
 		add(guiPanel);
 
@@ -209,36 +212,35 @@ public class AppFrame extends JFrame {
 
 	private class HistoryExpr extends JLabel {
 
+		/**
+		 * dialog box that holds/created this obj
+		 */
 		private JDialog dialogBox;
 
-		private JButton button;
+		/**
+		 * button to rerun a previous expression
+		 */
+		private JButton redoButton;
 
-		public HistoryExpr(String text, JDialog dialogBox) {
+		public HistoryExpr(String text, JDialog dialog) {
 			super(text);
-			this.dialogBox = dialogBox;
-			button = new JButton("Redo");
-
-			setOpaque(true);
-			setVisible(true);
-			setLayout(null);
-			format();
-
-			add(button);
-		}
-
-		private void format() {
-			button.setBounds(270, 10, 70, 30);
-			
 			setFont(new Font("Monospaced", 1, 20));
 			setHorizontalAlignment(SwingConstants.LEFT);
-
-			button.addActionListener(new ActionListener() {
+			setLayout(null);
+			
+			dialogBox = dialog;
+			redoButton = new JButton("Redo");
+			
+			redoButton.setBounds(270, 10, 70, 30);
+			redoButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					evaluateExpression(getText());
 					dialogBox.dispose();
 				}
 			});
+
+			add(redoButton);
 		}
 	}
 }
