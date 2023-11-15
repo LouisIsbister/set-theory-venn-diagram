@@ -71,15 +71,19 @@ public class ExpressionInterface extends JDialog {
     }
 
     /**
+     * Inserts the the operator into the textfield for the user to see. 
      * 
      * @param insertString
      */
     private void updateExprField(String insertString) {
-        StringBuilder txt = new StringBuilder(expressionField.getText());
-        txt.insert(expressionField.getCaretPosition(), insertString);
+        int pos = expressionField.getCaretPosition();
+        StringBuilder ret = new StringBuilder(expressionField.getText());
+        ret.insert(pos, insertString);
         
-        expressionField.setText(txt.toString());
+        // reset the expression field
+        expressionField.setText(ret.toString());
         expressionField.requestFocus();
+        expressionField.setCaretPosition(pos + insertString.length());
     }
 
     /**

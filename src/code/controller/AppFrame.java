@@ -223,7 +223,7 @@ public class AppFrame extends JFrame {
 		private JButton redoButton;
 
 		public HistoryExpr(String text, JDialog dialog) {
-			super(text);
+			super(" " + text);    // add a space for formating
 			setFont(new Font("Monospaced", 1, 20));
 			setHorizontalAlignment(SwingConstants.LEFT);
 			setLayout(null);
