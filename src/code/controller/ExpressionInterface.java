@@ -31,6 +31,7 @@ public class ExpressionInterface extends JDialog {
         this.frame = frame;
 
         display();
+        addButtons();
 
         pack();
         setLocationRelativeTo(null);
@@ -38,7 +39,7 @@ public class ExpressionInterface extends JDialog {
     }
 
     /**
-     * 
+     * display the expression interface dialog box
      */
     private void display() {
         panel = new JPanel();
@@ -65,25 +66,7 @@ public class ExpressionInterface extends JDialog {
 
         panel.add(expressionField);
         panel.add(confirmButton);
-        addButtons();
-
         add(panel);
-    }
-
-    /**
-     * Inserts the the operator into the textfield for the user to see. 
-     * 
-     * @param insertString
-     */
-    private void updateExprField(String insertString) {
-        int pos = expressionField.getCaretPosition();
-        StringBuilder ret = new StringBuilder(expressionField.getText());
-        ret.insert(pos, insertString);
-        
-        // reset the expression field
-        expressionField.setText(ret.toString());
-        expressionField.requestFocus();
-        expressionField.setCaretPosition(pos + insertString.length());
     }
 
     /**
@@ -131,5 +114,21 @@ public class ExpressionInterface extends JDialog {
         panel.add(union);
         panel.add(difference);
         panel.add(complement);
+    }
+    
+    /**
+     * Inserts the the operator into the textfield for the user to see. 
+     * 
+     * @param insertString
+     */
+    private void updateExprField(String insertString) {
+        int pos = expressionField.getCaretPosition();
+        StringBuilder ret = new StringBuilder(expressionField.getText());
+        ret.insert(pos, insertString);
+        
+        // reset the expression field
+        expressionField.setText(ret.toString());
+        expressionField.requestFocus();
+        expressionField.setCaretPosition(pos + insertString.length());
     }
 }
