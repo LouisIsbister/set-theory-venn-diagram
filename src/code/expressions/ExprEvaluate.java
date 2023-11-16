@@ -95,16 +95,16 @@ public class ExprEvaluate {
 	public BTNode parseExpression() throws InvalidExpressionException {
 		Scanner scan = new Scanner(expression);
 
-		scan.useDelimiter("([\\(\s])");
+		scan.useDelimiter("\s");
 
 		// recursively create the binary tree
 		root = parseTree(scan);
 
 		// user provided too many or no arguments
 		if (scan.hasNext())
-			throw new InvalidExpressionException("'Invalid format: too many arguments were provided.'");
+			throw new InvalidExpressionException("'Invalid expression: too many arguments were provided.'");
 		if (setNodes.size() < 1)
-			throw new InvalidExpressionException("'Invalid expression: no arguments were provided.'");
+			throw new InvalidExpressionException("'Invalid expression: no set/data was provided.'");
 		
 		scan.close();
 		return root;
@@ -124,19 +124,16 @@ public class ExprEvaluate {
 		if (!scan.hasNext())
 			return null;
 
-		String next = scan.next().trim().toLowerCase();
-		// if the an invalid set id was given 
+		String next = scan.next().toLowerCase();
+		// an invalid argument was found 
 		if (next.length() > 1) {
 			next = next.length() > 10 ? next.substring(0, 10) + "..." : next;
-			throw new IllegalArgumentException(
-					"CLIENT ERROR:" +
-					"<br>'" + next + "'<br>Is not a valid set id.");
+			throw new IllegalArgumentException("CLIENT ERROR:<br>'" + next + "' is not supported/recognised");
 		}
 
-		boolean isSetNode = next.matches("[a-z]");
-
-		// if an operator has been found
-		if (!isSetNode) {
+		boolean isSetIdentifier = next.matches("[a-z]");
+		if (!isSetIdentifier) {
+			// an operator has been found
 			Operator op = parseOperator(next.charAt(0));
 			BTNode node = new BTNode(op);
 
@@ -176,9 +173,7 @@ public class ExprEvaluate {
 			case '~':
 				return new Complement();
 			default:
-				throw new IllegalArgumentException(
-						"4XX CLIENT ERROR:" +
-						"<br>'" + c + "' is not a valid operator.");
+				throw new IllegalArgumentException("CLIENT ERROR:<br>'" + c + "' is not a valid operator.");
 		}
 	}
 
