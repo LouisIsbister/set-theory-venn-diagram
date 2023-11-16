@@ -117,7 +117,7 @@ public class AppFrame extends JFrame {
 		} catch (Exception err) {
 			err.printStackTrace();
 
-			displayException(err);
+			displayException(err.getMessage());
 			return false;
 		}
 
@@ -172,7 +172,7 @@ public class AppFrame extends JFrame {
 	 * 
 	 * @param err, the exception to be displayed
 	 */
-	private void displayException(Exception err) {
+	private void displayException(String errStr) {
 		JDialog dialogBox = new JDialog(this, "Enter your Expression", true);
 
 		JPanel panel = new JPanel();
@@ -182,7 +182,7 @@ public class AppFrame extends JFrame {
 
 		String errorMsg = "<html><center>----- Error -----" +
 				"<br>Expression evaluation failed." +
-				"<br>Error message:<b><br>" + err.getMessage() + "</center></html>";
+				"<br>Error message:<b><br>" + errStr + "</center></html>";
 
 		JLabel errorLabel = new JLabel(errorMsg);
 		errorLabel.setHorizontalAlignment(SwingConstants.CENTER);

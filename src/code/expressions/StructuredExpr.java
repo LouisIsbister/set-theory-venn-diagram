@@ -10,10 +10,10 @@ public class StructuredExpr {
     public static String restructureExpression(String expr) throws InvalidExpressionException {
         int openParenCount = (int) expr.codePoints().filter(e -> e == '(').count();
         int closedParenCount = (int) expr.codePoints().filter(e -> e == ')').count();
-        
+
         // if the brackets do not match then throw an exception
         if (openParenCount != closedParenCount)
-            throw new InvalidExpressionException("Unmatching brackets");
+            throw new InvalidExpressionException(formatBracketException(expr));
 
         return restructure(expr);
     }
@@ -27,15 +27,10 @@ public class StructuredExpr {
      */
     private static String restructure(String str) throws InvalidExpressionException {
         str = str.trim();
-        if (str.matches("[a-zA-Z]+") || str.isEmpty()) 
+        if (str.matches("[a-zA-Z]+") || str.isEmpty())
             return str + " ";
-        
+
         String ret = "";
-
-        // remove the unnecassary brackets
-        // while (str.charAt(0) == '(' && str.charAt(str.length() - 1) == ')' && str.length() > 2)
-        //     str = str.substring(1, str.length() - 1);
-
         int exprCenter = getCenterIndex(str);
         String left = str.substring(0, exprCenter).trim();
         String right = str.substring(exprCenter + 1, str.length()).trim();
@@ -48,22 +43,26 @@ public class StructuredExpr {
             ret += restructure(left);
         if (right.length() > 0 && !right.isBlank())
             ret += restructure(right);
-        
+
         return ret;
     }
 
     /**
      * Method that finds the "center" of an expression or sub-expression.
-     * The center is the most recent operator that is contained within 
-     * matching open and closed brackets. 
+     * The center is the most recent operator that is contained within
+     * matching open and closed brackets.
      * i.e. a ∩ (b ∪ c)
-     *             ^ is the center of this expression 
+     *        ^ is the center of this expression as the brackets
+     *          are matching, i.e. there are none
      * 
      * @param str, the string that is being searched for an operator
      * @return, the index of the operator if one is found
      * @throws InvalidExpressionException
      */
     private static int getCenterIndex(String str) throws InvalidExpressionException {
+        if (str.length() <= 1)
+            return 0;
+
         int openBracketCount = 0;
         int closedBracketCount = 0;
         int ret = 0;
@@ -71,7 +70,7 @@ public class StructuredExpr {
         for (int i = 0; i < str.length(); i++) {
             if (str.charAt(i) == ' ')
                 continue;
-            
+
             char c = str.charAt(i);
             if (c == '(')
                 openBracketCount++;
@@ -82,38 +81,39 @@ public class StructuredExpr {
                 ret = i;
 
                 // if the brackets match then we've found a center
-                if (openBracketCount == closedBracketCount) 
-                    return ret ;
-                
+                if (openBracketCount == closedBracketCount)
+                    return ret;
             }
         }
+
+        // if no center was found then their is either a too many open brackets
+        // or there is operator
         return 0;
-    } 
+    }
 
-    // private static void formatBracketException(String str) throws InvalidExpressionException {
-    //     int openBrCount = 0;
-    //     int closeBrCount = 0;
-    //     int idx = 0;
-    //     for (int i = 0; i < str.length(); i++) {
-    //         char c = str.charAt(i);
-
-    //         if (c == '(' || c == ')') {
-    //             if (c == '(')
-    //                 openBrCount++;
-    //             else if (c == ')')
-    //                 closeBrCount++;
-    //             // find the center most opertor
-    //             if (openBrCount != closeBrCount) {
-    //                 idx = i;
-    //             }
-    //         }
-    //     }
-    //     System.out.println("mismatch: " + idx);
-    //     String ret = "<br>" + str + "<br>";
-    //     ret += " ".repeat(idx);
-    //     ret += "^";
-    //     ret += " ".repeat(str.length() - idx) + "";
-    //     System.out.println(ret);
-    //     throw new InvalidExpressionException(ret);
-    // }
+    /**
+     * Creates a formatted string that points to where the bracket imbalance occurs
+     * 
+     * @param str, the string that caused the error
+     * @return, the formatted string
+     */
+    private static String formatBracketException(String str) {
+        int balance = 0;
+        int idx = 0;
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            if (c == '(')
+                balance++;
+            else if (c == ')')
+                balance--;
+            
+            if (balance != 0 && (c == ')' || c == '(')) 
+                idx = i;
+        }
+        
+        String insrt = balance < 0 ? "open" : "closed";
+        String ret = "Unmatching brackets: require '"+ insrt + "'<br>" + str + "<br>";
+        ret += "_".repeat(idx - 1) + "^" + "_".repeat(str.length() - idx - 1);
+        return ret;
+    }
 }
