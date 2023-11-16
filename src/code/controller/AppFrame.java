@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import code.expressions.*;
+import code.util.Coordinate;
 
 public class AppFrame extends JFrame {
 

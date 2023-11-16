@@ -1,5 +1,7 @@
 package code.expressions;
 
+import code.util.InvalidExpressionException;
+
 public class StructuredExpr {
 
     /**

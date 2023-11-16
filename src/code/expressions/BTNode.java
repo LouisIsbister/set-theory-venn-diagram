@@ -3,6 +3,7 @@ package code.expressions;
 import java.util.Set;
 
 import code.operators.Operator;
+import code.util.Coordinate;
 
 public class BTNode {
 

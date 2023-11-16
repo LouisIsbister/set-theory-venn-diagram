@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import code.expressions.BTNode;
-import code.expressions.Coordinate;
+import code.util.Coordinate;
 
 /**
  * Set difference class, in mathmatical notaion x\y

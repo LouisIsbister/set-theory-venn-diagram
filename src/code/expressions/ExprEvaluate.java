@@ -9,6 +9,8 @@ import java.util.Set;
 
 import code.controller.AppPanel;
 import code.operators.*;
+import code.util.Coordinate;
+import code.util.InvalidExpressionException;
 
 public class ExprEvaluate {
 

@@ -3,7 +3,7 @@ package code.operators;
 import java.util.Set;
 
 import code.expressions.BTNode;
-import code.expressions.Coordinate;
+import code.util.Coordinate;
 
 /**
  * Operator interface, each operator overrides

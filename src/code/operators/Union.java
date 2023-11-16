@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import code.expressions.BTNode;
-import code.expressions.Coordinate;
+import code.util.Coordinate;
 
 /**
  * Set union class, in mathmatical notaion (x U y)
