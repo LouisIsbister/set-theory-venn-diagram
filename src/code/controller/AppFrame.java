@@ -143,20 +143,24 @@ public class AppFrame extends JFrame {
 
 		JPanel panel = new JPanel();
 		panel.setVisible(true);
-		panel.setPreferredSize(new Dimension(350, height));
+		panel.setPreferredSize(new Dimension(450, height));
 		panel.setLayout(null);
 
 		for (int i = 0; i < exprHistory.size(); i++) {
-			HistoryExpr expr = new HistoryExpr(exprHistory.get(i), dialogBox);
-			expr.setBounds(0, 20 + i * 50, 350, 50);
+			String text = exprHistory.get(i);
+			if (text.length() > 35)
+				text = text.substring(0, 35) + ".."; 
+			
+			HistoryExpr expr = new HistoryExpr(text, dialogBox);
+			expr.setBounds(0, 20 + i * 50, 450, 50);
 			panel.add(expr);
 		}
 
 		String content = "<html><center>Previous expressions:</center></html>";
 		JLabel label = new JLabel(content);
-		label.setFont(new Font("Monospaced", 1, 20));
+		label.setFont(new Font("Monospaced", 1, 15));
 		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setBounds(0, 0, 350, 25);
+		label.setBounds(0, 0, 450, 25);
 		
 		panel.add(label);
 
@@ -225,14 +229,14 @@ public class AppFrame extends JFrame {
 
 		public HistoryExpr(String text, JDialog dialog) {
 			super(" " + text);
-			setFont(new Font("Monospaced", 1, 20));
+			setFont(new Font("Monospaced", 1, 15));
 			setHorizontalAlignment(SwingConstants.LEFT);
 			setLayout(null);
 			
 			dialogBox = dialog;
 			redoButton = new JButton("Redo");
 			
-			redoButton.setBounds(270, 10, 70, 30);
+			redoButton.setBounds(370, 10, 70, 30);
 			redoButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
