@@ -1,22 +1,25 @@
 package code.expressions;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import code.util.InvalidExpressionException;
 
 public class StructuredExpr {
+
+    private static Queue<Character> expression;
 
     /**
      * @param expr, the user provided expression
      * @return, the restructured expression
      * @throws InvalidExpressionException
      */
-    public static String restructureExpression(String expr) throws InvalidExpressionException {
-        int openParenCount = (int) expr.codePoints().filter(e -> e == '(').count();
-        int closedParenCount = (int) expr.codePoints().filter(e -> e == ')').count();
+    public static Queue<Character> restructureExpression(String expr) throws InvalidExpressionException {
+        validateExpression(expr);
 
-        // if the brackets do not match then throw an exception
-        if (openParenCount != closedParenCount)
-            throw new InvalidExpressionException(formatBracketException(expr));
-
+        expression  = new ArrayDeque<>();
         return restructure(expr);
     }
 
@@ -27,26 +30,27 @@ public class StructuredExpr {
      * 
      * @throws InvalidExpressionException
      */
-    private static String restructure(String str) throws InvalidExpressionException {
+    private static Queue<Character> restructure(String str) throws InvalidExpressionException {
         str = str.trim();
-        if (str.matches("[a-zA-Z]+") || str.isEmpty())
-            return str + " ";
-
-        String ret = "";
+        if (str.isEmpty() || str.equals("\\(") || str.equals("\\)"))
+            return null;
+        
         int exprCenter = getCenterIndex(str);
         String left = str.substring(0, exprCenter).trim();
         String right = str.substring(exprCenter + 1, str.length()).trim();
 
         char ch = str.charAt(exprCenter);
-        if (ch != ')' && ch != '(')
-            ret += ch + " ";
-
+        // System.out.println("DBG:: Cen-> " + ch + ", left-> " + left + ", right-> " + right);
+        
+        if (ch != ')' && ch != '(') 
+            expression.add(ch);
+        
         if (left.length() > 0 && !left.isBlank())
-            ret += restructure(left);
+            restructure(left);
         if (right.length() > 0 && !right.isBlank())
-            ret += restructure(right);
+            restructure(right);
 
-        return ret;
+        return expression;
     }
 
     /**
@@ -91,6 +95,30 @@ public class StructuredExpr {
         // if no center was found then their is either a too many open brackets
         // or there is operator
         return 0;
+    }
+
+    /**
+     * Check that all the set ids are no longer than one letter. 
+     * Check that the open and closed bracket counts are equal.
+     * 
+     * @param str, the provided expression
+     * @throws InvalidExpressionException
+     */
+    private static void validateExpression(String str) throws InvalidExpressionException {
+        // check set ids
+        Pattern pattern = Pattern.compile("[a-zA-Z]{2,}");
+        Matcher matcher = pattern.matcher(str);
+        if (matcher.find()) {
+            String s = matcher.group();
+            String ret = s.length() > 10 ? s.substring(0, 10) + "..." : s;
+            throw new InvalidExpressionException("Set ids must be one letter.<br>Found '" + ret + "'");
+        }
+
+        // check brackets
+        int openParenCount = (int) str.codePoints().filter(e -> e == '(').count();
+        int closedParenCount = (int) str.codePoints().filter(e -> e == ')').count();
+        if (openParenCount != closedParenCount)
+            throw new InvalidExpressionException(formatBracketException(str));
     }
 
     /**

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Scanner;
+import java.util.Queue;
 import java.util.Set;
 
 import code.controller.AppPanel;
@@ -26,14 +26,14 @@ public class ExprEvaluate {
 	private BTNode root;
 
 	/**
-	 * expression from the user
+	 * characters in the expression
 	 */
-	private String expression;
+	private Queue<Character> expression;
 
 	/**
 	 * Map of all the sets in the expression
 	 */
-	private Map<String, SetNode> setNodes = new HashMap<>();
+	private Map<Character, SetNode> setNodes = new HashMap<>();
 
 	/**
 	 * The universal set represents all the available data and is constant.
@@ -69,9 +69,7 @@ public class ExprEvaluate {
 	}
 
 	/**
-	 * Retrieves all the set nodes (leaf nodes)
-	 * 
-	 * @return, a collection of set nodes
+	 * @return, the collection of set nodes
 	 */
 	public ArrayList<SetNode> setNodes() {
 		return new ArrayList<SetNode>(setNodes.values());
@@ -79,34 +77,28 @@ public class ExprEvaluate {
 
 	/**
 	 * This method intialises the creation of the tree structure.
-	 * It first calls the recursive method to build the binary tree, it then checks
-	 * for formatting
-	 * errors, these cases are when the user has provided too many arguments, not
-	 * enough arguments,
-	 * or invalid set identifiers.
-	 * It then calls the propagateSetNodes method that fills the sets with
-	 * pixels/data before
-	 * returning the root of the binary tree.
+	 * It first calls the recursive method to build the binary tree. It 
+	 * then checks for formatting errors where too many arguments were
+	 * provided or if there are invalid set identifiers.
 	 * 
 	 * @param expression, the expression that is to be evaluated
 	 *                    @return, the root node of binary tree representation of
 	 *                    the expression
+	 * @return, the root of the binary tree
 	 */
 	public BTNode parseExpression() throws InvalidExpressionException {
-		Scanner scan = new Scanner(expression);
-
-		scan.useDelimiter("\s");
-
-		// recursively create the binary tree
-		root = parseTree(scan);
+		root = parseTree();
 
 		// user provided too many or no arguments
-		if (scan.hasNext())
-			throw new InvalidExpressionException("'Invalid expression: too many arguments were provided.'");
+		if (!expression.isEmpty()) {
+			String ret = "Invalid expression: too many arguments were provided.<br>"
+					+ "Remaining unrecogised args: " + expression;
+			throw new InvalidExpressionException(ret);
+		}
+			
 		if (setNodes.size() < 1)
-			throw new InvalidExpressionException("'Invalid expression: no set/data was provided.'");
+			throw new InvalidExpressionException("Invalid expression: no set/data was provided.");
 		
-		scan.close();
 		return root;
 	}
 
@@ -119,37 +111,33 @@ public class ExprEvaluate {
 	 * 
 	 * @param scan, the scanner that traverses the expression
 	 *              @return, the root node of the binary tree
+	 * @throws InvalidExpressionException
 	 */
-	private BTNode parseTree(Scanner scan) {
-		if (!scan.hasNext())
+	private BTNode parseTree() throws InvalidExpressionException {
+		if (expression.isEmpty())
 			return null;
 
-		String next = scan.next().toLowerCase();
-		// an invalid argument was found 
-		if (next.length() > 1) {
-			next = next.length() > 10 ? next.substring(0, 10) + "..." : next;
-			throw new IllegalArgumentException("CLIENT ERROR:<br>'" + next + "' is not supported/recognised");
-		}
+		char next = expression.poll();
+		boolean isSetIdentifier = (next + "").matches("[a-zA-Z]");
 
-		boolean isSetIdentifier = next.matches("[a-z]");
 		if (!isSetIdentifier) {
-			// an operator has been found
-			Operator op = parseOperator(next.charAt(0));
+			Operator op = parseOperator(next);
 			BTNode node = new BTNode(op);
 
-			node.setLeft(parseTree(scan));
+			node.setLeft(parseTree());
 
 			// if the operator is a complement then the right node must be the universal set
 			if (op instanceof Complement)
 				node.setRight(universalSet);
 			else
-				node.setRight(parseTree(scan));
+				node.setRight(parseTree());
 
 			return node;
 		} 
 		else {
+			next = Character.toLowerCase(next);
 			if (!setNodes.containsKey(next))
-				setNodes.put(next, new SetNode(next));
+				setNodes.put(next, new SetNode(next + ""));
 
 			return setNodes.get(next);
 		}
@@ -161,8 +149,9 @@ public class ExprEvaluate {
 	 * 
 	 * @param c, the operator
 	 *           @return, an instance of the operator
+	 * @throws InvalidExpressionException
 	 */
-	private Operator parseOperator(char c) {
+	private Operator parseOperator(char c) throws InvalidExpressionException {
 		switch (c) {
 			case '\u222A':
 				return new Union();
@@ -173,7 +162,7 @@ public class ExprEvaluate {
 			case '~':
 				return new Complement();
 			default:
-				throw new IllegalArgumentException("CLIENT ERROR:<br>'" + c + "' is not a valid operator.");
+				throw new InvalidExpressionException("'" + c + "' is an invalid operator.");
 		}
 	}
 
