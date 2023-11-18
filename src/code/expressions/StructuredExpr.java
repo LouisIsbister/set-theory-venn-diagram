@@ -19,7 +19,7 @@ public class StructuredExpr {
     public static Queue<Character> restructureExpression(String expr) throws InvalidExpressionException {
         validateExpression(expr);
 
-        expression  = new ArrayDeque<>();
+        expression = new ArrayDeque<>();
         return restructure(expr);
     }
 
@@ -33,7 +33,7 @@ public class StructuredExpr {
     private static Queue<Character> restructure(String str) throws InvalidExpressionException {
         str = str.trim();
         if (str.isEmpty() || str.equals("\\(") || str.equals("\\)"))
-            return null;
+            return expression;
         
         int exprCenter = getCenterIndex(str);
         String left = str.substring(0, exprCenter).trim();
@@ -114,10 +114,23 @@ public class StructuredExpr {
             throw new InvalidExpressionException("Set ids must be one letter.<br>Found '" + ret + "'");
         }
 
-        // check brackets
-        int openParenCount = (int) str.codePoints().filter(e -> e == '(').count();
-        int closedParenCount = (int) str.codePoints().filter(e -> e == ')').count();
-        if (openParenCount != closedParenCount)
+        // check bracket formatting
+        int balance = 0;
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+            char ch = i == str.length() - 1 ? ' ' : str.charAt(i + 1);
+            if (c == '(')
+                balance++;
+            else if (c == ')')
+                balance--;
+
+            // if there are recurring brackets that contains nothing, i.e. a ∩ () b
+            if ((c == '(' && ch == ')') || (ch == '(' && c == ')'))
+                throw new InvalidExpressionException("Brackets must contain an expression.");
+        }
+
+        // check that the number of open brackets == number of closed brackets
+        if (balance != 0)
             throw new InvalidExpressionException(formatBracketException(str));
     }
 
@@ -143,7 +156,7 @@ public class StructuredExpr {
         
         String insrt = balance < 0 ? "open" : "closed";
         String ret = "Unmatching brackets: require '"+ insrt + "'<br>" + str + "<br>";
-        ret += "_".repeat(idx - 1) + "^" + "_".repeat(str.length() - idx - 1);
+        ret += "_".repeat(idx) + "^" + "_".repeat(str.length() - idx);
         return ret;
     }
 }
