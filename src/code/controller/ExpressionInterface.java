@@ -26,12 +26,14 @@ public class ExpressionInterface extends JDialog {
      */
     private JPanel panel;
 
-    public ExpressionInterface(AppFrame frame) {
+    public ExpressionInterface(AppFrame frame,  String def) {
         super(frame, "Enter an expression", true);
         this.frame = frame;
 
         display();
         addButtons();
+        // set the default string in the text field, used for redoing an expr
+        expressionField.setText(def);
 
         pack();
         setLocationRelativeTo(null);

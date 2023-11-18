@@ -25,6 +25,8 @@ public class Main {
 	 * c and d's union and d and e's union"
 	 */
 
+	 //d \ (a ∪ c) ∪ b \ (a ∪ c), (a ∩ b) ∩ ( c ∩ d) ∪ (e ∩f)
+
 	public static void main(String args[]) {
 		new AppFrame();
 	}

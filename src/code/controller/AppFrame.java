@@ -94,7 +94,7 @@ public class AppFrame extends JFrame {
 	 * to enter their expression
 	 */
 	private void askForExpression() {
-		new ExpressionInterface(this);
+		new ExpressionInterface(this, "");
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class AppFrame extends JFrame {
 			if (text.length() > 35)
 				text = text.substring(0, 35) + ".."; 
 			
-			HistoryExpr expr = new HistoryExpr(text, dialogBox);
+			HistoryExpr expr = new HistoryExpr(this, text, dialogBox);
 			expr.setBounds(0, 20 + i * 50, 450, 50);
 			panel.add(expr);
 		}
@@ -227,7 +227,7 @@ public class AppFrame extends JFrame {
 		 */
 		private JButton redoButton;
 
-		public HistoryExpr(String text, JDialog dialog) {
+		public HistoryExpr(AppFrame frame, String text, JDialog dialog) {
 			super(" " + text);
 			setFont(new Font("Monospaced", 1, 15));
 			setHorizontalAlignment(SwingConstants.LEFT);
@@ -240,8 +240,8 @@ public class AppFrame extends JFrame {
 			redoButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					evaluateExpression(text);
 					dialogBox.dispose();
+					new ExpressionInterface(frame, text);
 				}
 			});
 
