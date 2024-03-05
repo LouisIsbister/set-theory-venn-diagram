@@ -39,7 +39,7 @@ Let A and B be sets, let U represent the universal set.
 ## Difference (A\B):
 - The difference operator defines all the elements that are in A but not in B. 
 ## Complement (U\A, is represented by '~'):
-- The complement operator defines all the elements of U minus all the elements of A.
+- The complement operator defines all the elements of U minus all the elements of A, must be enclosed in brackets when used. i.e. 'a ∩ (~b)' is valid, the expression 'a ∩ ~b' will not work.
 
 
 # Some valid expressions:  

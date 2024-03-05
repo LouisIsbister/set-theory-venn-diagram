@@ -106,13 +106,13 @@ public class AppFrame extends JFrame {
 	 *              @return, whether the parsing of the expression was successful
 	 */
 	public boolean evaluateExpression(String text) {
-		ExprEvaluate tree = null;
+		BTParser tree = null;
 		Set<Coordinate> highlightCoords = new HashSet<>();
 		List<SetNode> nodes = new ArrayList<>();
 
 		try {
 			// root = tree.createTree(text);
-			tree = new ExprEvaluate(text);
+			tree = new BTParser(text);
 			highlightCoords = tree.root().evaluate();
 			nodes = tree.setNodes();
 		} catch (Exception err) {
@@ -126,7 +126,7 @@ public class AppFrame extends JFrame {
 			exprHistory.add(text);
 
 		remove(guiPanel);
-		guiPanel.updateDisplayData(highlightCoords, nodes);
+		guiPanel.updateDisplayData(highlightCoords, nodes);		
 		add(guiPanel);
 
 		repaint();
@@ -180,9 +180,11 @@ public class AppFrame extends JFrame {
 	private void displayException(String errStr) {
 		JDialog dialogBox = new JDialog(this, "Enter your Expression", true);
 
+		int ofs = 20 * errStr.split("<br>").length;
+
 		JPanel panel = new JPanel();
 		panel.setVisible(true);
-		panel.setPreferredSize(new Dimension(350, 175));
+		panel.setPreferredSize(new Dimension(350, 175 + ofs));
 		panel.setLayout(null);
 
 		String errorMsg = "<html><center>----- Error -----" +
@@ -191,11 +193,11 @@ public class AppFrame extends JFrame {
 
 		JLabel errorLabel = new JLabel(errorMsg);
 		errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		errorLabel.setBounds(0, 0, 350, 130);
+		errorLabel.setBounds(0, 0, 350, 130 + ofs);
 		errorLabel.setFont(new Font("Monospaced", 4, 14));
 
 		JButton contiueButton = new JButton("Continue");
-		contiueButton.setBounds(100, 130, 150, 25);
+		contiueButton.setBounds(100, 130 + ofs, 150, 25);
 
 		// button to dispose the dialog box when user is satisfied
 		contiueButton.addActionListener(new ActionListener() {
