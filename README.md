@@ -1,7 +1,7 @@
 # Set Theory Venn Diagrams
 
 
-# About:
+## About:
 This app evaluates expressions in set theory and graphically represents the result
 using Venn Diagrams.
 
@@ -10,9 +10,13 @@ Example: `(c ∩ d) ∪ (a \ ((b ∪ c) ∩ (d ∪ e)))`
 <img width="377" alt="SetTheorySH" src="https://github.com/LouisIsbister/Set-Theory-Venn-Diagram/assets/104889878/d0e393b9-6c02-43e7-a570-7fa3d528f366">
 
 
-# Running the program:
+## Running the program:
 The program is run via the main method which is located in the "Main" class. 
-To run your own expressions simply run the main method, a window will pop up where you can navigate to the "menu" icon in the top lefthand corner. Then click of "Enter new expression", this will prompt a dialog box where you can enter an expression, once you have entered your expression, click "confirm". This will parse and display your expression if it is valid.
+When the program is executed a window will pop up where you can navigate to the "menu" icon in the top left hand corner. To enter your own expressions click on "Enter new expression", this will prompt a dialog box where you can enter your expression. Once you have entered your expression, click "confirm", this will parse and display your expression if it is valid.
+
+
+# Expression ambiguity:
+Sometimes it is not clear how an expression should be evaluated due to a lack of brackets to provide precedence. For example, the expression `a ∩ b ∪ c` could be evaluated as `(a ∩ b) ∪ c` where the intersect of 'a' and 'b' is evaluated first. Or it could be evaluated as `a ∩ (b ∪ c)` where the union of 'b' and 'c' in evaluated first, both expressions will produce vastly different outputs. When an expression is ambiguous it will be treated as having 'right precedence', i.e. the expression `a ∩ b ∪ c` will be evaluated as `a ∩ (b ∪ c)` by default. So, if you are receiving weird or unexpected results please check how you are formatting your expression with brackets. 
 
 
 # Sets:
@@ -38,23 +42,5 @@ Let A and B be sets, let U represent the universal set.
 - The union operator defines all the elements that are members of A plus all the elements that are members of B. 
 ## Difference (A\B):
 - The difference operator defines all the elements that are in A but not in B. 
-## Complement (U\A, is represented by '~'):
+## Complement (U\A, represented by '~'):
 - The complement operator defines all the elements of U minus all the elements of A.
-
-
-# Some valid expressions:  
-a ∪ (b ∩ c)  
-(a ∩ b) ∪ (c ∩ d)  
-((b ∪ c) ∩ a) ∪ (b ∩ c)  
-a ∩ (b \ c)    
-a \ (b ∩ c)  
-(c ∩ (a ∪ b)) \ (a ∩ b)    
-~ (a \ b)  
-a ∩ b ∩ (~ (c ∪ d))  
-(c ∩ d) ∪ (a \ ((b ∪ c) ∩ (d ∪ e)))    
-
-# Examples of Invalid expressions:  
-~ (a b \ c), reason: complement can only take one argument.  
-(a ∪ b c), reason: union can only take two arguments.  
-, reason: no expression provided.  
-AA ∪ B, reason: invalid set identifier.  
