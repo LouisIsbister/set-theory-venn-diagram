@@ -16,7 +16,7 @@ When the program is executed a window will pop up where you can navigate to the 
 
 
 ## Expression ambiguity:
-Sometimes it is not clear how an expression should be evaluated due to a lack of brackets to provide precedence. For example, the expression `a ∩ b ∪ c` could be evaluated as `(a ∩ b) ∪ c` where the intersect of 'a' and 'b' is evaluated first. Or it could be evaluated as `a ∩ (b ∪ c)` where the union of 'b' and 'c' in evaluated first, both expressions will produce vastly different outputs. To remove this ambiguity an expression will always be treated as having 'right precedence' when it is ambiguous, i.e. the expression `a ∩ b ∪ c` will be evaluated as `a ∩ (b ∪ c)` by default. So, if you want `a ∩ b ∪ c` to evaluate the intersect of 'a' and 'b' first, then you must use brackets to show this precedence `(a ∩ b) ∪ c`. 
+Sometimes it's not clear how an expression should be evaluated due to a lack of brackets to show precedence. For example, the expression `a ∩ b ∪ c` could be evaluated as `(a ∩ b) ∪ c` where the intersect of 'a' and 'b' is evaluated first. Or it could be evaluated as `a ∩ (b ∪ c)` where the union of 'b' and 'c' in evaluated first, both expressions will produce vastly different outputs. To remove this ambiguity an expression will always be treated as having 'right precedence' when it is ambiguous, i.e. the expression `a ∩ b ∪ c` will be evaluated as `a ∩ (b ∪ c)` by default. So, if you want `a ∩ b ∪ c` to evaluate the intersect of 'a' and 'b' first, then you must use brackets to show the precedence `(a ∩ b) ∪ c`. ***If you receive weird or unexpected results then make sure you are explicitly placing brackets where you want precedence!***
 
 
 ## Sets:
