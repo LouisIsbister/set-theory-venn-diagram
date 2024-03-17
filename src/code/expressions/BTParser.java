@@ -12,7 +12,7 @@ import code.operators.*;
 import code.util.Coordinate;
 import code.util.InvalidExpressionException;
 
-public class ExprEvaluate {
+public class BTParser {
 
 	/**
 	 * The central x and y coordinates of the Venn diagram
@@ -52,9 +52,9 @@ public class ExprEvaluate {
 		}
 	};
 
-	public ExprEvaluate(String expr) throws InvalidExpressionException {
+	public BTParser(String expr) throws InvalidExpressionException {
 		root = null;
-		expression = StructuredExpr.restructureExpression(expr.trim());
+		expression = ExpressionParser.restructureExpression(expr.trim());
 		System.out.println(expression);
 
 		parseExpression();
@@ -72,7 +72,7 @@ public class ExprEvaluate {
 	 * @return, the collection of set nodes
 	 */
 	public ArrayList<SetNode> setNodes() {
-		return new ArrayList<SetNode>(setNodes.values());
+		return new ArrayList<>(setNodes.values());
 	}
 
 	/**

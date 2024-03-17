@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 import code.util.InvalidExpressionException;
 
-public class StructuredExpr {
+public class ExpressionParser {
 
     private static Queue<Character> expression;
 
@@ -32,23 +32,25 @@ public class StructuredExpr {
      */
     private static Queue<Character> restructure(String str) throws InvalidExpressionException {
         str = str.trim();
-        if (str.isEmpty() || str.equals("\\(") || str.equals("\\)"))
-            return expression;
-        
+        if (str.equals("(") || str.equals(")")) {
+            return expression;     
+        }
+
         int exprCenter = getCenterIndex(str);
+        char centerChar = str.charAt(exprCenter);
         String left = str.substring(0, exprCenter).trim();
         String right = str.substring(exprCenter + 1, str.length()).trim();
-
-        char ch = str.charAt(exprCenter);
-        // System.out.println("DBG:: Cen-> " + ch + ", left-> " + left + ", right-> " + right);
         
-        if (ch != ')' && ch != '(') 
-            expression.add(ch);
+        if (centerChar != ')' && centerChar != '(') {
+            expression.add(centerChar);
+        }
         
-        if (left.length() > 0 && !left.isBlank())
+        if (left.length() > 0) {
             restructure(left);
-        if (right.length() > 0 && !right.isBlank())
+        }
+        if (right.length() > 0) {
             restructure(right);
+        }
 
         return expression;
     }
@@ -71,6 +73,7 @@ public class StructuredExpr {
 
         int openBracketCount = 0;
         int closedBracketCount = 0;
+        int minDifference = Integer.MAX_VALUE;
         int ret = 0;
 
         for (int i = 0; i < str.length(); i++) {
@@ -82,19 +85,18 @@ public class StructuredExpr {
                 openBracketCount++;
             else if (c == ')')
                 closedBracketCount++;
-            // if an operator has been found
-            else if (!(c + "").matches("[a-zA-Z]")) {
-                ret = i;
 
-                // if the brackets match then we've found a center
-                if (openBracketCount == closedBracketCount)
-                    return ret;
+            // if an operator has been found
+            if (!(c + "").matches("[a-zA-Z]") && !(c + "").matches("[\\(|\\)]")) {
+                if (openBracketCount - closedBracketCount < minDifference) {
+                    minDifference = openBracketCount - closedBracketCount;
+                    ret = i;
+                }
             }
         }
-
         // if no center was found then their is either a too many open brackets
         // or there is operator
-        return 0;
+        return ret;
     }
 
     /**
@@ -105,7 +107,7 @@ public class StructuredExpr {
      * @throws InvalidExpressionException
      */
     private static void validateExpression(String str) throws InvalidExpressionException {
-        // check set ids
+        // check that there are not set ids with 2 or more characters
         Pattern pattern = Pattern.compile("[a-zA-Z]{2,}");
         Matcher matcher = pattern.matcher(str);
         if (matcher.find()) {
@@ -116,22 +118,32 @@ public class StructuredExpr {
 
         // check bracket formatting
         int balance = 0;
+        int unbalancedIdx = 0;
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
             char ch = i == str.length() - 1 ? ' ' : str.charAt(i + 1);
-            if (c == '(')
+            if (c == '('){
                 balance++;
-            else if (c == ')')
+            }
+            else if (c == ')') {
                 balance--;
+            }
+  
+            if (balance != 0 && (c == ')' || c == '(')) {
+                unbalancedIdx = i;
+            }
 
             // if there are recurring brackets that contains nothing, i.e. a ∩ () b
-            if ((c == '(' && ch == ')') || (ch == '(' && c == ')'))
+            if ((c == '(' && ch == ')') || (ch == '(' && c == ')')) {
                 throw new InvalidExpressionException("Brackets must contain an expression.");
+            }
         }
 
-        // check that the number of open brackets == number of closed brackets
-        if (balance != 0)
-            throw new InvalidExpressionException(formatBracketException(str));
+        // if the number of open brackets != number of closed brackets
+        if (balance != 0) {
+            String errorMsg = formatBracketException(str, balance, unbalancedIdx);
+            throw new InvalidExpressionException(errorMsg);
+        }
     }
 
     /**
@@ -140,23 +152,10 @@ public class StructuredExpr {
      * @param str, the string that caused the error
      * @return, the formatted string
      */
-    private static String formatBracketException(String str) {
-        int balance = 0;
-        int idx = 0;
-        for (int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);
-            if (c == '(')
-                balance++;
-            else if (c == ')')
-                balance--;
-            
-            if (balance != 0 && (c == ')' || c == '(')) 
-                idx = i;
-        }
-        
+    private static String formatBracketException(String expr, int balance, int errorIdx) {
         String insrt = balance < 0 ? "open" : "closed";
-        String ret = "Unmatching brackets: require '"+ insrt + "'<br>" + str + "<br>";
-        ret += "_".repeat(idx) + "^" + "_".repeat(str.length() - idx);
+        String ret = "Found unmatched '"+ insrt + "' bracket.<br>" + expr + "<br>";
+        ret += "_".repeat(errorIdx) + "^" + "_".repeat(expr.length() - errorIdx);
         return ret;
     }
 }

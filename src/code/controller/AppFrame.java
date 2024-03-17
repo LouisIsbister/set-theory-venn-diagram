@@ -106,13 +106,13 @@ public class AppFrame extends JFrame {
 	 *              @return, whether the parsing of the expression was successful
 	 */
 	public boolean evaluateExpression(String text) {
-		ExprEvaluate tree = null;
+		BTParser tree = null;
 		Set<Coordinate> highlightCoords = new HashSet<>();
 		List<SetNode> nodes = new ArrayList<>();
 
 		try {
 			// root = tree.createTree(text);
-			tree = new ExprEvaluate(text);
+			tree = new BTParser(text);
 			highlightCoords = tree.root().evaluate();
 			nodes = tree.setNodes();
 		} catch (Exception err) {
@@ -148,8 +148,7 @@ public class AppFrame extends JFrame {
 
 		for (int i = 0; i < exprHistory.size(); i++) {
 			String text = exprHistory.get(i);
-			if (text.length() > 35)
-				text = text.substring(0, 35) + ".."; 
+			
 			
 			HistoryExpr expr = new HistoryExpr(this, text, dialogBox);
 			expr.setBounds(0, 20 + i * 50, 450, 50);
@@ -229,6 +228,7 @@ public class AppFrame extends JFrame {
 
 		public HistoryExpr(AppFrame frame, String text, JDialog dialog) {
 			super(" " + text);
+
 			setFont(new Font("Monospaced", 1, 15));
 			setHorizontalAlignment(SwingConstants.LEFT);
 			setLayout(null);

@@ -20,13 +20,10 @@ public class Main {
 	 * ~(a \ b)                 "complement of the difference between a and b"
 	 * a ∩ b ∩ (~(c ∪ d))       "a and b and the complement of c or d"
 	 * 
+	 * (((b ∪ c) ∪ (d ∪ e)) \ a) ∪ ((b ∪ c) ∩ (d ∪ e))
 	 * (c ∩ d) ∪ (a \ ((b ∪ c) ∩ (d ∪ e)))
-	 * "c and d or the difference between a and the intersection of 
-	 * c and d's union and d and e's union"
 	 */
-
-	 //d \ (a ∪ c) ∪ b \ (a ∪ c), (a ∩ b) ∩ ( c ∩ d) ∪ (e ∩f)
-
+	
 	public static void main(String args[]) {
 		new AppFrame();
 	}
