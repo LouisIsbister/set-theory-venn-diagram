@@ -53,11 +53,9 @@ public class BTParser {
 	};
 
 	public BTParser(String expr) throws InvalidExpressionException {
-		root = null;
-		expression = ExpressionParser.restructureExpression(expr.trim());
-		System.out.println(expression);
+		expression = ExpressionParser.parse(expr.trim());
 
-		parseExpression();
+		buildExpressionTree();
 		propagateSetNodes();
 	}
 
@@ -77,16 +75,13 @@ public class BTParser {
 
 	/**
 	 * This method intialises the creation of the tree structure.
-	 * It first calls the recursive method to build the binary tree. It 
+	 * It first calls the recursive method to build the binary tree. It
 	 * then checks for formatting errors where too many arguments were
 	 * provided or if there are invalid set identifiers.
 	 * 
-	 * @param expression, the expression that is to be evaluated
-	 *                    @return, the root node of binary tree representation of
-	 *                    the expression
-	 * @return, the root of the binary tree
+	 * @throws InvalidExpressionException
 	 */
-	public BTNode parseExpression() throws InvalidExpressionException {
+	public void buildExpressionTree() throws InvalidExpressionException {
 		root = parseTree();
 
 		// user provided too many or no arguments
@@ -95,11 +90,9 @@ public class BTParser {
 					+ "Remaining unrecogised args: " + expression;
 			throw new InvalidExpressionException(ret);
 		}
-			
+
 		if (setNodes.size() < 1)
 			throw new InvalidExpressionException("Invalid expression: no set/data was provided.");
-		
-		return root;
 	}
 
 	/**
@@ -123,7 +116,6 @@ public class BTParser {
 		if (!isSetIdentifier) {
 			Operator op = parseOperator(next);
 			BTNode node = new BTNode(op);
-
 			node.setLeft(parseTree());
 
 			// if the operator is a complement then the right node must be the universal set
@@ -133,12 +125,11 @@ public class BTParser {
 				node.setRight(parseTree());
 
 			return node;
-		} 
-		else {
+		} else {
 			next = Character.toLowerCase(next);
 			if (!setNodes.containsKey(next))
 				setNodes.put(next, new SetNode(next + ""));
-
+			
 			return setNodes.get(next);
 		}
 	}

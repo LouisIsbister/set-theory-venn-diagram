@@ -42,5 +42,5 @@ Let A and B be sets, let U represent the universal set.
 - The union operator defines all the elements that are members of A plus all the elements that are members of B. 
 #### Difference (A\B):
 - The difference operator defines all the elements that are in A but not in B. 
-#### Complement (U\A, represented by '~'):
+#### Complement (U\A, represented by ~A for simplicity):
 - The complement operator defines all the elements of U minus all the elements of A.

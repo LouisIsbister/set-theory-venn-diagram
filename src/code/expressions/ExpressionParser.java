@@ -16,7 +16,7 @@ public class ExpressionParser {
      * @return, the restructured expression
      * @throws InvalidExpressionException
      */
-    public static Queue<Character> restructureExpression(String expr) throws InvalidExpressionException {
+    public static Queue<Character> parse(String expr) throws InvalidExpressionException {
         validateExpression(expr);
 
         expression = new ArrayDeque<>();
@@ -32,25 +32,21 @@ public class ExpressionParser {
      */
     private static Queue<Character> restructure(String str) throws InvalidExpressionException {
         str = str.trim();
-        if (str.equals("(") || str.equals(")")) {
-            return expression;     
-        }
+        if (str.equals("(") || str.equals(")"))
+            return expression;
 
         int exprCenter = getCenterIndex(str);
         char centerChar = str.charAt(exprCenter);
         String left = str.substring(0, exprCenter).trim();
         String right = str.substring(exprCenter + 1, str.length()).trim();
         
-        if (centerChar != ')' && centerChar != '(') {
+        if (centerChar != ')' && centerChar != '(')
             expression.add(centerChar);
-        }
         
-        if (left.length() > 0) {
+        if (left.length() > 0)
             restructure(left);
-        }
-        if (right.length() > 0) {
+        if (right.length() > 0)
             restructure(right);
-        }
 
         return expression;
     }
@@ -122,21 +118,17 @@ public class ExpressionParser {
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
             char ch = i == str.length() - 1 ? ' ' : str.charAt(i + 1);
-            if (c == '('){
+            if (c == '(')
                 balance++;
-            }
-            else if (c == ')') {
+            else if (c == ')')
                 balance--;
-            }
   
-            if (balance != 0 && (c == ')' || c == '(')) {
+            if (balance != 0 && (c == ')' || c == '('))
                 unbalancedIdx = i;
-            }
 
             // if there are recurring brackets that contains nothing, i.e. a ∩ () b
-            if ((c == '(' && ch == ')') || (ch == '(' && c == ')')) {
+            if ((c == '(' && ch == ')') || (ch == '(' && c == ')'))
                 throw new InvalidExpressionException("Brackets must contain an expression.");
-            }
         }
 
         // if the number of open brackets != number of closed brackets

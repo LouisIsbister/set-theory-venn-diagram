@@ -12,11 +12,6 @@ import javax.swing.JTextField;
 public class ExpressionInterface extends JDialog {
 
     /**
-     * text field to enter an experssion
-     */
-    private JTextField expressionField;
-
-    /**
      * the parent frame component
      */
     private AppFrame frame;
@@ -26,9 +21,20 @@ public class ExpressionInterface extends JDialog {
      */
     private JPanel panel;
 
+     /**
+     * text field to enter an experssion
+     */
+    private JTextField expressionField;
+
     public ExpressionInterface(AppFrame frame,  String def) {
         super(frame, "Enter an expression", true);
         this.frame = frame;
+        this.panel = new JPanel(); 
+        this.expressionField = new JTextField();
+        
+        panel.setVisible(true);
+        panel.setPreferredSize(new Dimension(250, 160));
+        panel.setLayout(null);
 
         display();
         addButtons();
@@ -44,16 +50,9 @@ public class ExpressionInterface extends JDialog {
      * display the expression interface dialog box
      */
     private void display() {
-        panel = new JPanel();
-        panel.setVisible(true);
-        panel.setPreferredSize(new Dimension(250, 160));
-        panel.setLayout(null);
-
-        expressionField = new JTextField();
         JButton confirmButton = new JButton("Confirm Expression");
-
-        expressionField.setBounds(10, 10, 230, 25);
         confirmButton.setBounds(50, 110, 150, 25);
+        expressionField.setBounds(10, 10, 230, 25);
 
         confirmButton.addActionListener(new ActionListener() {
             @Override
@@ -61,7 +60,7 @@ public class ExpressionInterface extends JDialog {
                 String text = expressionField.getText();
 
                 // if the expression was valid, then dispose of the expression interface
-                if (frame.evaluateExpression(text)) 
+                if (frame.executeExpression(text))
                     dispose();
             }
         });

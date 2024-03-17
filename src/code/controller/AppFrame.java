@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
 
@@ -105,30 +104,25 @@ public class AppFrame extends JFrame {
 	 * @param text, the expression to be parsed
 	 *              @return, whether the parsing of the expression was successful
 	 */
-	public boolean evaluateExpression(String text) {
-		BTParser tree = null;
-		Set<Coordinate> highlightCoords = new HashSet<>();
-		List<SetNode> nodes = new ArrayList<>();
-
+	public boolean executeExpression(String text) {
 		try {
-			// root = tree.createTree(text);
-			tree = new BTParser(text);
-			highlightCoords = tree.root().evaluate();
-			nodes = tree.setNodes();
-		} catch (Exception err) {
-			err.printStackTrace();
+			BTParser tree = new BTParser(text);
+			Set<Coordinate> highlightCoords = tree.root().evaluate();
+			List<SetNode> nodes = tree.setNodes();
+			if (!exprHistory.contains(text))
+				exprHistory.add(text);
 
+			guiPanel.updateDisplayData(highlightCoords, nodes);
+		} 
+		catch (Exception err) {
+			err.printStackTrace();
 			displayException(err.getMessage());
 			return false;
 		}
 
-		if (!exprHistory.contains(text))
-			exprHistory.add(text);
-
-		remove(guiPanel);
-		guiPanel.updateDisplayData(highlightCoords, nodes);
-		add(guiPanel);
-
+		// this is stupid but so is swing
+		getContentPane().remove(guiPanel);
+		getContentPane().add(guiPanel);
 		repaint();
 		return true;
 	}
@@ -148,8 +142,7 @@ public class AppFrame extends JFrame {
 
 		for (int i = 0; i < exprHistory.size(); i++) {
 			String text = exprHistory.get(i);
-			
-			
+
 			HistoryExpr expr = new HistoryExpr(this, text, dialogBox);
 			expr.setBounds(0, 20 + i * 50, 450, 50);
 			panel.add(expr);
@@ -160,7 +153,7 @@ public class AppFrame extends JFrame {
 		label.setFont(new Font("Monospaced", 1, 15));
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setBounds(0, 0, 450, 25);
-		
+
 		panel.add(label);
 
 		dialogBox.add(panel);
@@ -216,26 +209,16 @@ public class AppFrame extends JFrame {
 
 	private class HistoryExpr extends JLabel {
 
-		/**
-		 * dialog box that holds/created this obj
-		 */
-		private JDialog dialogBox;
-
-		/**
-		 * button to rerun a previous expression
-		 */
-		private JButton redoButton;
-
 		public HistoryExpr(AppFrame frame, String text, JDialog dialog) {
 			super(" " + text);
 
 			setFont(new Font("Monospaced", 1, 15));
 			setHorizontalAlignment(SwingConstants.LEFT);
 			setLayout(null);
-			
-			dialogBox = dialog;
-			redoButton = new JButton("Redo");
-			
+
+			JDialog dialogBox = dialog;
+			JButton redoButton = new JButton("Redo");
+
 			redoButton.setBounds(370, 10, 70, 30);
 			redoButton.addActionListener(new ActionListener() {
 				@Override
@@ -247,5 +230,6 @@ public class AppFrame extends JFrame {
 
 			add(redoButton);
 		}
+
 	}
 }
