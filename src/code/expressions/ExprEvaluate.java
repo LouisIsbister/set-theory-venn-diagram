@@ -4,18 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
-import java.util.Stack;
 
 import code.controller.AppPanel;
 import code.operators.*;
 import code.util.Coordinate;
 import code.util.InvalidExpressionException;
 
-/**
- *  Binary Tree Parser 
- */
-public class BTParser {
+public class ExprEvaluate {
 
 	/**
 	 * The central x and y coordinates of the Venn diagram
@@ -31,12 +28,12 @@ public class BTParser {
 	/**
 	 * characters in the expression
 	 */
-	private Stack<String> expression;
+	private Queue<Character> expression;
 
 	/**
 	 * Map of all the sets in the expression
 	 */
-	private Map<String, SetNode> setNodes = new HashMap<>();
+	private Map<Character, SetNode> setNodes = new HashMap<>();
 
 	/**
 	 * The universal set represents all the available data and is constant.
@@ -55,9 +52,9 @@ public class BTParser {
 		}
 	};
 
-	public BTParser(String expr) throws InvalidExpressionException {
+	public ExprEvaluate(String expr) throws InvalidExpressionException {
 		root = null;
-		expression = ExpressionParser.shuntingYardAlgoritm(expr);
+		expression = StructuredExpr.restructureExpression(expr.trim());
 		System.out.println(expression);
 
 		parseExpression();
@@ -99,7 +96,7 @@ public class BTParser {
 			throw new InvalidExpressionException(ret);
 		}
 			
-		if (setNodes.isEmpty())
+		if (setNodes.size() < 1)
 			throw new InvalidExpressionException("Invalid expression: no set/data was provided.");
 		
 		return root;
@@ -120,7 +117,7 @@ public class BTParser {
 		if (expression.isEmpty())
 			return null;
 
-		String next = expression.pop();
+		char next = expression.poll();
 		boolean isSetIdentifier = (next + "").matches("[a-zA-Z]");
 
 		if (!isSetIdentifier) {
@@ -138,7 +135,7 @@ public class BTParser {
 			return node;
 		} 
 		else {
-			next = next.toLowerCase();
+			next = Character.toLowerCase(next);
 			if (!setNodes.containsKey(next))
 				setNodes.put(next, new SetNode(next + ""));
 
@@ -154,15 +151,15 @@ public class BTParser {
 	 *           @return, an instance of the operator
 	 * @throws InvalidExpressionException
 	 */
-	private Operator parseOperator(String c) throws InvalidExpressionException {
+	private Operator parseOperator(char c) throws InvalidExpressionException {
 		switch (c) {
-			case "\u222A":
+			case '\u222A':
 				return new Union();
-			case "\u2229":
+			case '\u2229':
 				return new Intersect();
-			case "\\":
+			case '\\':
 				return new Difference();
-			case "~":
+			case '~':
 				return new Complement();
 			default:
 				throw new InvalidExpressionException("'" + c + "' is an invalid operator.");
