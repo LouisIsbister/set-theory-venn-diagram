@@ -1,8 +1,6 @@
 package code.controller;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -54,15 +52,12 @@ public class ExpressionInterface extends JDialog {
         confirmButton.setBounds(50, 110, 150, 25);
         expressionField.setBounds(10, 10, 230, 25);
 
-        confirmButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String text = expressionField.getText();
-
-                // if the expression was valid, then dispose of the expression interface
-                if (frame.executeExpression(text))
-                    dispose();
-            }
+        confirmButton.addActionListener(e -> {
+            String text = expressionField.getText();
+            boolean isValidExpression = frame.executeExpression(text);
+            // if the expression was valid, then dispose of the interface
+            if (isValidExpression)
+                dispose();
         });
 
         panel.add(expressionField);
@@ -77,39 +72,19 @@ public class ExpressionInterface extends JDialog {
     private void addButtons() {
         JButton intersect = new JButton("\u2229");
         intersect.setBounds(10, 40, 50, 50);
-        intersect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateExprField("\u2229");
-            }
-        });
+        intersect.addActionListener(e -> updateExprField("\u2229"));
 
         JButton union = new JButton("\u222A");
         union.setBounds(70, 40, 50, 50);
-        union.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateExprField("\u222A");
-            }
-        });
+        union.addActionListener(e -> updateExprField("\u222A"));
 
         JButton difference = new JButton("\\");
         difference.setBounds(130, 40, 50, 50);
-        difference.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateExprField("\\");
-            }
-        });
+        difference.addActionListener(e -> updateExprField("\\"));
 
         JButton complement = new JButton("~");
         complement.setBounds(190, 40, 50, 50);
-        complement.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateExprField("~");
-            }
-        });
+        complement.addActionListener(e -> updateExprField("~"));
 
         panel.add(intersect);
         panel.add(union);

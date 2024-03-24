@@ -2,8 +2,6 @@ package code.controller;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.List;
@@ -54,31 +52,17 @@ public class AppFrame extends JFrame {
 		JMenu menu = new JMenu("Menu");
 
 		JMenuItem newExpr = new JMenuItem("Enter new expression");
-		newExpr.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// clear the pane and ask user for another expression
-				getContentPane().removeAll();
-				askForExpression();
-			}
+		newExpr.addActionListener(e -> {
+			// clear the pane and ask user for another expression
+			getContentPane().removeAll();
+			askForExpression();
 		});
 
-		AppFrame comp = this;
 		JMenuItem exit = new JMenuItem("Exit");
-		exit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				comp.dispose();
-			}
-		});
+		exit.addActionListener(e -> dispose());
 
 		JMenuItem expressionHistory = new JMenuItem("View previous expressions");
-		expressionHistory.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				displayExpressionHistory();
-			}
-		});
+		expressionHistory.addActionListener(e -> displayExpressionHistory());
 
 		menu.add(newExpr);
 		menu.add(expressionHistory);
@@ -141,7 +125,7 @@ public class AppFrame extends JFrame {
 		panel.setLayout(null);
 
 		for (int i = 0; i < exprHistory.size(); i++) {
-			String text = exprHistory.get(i);
+			String text = " " + exprHistory.get(i);
 
 			HistoryExpr expr = new HistoryExpr(this, text, dialogBox);
 			expr.setBounds(0, 20 + i * 50, 450, 50);
@@ -188,20 +172,13 @@ public class AppFrame extends JFrame {
 
 		JButton contiueButton = new JButton("Continue");
 		contiueButton.setBounds(100, 130, 150, 25);
-
 		// button to dispose the dialog box when user is satisfied
-		contiueButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dialogBox.dispose();
-			}
-		});
+		contiueButton.addActionListener(e -> dialogBox.dispose());
 
 		panel.add(errorLabel);
 		panel.add(contiueButton);
 
 		dialogBox.add(panel);
-
 		dialogBox.pack();
 		dialogBox.setLocationRelativeTo(this);
 		dialogBox.setVisible(true);
@@ -210,22 +187,17 @@ public class AppFrame extends JFrame {
 	private class HistoryExpr extends JLabel {
 
 		public HistoryExpr(AppFrame frame, String text, JDialog dialog) {
-			super(" " + text);
-
+			super(text);
 			setFont(new Font("Monospaced", 1, 15));
 			setHorizontalAlignment(SwingConstants.LEFT);
 			setLayout(null);
 
-			JDialog dialogBox = dialog;
 			JButton redoButton = new JButton("Redo");
 
 			redoButton.setBounds(370, 10, 70, 30);
-			redoButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					dialogBox.dispose();
-					new ExpressionInterface(frame, text);
-				}
+			redoButton.addActionListener(e -> {
+				dialog.dispose();
+				new ExpressionInterface(frame, text);
 			});
 
 			add(redoButton);
