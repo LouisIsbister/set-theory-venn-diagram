@@ -25,28 +25,29 @@ public class ExpressionParser {
 
     /**
      * convert the user provided expression into cambridge polish notation.
-     * for every character in the expression, if the character is not a valid
-     * set identifier, i.e. [a-zA-Z].
      * 
      * @throws InvalidExpressionException
      */
     private static Queue<Character> restructure(String str) throws InvalidExpressionException {
-        str = str.trim();
-        if (str.equals("(") || str.equals(")"))
+        if (str.equals("(") || str.equals(")")) {
             return expression;
+        }
 
-        int exprCenter = getCenterIndex(str);
+        int exprCenter = getCenterIndex(str);    // the index to split the expression by
         char centerChar = str.charAt(exprCenter);
+        if (centerChar != ')' && centerChar != '(') {
+            expression.add(centerChar);
+        }
+
         String left = str.substring(0, exprCenter).trim();
         String right = str.substring(exprCenter + 1, str.length()).trim();
-        
-        if (centerChar != ')' && centerChar != '(')
-            expression.add(centerChar);
-        
-        if (left.length() > 0)
-            restructure(left);
-        if (right.length() > 0)
-            restructure(right);
+                
+        if (left.length() > 0) {
+            restructure(left.trim());
+        }
+        if (right.length() > 0) {
+            restructure(right.trim());
+        }
 
         return expression;
     }
@@ -64,35 +65,27 @@ public class ExpressionParser {
      * @throws InvalidExpressionException
      */
     private static int getCenterIndex(String str) throws InvalidExpressionException {
-        if (str.length() <= 1)
+        if (str.length() <= 1) {
             return 0;
+        }
 
-        int openBracketCount = 0;
-        int closedBracketCount = 0;
-        int minDifference = Integer.MAX_VALUE;
-        int ret = 0;
-
+        int openBracketCount = 0, closedBracketCount = 0;
+        int center = 0;
         for (int i = 0; i < str.length(); i++) {
-            if (str.charAt(i) == ' ')
+            if (str.charAt(i) == ' ') {
                 continue;
+            }
 
-            char c = str.charAt(i);
-            if (c == '(')
-                openBracketCount++;
-            else if (c == ')')
-                closedBracketCount++;
+            char ch = str.charAt(i);
+            openBracketCount += ch == '(' ? 1 : 0;
+            closedBracketCount += ch == ')' ? 1 : 0;
 
             // if an operator has been found
-            if (!(c + "").matches("[a-zA-Z]") && !(c + "").matches("[\\(|\\)]")) {
-                if (openBracketCount - closedBracketCount < minDifference) {
-                    minDifference = openBracketCount - closedBracketCount;
-                    ret = i;
-                }
+            if (BTParser.charIsOperator(ch) && openBracketCount == closedBracketCount) {
+                center = i;
             }
         }
-        // if no center was found then their is either a too many open brackets
-        // or there is operator
-        return ret;
+        return center;
     }
 
     /**

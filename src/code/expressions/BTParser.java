@@ -91,8 +91,19 @@ public class BTParser {
 			throw new InvalidExpressionException(ret);
 		}
 
-		if (setNodes.size() < 1)
+		if (setNodes.size() < 1) {
 			throw new InvalidExpressionException("Invalid expression: no set/data was provided.");
+		}
+	}
+
+	/**
+	 * Check whether a given character is an operator
+	 * @param c, the provided character
+	 * @return
+	 */
+	public static boolean charIsOperator(Character c) {
+		String value = String.valueOf(c);
+		return value.matches("[\u222A|\u2229|\\|~]");
 	}
 
 	/**
@@ -110,26 +121,26 @@ public class BTParser {
 		if (expression.isEmpty())
 			return null;
 
-		char next = expression.poll();
-		boolean isSetIdentifier = (next + "").matches("[a-zA-Z]");
+		Character next = expression.poll();	
 
-		if (!isSetIdentifier) {
+		if (BTParser.charIsOperator(next)) {
 			Operator op = parseOperator(next);
 			BTNode node = new BTNode(op);
 			node.setLeft(parseTree());
 
 			// if the operator is a complement then the right node must be the universal set
-			if (op instanceof Complement)
+			if (op instanceof Complement) {
 				node.setRight(universalSet);
-			else
+			} else {
 				node.setRight(parseTree());
+			}
 
 			return node;
 		} else {
 			next = Character.toLowerCase(next);
-			if (!setNodes.containsKey(next))
+			if (!setNodes.containsKey(next)) {
 				setNodes.put(next, new SetNode(next + ""));
-			
+			}
 			return setNodes.get(next);
 		}
 	}
@@ -164,11 +175,11 @@ public class BTParser {
 	 * Each pixel represents a piece of data within the set.
 	 */
 	private void propagateSetNodes() {
-		int NUMBER_OF_SETS = setNodes.size();
-		int RADIUS = SetNode.DIAMETER / 2;
+		final int NUMBER_OF_SETS = setNodes.size();
+		final int RADIUS = SetNode.DIAMETER / 2;
 
 		// the angle difference of each circle from the center
-		double ANGLE_OFFSET = 360 / NUMBER_OF_SETS;
+		final double ANGLE_OFFSET = 360 / NUMBER_OF_SETS;
 
 		int setCount = 0;
 		for (SetNode setNode : setNodes.values()) {

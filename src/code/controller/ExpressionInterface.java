@@ -24,7 +24,7 @@ public class ExpressionInterface extends JDialog {
      */
     private JTextField expressionField;
 
-    public ExpressionInterface(AppFrame frame,  String def) {
+    public ExpressionInterface(AppFrame frame,  String defaultExpr) {
         super(frame, "Enter an expression", true);
         this.frame = frame;
         this.panel = new JPanel(); 
@@ -37,7 +37,7 @@ public class ExpressionInterface extends JDialog {
         display();
         addButtons();
         // set the default string in the text field, used for redoing an expr
-        expressionField.setText(def);
+        expressionField.setText(defaultExpr);
 
         pack();
         setLocationRelativeTo(null);
@@ -107,4 +107,5 @@ public class ExpressionInterface extends JDialog {
         expressionField.requestFocus();
         expressionField.setCaretPosition(pos + insertString.length());
     }
+
 }
