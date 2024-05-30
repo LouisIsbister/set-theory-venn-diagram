@@ -1,4 +1,4 @@
-package code.controller;
+package stvd.controller;
 
 import java.awt.Dimension;
 import java.awt.Font;
@@ -16,8 +16,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import code.expressions.*;
-import code.util.Coordinate;
+import stvd.expressions.*;
+import stvd.util.Coordinate;
 
 public class AppFrame extends JFrame {
 

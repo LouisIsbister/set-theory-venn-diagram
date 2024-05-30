@@ -1,11 +1,11 @@
-package code.operators;
+package stvd.operators;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import code.expressions.BTNode;
-import code.util.Coordinate;
+import stvd.expressions.BTNode;
+import stvd.util.Coordinate;
 
 /**
  * Set complement class, in mathmatical notaion U\X

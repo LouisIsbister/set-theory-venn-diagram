@@ -1,26 +1,26 @@
-package code.operators;
+package stvd.operators;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import code.expressions.BTNode;
-import code.util.Coordinate;
+import stvd.expressions.BTNode;
+import stvd.util.Coordinate;
 
 /**
- * Set difference class, in mathmatical notaion x\y
- * "Find all the coordinates in x that are not in y"
+ * Set intersect class, in mathmatical notaion (x ∩ y)
+ * "Find all the coordinates in x that also in y"
  */
-public class Difference implements Operator {
+public class Intersect implements Operator {
 
 	/**
-	 * Find the set difference between of two nodes.
-	 * returns all the values in left that are not
-	 * in right.
+	 * Find the set intersect between of two nodes.
+	 * returns all the values in left that also in
+	 * right.
 	 * 
 	 * @param left,  left child node
 	 * @param right, right child node
-	 *               @return, the difference between left and right nodes
+	 *               @return, the intersect of left and right nodes
 	 */
 	@Override
 	public Set<Coordinate> evaluate(BTNode left, BTNode right) throws IllegalArgumentException {
@@ -28,13 +28,13 @@ public class Difference implements Operator {
 		Set<Coordinate> rightSet = right.evaluate();
 
 		List<Coordinate> list = leftSet.stream()
-				.filter(elem -> !rightSet.contains(elem))
+				.filter(elem -> rightSet.contains(elem))
 				.toList();
 
 		return new HashSet<>(list);
 	}
 
 	public String toString() {
-		return "difference";
+		return "intersect";
 	}
 }

@@ -1,10 +1,10 @@
-package code.expressions;
+package stvd.expressions;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import code.util.Coordinate;
+import stvd.util.Coordinate;
 
 public class SetNode extends BTNode {
 

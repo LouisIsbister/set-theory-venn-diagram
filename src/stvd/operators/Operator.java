@@ -1,9 +1,9 @@
-package code.operators;
+package stvd.operators;
 
 import java.util.Set;
 
-import code.expressions.BTNode;
-import code.util.Coordinate;
+import stvd.expressions.BTNode;
+import stvd.util.Coordinate;
 
 /**
  * Operator interface, each operator overrides

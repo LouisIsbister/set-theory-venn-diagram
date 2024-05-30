@@ -1,9 +1,9 @@
-package code.expressions;
+package stvd.expressions;
 
 import java.util.Set;
 
-import code.operators.Operator;
-import code.util.Coordinate;
+import stvd.operators.Operator;
+import stvd.util.Coordinate;
 
 public class BTNode {
 

@@ -1,4 +1,4 @@
-package code.util;
+package stvd.util;
 
 /**
  * Record that represents a pixel in the graphical representation.

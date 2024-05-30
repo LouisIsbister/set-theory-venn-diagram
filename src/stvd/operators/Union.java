@@ -1,10 +1,10 @@
-package code.operators;
+package stvd.operators;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import code.expressions.BTNode;
-import code.util.Coordinate;
+import stvd.expressions.BTNode;
+import stvd.util.Coordinate;
 
 /**
  * Set union class, in mathmatical notaion (x U y)

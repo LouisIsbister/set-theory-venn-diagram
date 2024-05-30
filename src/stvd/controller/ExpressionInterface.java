@@ -1,4 +1,4 @@
-package code.controller;
+package stvd.controller;
 
 import java.awt.Dimension;
 

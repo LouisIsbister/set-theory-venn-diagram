@@ -1,4 +1,4 @@
-package code.expressions;
+package stvd.expressions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import code.controller.AppPanel;
-import code.operators.*;
-import code.util.Coordinate;
-import code.util.InvalidExpressionException;
+import stvd.controller.AppPanel;
+import stvd.operators.*;
+import stvd.util.Coordinate;
+import stvd.util.InvalidExpressionException;
 
 public class BTParser {
 
@@ -81,7 +81,7 @@ public class BTParser {
 	 * 
 	 * @throws InvalidExpressionException
 	 */
-	public void buildExpressionTree() throws InvalidExpressionException {
+	private void buildExpressionTree() throws InvalidExpressionException {
 		root = parseTree();
 
 		// user provided too many or no arguments
@@ -98,12 +98,13 @@ public class BTParser {
 
 	/**
 	 * Check whether a given character is an operator
+	 * 
 	 * @param c, the provided character
 	 * @return
 	 */
-	public static boolean charIsOperator(Character c) {
+	protected static boolean charIsOperator(Character c) {
 		String value = String.valueOf(c);
-		return value.matches("[\u222A|\u2229|\\|~]");
+		return value.matches("[\u222A|\u2229|\\\\|~]");
 	}
 
 	/**
@@ -121,7 +122,7 @@ public class BTParser {
 		if (expression.isEmpty())
 			return null;
 
-		Character next = expression.poll();	
+		Character next = expression.poll();
 
 		if (BTParser.charIsOperator(next)) {
 			Operator op = parseOperator(next);
@@ -154,18 +155,13 @@ public class BTParser {
 	 * @throws InvalidExpressionException
 	 */
 	private Operator parseOperator(char c) throws InvalidExpressionException {
-		switch (c) {
-			case '\u222A':
-				return new Union();
-			case '\u2229':
-				return new Intersect();
-			case '\\':
-				return new Difference();
-			case '~':
-				return new Complement();
-			default:
-				throw new InvalidExpressionException("'" + c + "' is an invalid operator.");
-		}
+		return switch (c) {
+			case '\u222A' -> new Union();
+			case '\u2229' -> new Intersect();
+			case '\\' -> new Difference();
+			case '~' -> new Complement();
+			default -> throw new InvalidExpressionException("'" + c + "' is an invalid operator.");
+		};
 	}
 
 	/**
