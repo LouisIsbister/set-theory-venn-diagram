@@ -16,7 +16,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import stvd.expressions.*;
+import stvd.expressionparser.*;
+import stvd.tree.BTSetNode;
 import stvd.util.Coordinate;
 
 public class AppFrame extends JFrame {
@@ -92,7 +93,7 @@ public class AppFrame extends JFrame {
 		try {
 			BTParser tree = new BTParser(text);
 			Set<Coordinate> highlightCoords = tree.root().evaluate();
-			List<SetNode> nodes = tree.setNodes();
+			List<BTSetNode> nodes = tree.setNodes();
 			if (!exprHistory.contains(text))
 				exprHistory.add(text);
 
@@ -125,10 +126,10 @@ public class AppFrame extends JFrame {
 		panel.setLayout(null);
 
 		for (int i = 0; i < exprHistory.size(); i++) {
-			String text = " " + exprHistory.get(i);
+			String text = exprHistory.get(i);
 
 			HistoryExpr expr = new HistoryExpr(this, text, dialogBox);
-			expr.setBounds(0, 20 + i * 50, 450, 50);
+			expr.setBounds(10, 20 + i * 50, 450, 50);
 			panel.add(expr);
 		}
 
@@ -194,7 +195,7 @@ public class AppFrame extends JFrame {
 
 			JButton redoButton = new JButton("Redo");
 
-			redoButton.setBounds(370, 10, 70, 30);
+			redoButton.setBounds(350, 10, 70, 30);
 			redoButton.addActionListener(e -> {
 				dialog.dispose();
 				new ExpressionInterface(frame, text);

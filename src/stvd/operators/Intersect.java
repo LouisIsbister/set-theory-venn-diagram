@@ -1,37 +1,32 @@
 package stvd.operators;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import stvd.expressions.BTNode;
+import stvd.tree.BTNode;
 import stvd.util.Coordinate;
 
 /**
  * Set intersect class, in mathmatical notaion (x ∩ y)
  * "Find all the coordinates in x that also in y"
  */
-public class Intersect implements Operator {
+public class Intersect extends BTNode {
 
 	/**
 	 * Find the set intersect between of two nodes.
 	 * returns all the values in left that also in
 	 * right.
 	 * 
-	 * @param left,  left child node
-	 * @param right, right child node
-	 *               @return, the intersect of left and right nodes
+	 * @return, the intersect of left and right nodes
 	 */
 	@Override
-	public Set<Coordinate> evaluate(BTNode left, BTNode right) throws IllegalArgumentException {
-		Set<Coordinate> leftSet = left.evaluate();
-		Set<Coordinate> rightSet = right.evaluate();
+	public Set<Coordinate> evaluate() throws IllegalArgumentException {
+		Set<Coordinate> leftSet = left().evaluate();
+		Set<Coordinate> rightSet = right().evaluate();
 
-		List<Coordinate> list = leftSet.stream()
+		return leftSet.stream()
 				.filter(elem -> rightSet.contains(elem))
-				.toList();
-
-		return new HashSet<>(list);
+				.collect(Collectors.toSet());
 	}
 
 	public String toString() {

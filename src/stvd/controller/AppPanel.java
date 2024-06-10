@@ -11,7 +11,7 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
-import stvd.expressions.SetNode;
+import stvd.tree.BTSetNode;
 import stvd.util.Coordinate;
 
 /**
@@ -31,14 +31,14 @@ public class AppPanel extends JPanel {
 	/**
 	 * all the sets in the expression
 	 */
-	private List<SetNode> setNodes = new ArrayList<>();
+	private List<BTSetNode> setNodes = new ArrayList<>();
 
 	public AppPanel() {
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		setOpaque(true);
 	}
 
-	public void updateDisplayData(Set<Coordinate> c, List<SetNode> s) {
+	public void updateDisplayData(Set<Coordinate> c, List<BTSetNode> s) {
 		coords = c;
 		setNodes = s;
 	}
@@ -60,9 +60,9 @@ public class AppPanel extends JPanel {
 
 		// draw the outlines of the set "regions"
 		g2D.setColor(Color.black);
-		for (SetNode sn : setNodes) {
-			g2D.drawOval(sn.center().x() - SetNode.DIAMETER / 2, sn.center().y() - SetNode.DIAMETER / 2,
-					SetNode.DIAMETER, SetNode.DIAMETER);
+		for (BTSetNode sn : setNodes) {
+			g2D.drawOval(sn.center().x() - BTSetNode.DIAMETER / 2, sn.center().y() - BTSetNode.DIAMETER / 2,
+					BTSetNode.DIAMETER, BTSetNode.DIAMETER);
 
 			g2D.drawString(sn.toString(), sn.stringPosition().x(), sn.stringPosition().y());
 		}

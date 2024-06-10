@@ -1,10 +1,11 @@
 package stvd.operators;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import stvd.expressions.BTNode;
+import stvd.expressionparser.BTParser;
+import stvd.tree.*;
 import stvd.util.Coordinate;
 
 /**
@@ -12,27 +13,35 @@ import stvd.util.Coordinate;
  * "Find all the coordinates in the universal set
  * that are not in X"
  */
-public class Complement implements Operator {
+public class Complement extends BTNode {
+
+	/**
+	 * The universal set represents all possible data and is constant.
+	 */
+	private static final HashSet<Coordinate> universalSet = new HashSet<>();
+
+	static {
+		for (int i = 0; i < 2 * BTParser.START_Y; i++) {
+			for (int j = 0; j < 2 * BTParser.START_X; j++) {
+				universalSet.add(new Coordinate(i, j));
+			}
+		}
+	}
 
 	/**
 	 * Returns all the values in the universal set
 	 * excluding the those in the left set.
 	 * Is represetned by U\A.
 	 * 
-	 * @param left,  left child node
-	 * @param right, right child node
-	 *               @return, the complement of the left node
+	 * @return, the complement of the left node
 	 */
 	@Override
-	public Set<Coordinate> evaluate(BTNode left, BTNode right) throws IllegalArgumentException {
-		Set<Coordinate> leftSet = left.evaluate();
-		Set<Coordinate> rightSet = right.evaluate();
+	public Set<Coordinate> evaluate() throws IllegalArgumentException {
+		Set<Coordinate> leftSet = left().evaluate();
 
-		List<Coordinate> coords = rightSet.stream()
-				.filter(elem -> !leftSet.contains(elem))
-				.toList();
-
-		return new HashSet<>(coords);
+		return universalSet.stream()
+				.filter(e -> !leftSet.contains(e))
+				.collect(Collectors.toSet());
 	}
 
 	public String toString() {

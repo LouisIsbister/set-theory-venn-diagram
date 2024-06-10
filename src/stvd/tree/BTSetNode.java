@@ -1,4 +1,4 @@
-package stvd.expressions;
+package stvd.tree;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -6,7 +6,7 @@ import java.util.Set;
 
 import stvd.util.Coordinate;
 
-public class SetNode extends BTNode {
+public class BTSetNode extends BTNode {
 
 	/**
 	 * The unique identifier of a set, will always be an uppercase letter.
@@ -38,7 +38,7 @@ public class SetNode extends BTNode {
 	/**
 	 * @param identifier, the unique id for this set
 	 */
-	public SetNode(String identifier) {
+	public BTSetNode(String identifier) {
 		this.identifier = identifier;
 		pixels = new HashSet<>();
 	}

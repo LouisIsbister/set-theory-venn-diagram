@@ -1,4 +1,4 @@
-package stvd.expressions;
+package stvd.expressionparser;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -16,10 +16,10 @@ public class ExpressionParser {
      * @return, the restructured expression
      * @throws InvalidExpressionException
      */
-    public static Queue<Character> parse(String expr) throws InvalidExpressionException {
-        validateExpression(expr);
-
+    public static Queue<Character> parse(String expr) throws InvalidExpressionException {  
         expression = new ArrayDeque<>();
+        validateExpression(expr);
+        
         return restructure(expr);
     }
 
@@ -43,10 +43,10 @@ public class ExpressionParser {
         String right = str.substring(exprCenter + 1, str.length()).trim();
                 
         if (left.length() > 0) {
-            restructure(left.trim());
+            restructure(left);
         }
         if (right.length() > 0) {
-            restructure(right.trim());
+            restructure(right);
         }
 
         return expression;
@@ -70,7 +70,6 @@ public class ExpressionParser {
         }
 
         int openBracketCount = 0, closedBracketCount = 0;
-        int center = 0;
         for (int i = 0; i < str.length(); i++) {
             if (str.charAt(i) == ' ') {
                 continue;
@@ -80,12 +79,12 @@ public class ExpressionParser {
             openBracketCount += ch == '(' ? 1 : 0;
             closedBracketCount += ch == ')' ? 1 : 0;
 
-            // if an operator has been found
+            // if an operator has been found with matching brackets
             if (BTParser.charIsOperator(ch) && openBracketCount == closedBracketCount) {
-                center = i;
+                return i;
             }
         }
-        return center;
+        return 0;
     }
 
     /**
@@ -106,28 +105,40 @@ public class ExpressionParser {
         }
 
         // check bracket formatting
-        int balance = 0;
-        int unbalancedIdx = 0;
-        for (int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);
-            char ch = i == str.length() - 1 ? ' ' : str.charAt(i + 1);
-            if (c == '(')
-                balance++;
-            else if (c == ')')
-                balance--;
+
+        char[] arr = str.toCharArray();
+        int balance = 0, unbalancedIdx = 0;    // bracket balance and possible bad balance index
+        char currentCh = arr[0];
+        for (int i = 0; i < arr.length; i++) {
+            char nextCh = i == arr.length - 1 ? ' ' : arr[i + 1];
+            
+            balance += arr[i] == '(' ? 1 : 0;
+            balance += arr[i] == ')' ? -1 : 0;
   
-            if (balance != 0 && (c == ')' || c == '('))
+            // -- used for formatting error msg when brackets are unblanced -- 
+            if (balance != 0 && (currentCh == '(' || currentCh == ')')) {
                 unbalancedIdx = i;
+            }
 
             // if there are recurring brackets that contains nothing, i.e. a ∩ () b
-            if ((c == '(' && ch == ')') || (ch == '(' && c == ')'))
-                throw new InvalidExpressionException("Brackets must contain an expression.");
+            if ((currentCh == '(' && nextCh == ')') || (nextCh == '(' && currentCh == ')')) {
+                throwBracketException("Brackets must contain an expression.", str, balance, unbalancedIdx);
+            }
+
+            // if an oeprator immediately follows another an isn't ~
+            if (BTParser.charIsOperator(currentCh) && BTParser.charIsOperator(nextCh) && nextCh != '~') {
+                throw new InvalidExpressionException("Operator: " + nextCh + " cannot immediately<br>follow " + currentCh);
+            }
+
+            // update the current character to point at the latest valid part of the expression 
+            if (nextCh != ' ') {
+                currentCh = nextCh;
+            }
         }
 
         // if the number of open brackets != number of closed brackets
         if (balance != 0) {
-            String errorMsg = formatBracketException(str, balance, unbalancedIdx);
-            throw new InvalidExpressionException(errorMsg);
+            throwBracketException("Found unmatched brackets.", str, balance, unbalancedIdx);
         }
     }
 
@@ -136,11 +147,11 @@ public class ExpressionParser {
      * 
      * @param str, the string that caused the error
      * @return, the formatted string
+     * @throws InvalidExpressionException 
      */
-    private static String formatBracketException(String expr, int balance, int errorIdx) {
-        String insrt = balance < 0 ? "open" : "closed";
-        String ret = "Found unmatched '"+ insrt + "' bracket.<br>" + expr + "<br>";
+    private static void throwBracketException(String msg, String expr, int balance, int errorIdx) throws InvalidExpressionException {
+        String ret = msg + "<br>" + expr + "<br>";
         ret += "_".repeat(errorIdx) + "^" + "_".repeat(expr.length() - errorIdx);
-        return ret;
+        throw new InvalidExpressionException(ret);
     }
 }

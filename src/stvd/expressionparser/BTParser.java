@@ -1,16 +1,17 @@
-package stvd.expressions;
+package stvd.expressionparser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 
+import stvd.util.*;
 import stvd.controller.AppPanel;
-import stvd.operators.*;
-import stvd.util.Coordinate;
-import stvd.util.InvalidExpressionException;
+import stvd.operators.Complement;
+import stvd.operators.Difference;
+import stvd.operators.Intersect;
+import stvd.operators.Union;
+import stvd.tree.*;
 
 public class BTParser {
 
@@ -33,27 +34,11 @@ public class BTParser {
 	/**
 	 * Map of all the sets in the expression
 	 */
-	private Map<Character, SetNode> setNodes = new HashMap<>();
-
-	/**
-	 * The universal set represents all the available data and is constant.
-	 */
-	private static final SetNode universalSet = new SetNode("Universal data") {
-		@Override
-		public Set<Coordinate> evaluate() {
-			HashSet<Coordinate> allCoords = new HashSet<>();
-			for (int i = 0; i < 2 * START_Y; i++) {
-				for (int j = 0; j < 2 * START_X; j++) {
-					allCoords.add(new Coordinate(i, j));
-				}
-			}
-
-			return allCoords;
-		}
-	};
+	private Map<Character, BTSetNode> setNodes = new HashMap<>();
 
 	public BTParser(String expr) throws InvalidExpressionException {
-		expression = ExpressionParser.parse(expr.trim());
+		expression = ExpressionParser.parse(expr);
+		System.out.println(expression);
 
 		buildExpressionTree();
 		propagateSetNodes();
@@ -69,7 +54,7 @@ public class BTParser {
 	/**
 	 * @return, the collection of set nodes
 	 */
-	public ArrayList<SetNode> setNodes() {
+	public ArrayList<BTSetNode> setNodes() {
 		return new ArrayList<>(setNodes.values());
 	}
 
@@ -119,28 +104,24 @@ public class BTParser {
 	 * @throws InvalidExpressionException
 	 */
 	private BTNode parseTree() throws InvalidExpressionException {
-		if (expression.isEmpty())
+		if (expression.isEmpty()) {
 			return null;
+		}
 
 		Character next = expression.poll();
-
-		if (BTParser.charIsOperator(next)) {
-			Operator op = parseOperator(next);
-			BTNode node = new BTNode(op);
+		if (charIsOperator(next)) {
+			BTNode node = parseOperator(next);
 			node.setLeft(parseTree());
 
-			// if the operator is a complement then the right node must be the universal set
-			if (op instanceof Complement) {
-				node.setRight(universalSet);
-			} else {
+			// if the operator is not a complement then set the right node
+			if (!(node instanceof Complement)) {
 				node.setRight(parseTree());
-			}
-
+			} 
 			return node;
-		} else {
+		} else {    // found a set/leaf node
 			next = Character.toLowerCase(next);
 			if (!setNodes.containsKey(next)) {
-				setNodes.put(next, new SetNode(next + ""));
+				setNodes.put(next, new BTSetNode(String.valueOf(next)));
 			}
 			return setNodes.get(next);
 		}
@@ -154,7 +135,7 @@ public class BTParser {
 	 *           @return, an instance of the operator
 	 * @throws InvalidExpressionException
 	 */
-	private Operator parseOperator(char c) throws InvalidExpressionException {
+	private BTNode parseOperator(char c) throws InvalidExpressionException {
 		return switch (c) {
 			case '\u222A' -> new Union();
 			case '\u2229' -> new Intersect();
@@ -172,13 +153,13 @@ public class BTParser {
 	 */
 	private void propagateSetNodes() {
 		final int NUMBER_OF_SETS = setNodes.size();
-		final int RADIUS = SetNode.DIAMETER / 2;
+		final int RADIUS = BTSetNode.DIAMETER / 2;
 
 		// the angle difference of each circle from the center
 		final double ANGLE_OFFSET = 360 / NUMBER_OF_SETS;
 
 		int setCount = 0;
-		for (SetNode setNode : setNodes.values()) {
+		for (BTSetNode setNode : setNodes.values()) {
 			// get the angle of the sets circle
 			double angle = (setCount * ANGLE_OFFSET) - 90;
 			double angleInRadians = angle * (Math.PI / 180);
