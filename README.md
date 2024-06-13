@@ -18,9 +18,10 @@ When the program is executed a window will pop up where you can navigate to the 
 ## Expression Ambiguity and Execution:
 Each expression is executed in two phases, first it is parsed in Cambridge Polish Notation (CPN). This format is then used to build a binary tree that can be executed to retrieve the expression output. However, sometimes it isn't clear how an expression should be evaluated due to a lack of brackets to show precedence. For example, the expression `a ∩ b ∪ c` could be evaluated as `(a ∩ b) ∪ c` where the intersect of 'a' and 'b' is evaluated first. Or it could be evaluated as `a ∩ (b ∪ c)` where the union of 'b' and 'c' in evaluated first, both expressions will produce vastly different outputs. To remove this ambiguity an expression will always be treated as having 'right precedence' when it is ambiguous, i.e. the expression `a ∩ b ∪ c` will be evaluated as `a ∩ (b ∪ c)` by default. So, if you want `a ∩ b ∪ c` to evaluate the intersect of 'a' and 'b' first, then you must use brackets to show the precedence `(a ∩ b) ∪ c`. ***If you receive weird or unexpected results then make sure you are explicitly placing brackets where you want precedence!***  
 
-When pressing "CPN Representation" you can view the expression in its CPN form, showing the precedence that is enforced during parsing:
+When pressing "CPN Representation" you can view the expression in its CPN form before you execute it, showing the precedence that is enforced during parsing. This may help with debugging where to put brackets in an expression:
 
-<img width="204" alt="Screenshot 2024-06-13 182740" src="https://github.com/LouisIsbister/set-theory-venn-diagram/assets/104889878/b5f8d2dc-05ad-4a6d-9afd-2d3ba3416de6">
+![Screenshot 2024-06-13 204803](https://github.com/LouisIsbister/set-theory-venn-diagram/assets/104889878/39e47a01-1cf0-4b2f-a1bb-adfb327f4f87)
+![Screenshot 2024-06-13 205307](https://github.com/LouisIsbister/set-theory-venn-diagram/assets/104889878/830d3f7f-dd2c-4bec-8f28-ec66a5cba8be)
 
 ## Sets:
 A set is a collection of elements that represent a group of data. In this application the user does not need to provide any data as this is simply a visualisation.
