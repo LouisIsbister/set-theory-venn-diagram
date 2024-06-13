@@ -30,6 +30,6 @@ public class Difference extends BTNode {
 	}
 
 	public String toString() {
-		return "difference";
+		return "\\";
 	}
 }

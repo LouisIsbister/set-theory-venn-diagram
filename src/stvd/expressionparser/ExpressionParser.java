@@ -9,14 +9,14 @@ import stvd.util.InvalidExpressionException;
 
 public class ExpressionParser {
 
-    private static Queue<Character> expression;
+    private static Queue<String> expression;
 
     /**
      * @param expr, the user provided expression
      * @return, the restructured expression
      * @throws InvalidExpressionException
      */
-    public static Queue<Character> parse(String expr) throws InvalidExpressionException {  
+    public static Queue<String> parse(String expr) throws InvalidExpressionException {  
         expression = new ArrayDeque<>();
         validateExpression(expr);
         
@@ -28,7 +28,7 @@ public class ExpressionParser {
      * 
      * @throws InvalidExpressionException
      */
-    private static Queue<Character> restructure(String str) throws InvalidExpressionException {
+    private static Queue<String> restructure(String str) throws InvalidExpressionException {
         if (str.equals("(") || str.equals(")")) {
             return expression;
         }
@@ -36,7 +36,7 @@ public class ExpressionParser {
         int exprCenter = getCenterIndex(str);    // the index to split the expression by
         char centerChar = str.charAt(exprCenter);
         if (centerChar != ')' && centerChar != '(') {
-            expression.add(centerChar);
+            expression.add(String.valueOf(centerChar));
         }
 
         String left = str.substring(0, exprCenter).trim();
@@ -80,7 +80,7 @@ public class ExpressionParser {
             closedBracketCount += ch == ')' ? 1 : 0;
 
             // if an operator has been found with matching brackets
-            if (BTParser.charIsOperator(ch) && openBracketCount == closedBracketCount) {
+            if (BTParser.isOperator(String.valueOf(ch)) && openBracketCount == closedBracketCount) {
                 return i;
             }
         }
@@ -126,7 +126,9 @@ public class ExpressionParser {
             }
 
             // if an oeprator immediately follows another an isn't ~
-            if (BTParser.charIsOperator(currentCh) && BTParser.charIsOperator(nextCh) && nextCh != '~') {
+            if (BTParser.isOperator(String.valueOf(currentCh)) && 
+                    BTParser.isOperator(String.valueOf(nextCh)) && 
+                    nextCh != '~') {
                 throw new InvalidExpressionException("Operator: " + nextCh + " cannot immediately<br>follow " + currentCh);
             }
 

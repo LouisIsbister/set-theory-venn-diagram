@@ -17,8 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import stvd.expressionparser.*;
-import stvd.tree.BTSetNode;
-import stvd.util.Coordinate;
+import stvd.tree.*;
+import stvd.util.*;
 
 public class AppFrame extends JFrame {
 
@@ -79,37 +79,6 @@ public class AppFrame extends JFrame {
 	 */
 	private void askForExpression() {
 		new ExpressionInterface(this, "");
-	}
-
-	/**
-	 * Parses the binary tree of the expression,
-	 * if an error is encountered then return false,
-	 * otherwise return true.
-	 * 
-	 * @param text, the expression to be parsed
-	 *              @return, whether the parsing of the expression was successful
-	 */
-	public boolean executeExpression(String text) {
-		try {
-			BTParser tree = new BTParser(text);
-			Set<Coordinate> highlightCoords = tree.root().evaluate();
-			List<BTSetNode> nodes = tree.setNodes();
-			if (!exprHistory.contains(text))
-				exprHistory.add(text);
-
-			guiPanel.updateDisplayData(highlightCoords, nodes);
-		} 
-		catch (Exception err) {
-			err.printStackTrace();
-			displayException(err.getMessage());
-			return false;
-		}
-
-		// this is stupid but so is swing
-		getContentPane().remove(guiPanel);
-		getContentPane().add(guiPanel);
-		repaint();
-		return true;
 	}
 
 	/**
@@ -205,4 +174,83 @@ public class AppFrame extends JFrame {
 		}
 
 	}
+
+
+	// --- expression display and evaluation handling --- 
+
+
+	/**
+	 * Parses the binary tree of the expression,
+	 * if an error is encountered then return false,
+	 * otherwise return true.
+	 * 
+	 * @param text, the expression to be parsed
+	 * @return, whether the parsing of the expression was successful
+	 */
+	public boolean executeExpression(String text) {
+		try {
+			BTParser tree = new BTParser(text);
+			Set<Coordinate> highlightCoords = tree.root().evaluate();
+			List<BTSetNode> nodes = tree.setNodes();
+			if (!exprHistory.contains(text)) {
+				exprHistory.add(text);
+			}
+
+			guiPanel.updateDisplayData(highlightCoords, nodes);
+		} 
+		catch (Exception err) {
+			displayException(err.getMessage());
+			return false;
+		}
+
+		// this is stupid but so is swing
+		getContentPane().remove(guiPanel);
+		getContentPane().add(guiPanel);
+		repaint();
+		return true;
+	}
+
+	/**
+	 * Returns the Cambridge Polish Notation form of the expression.
+	 * This is how the expression is executed giving the user insight
+	 * into what is actually happening.
+	 * 
+	 * @param expr, the user provided expression
+	 * @return, cpt string
+	 */
+	public String cPTRepresentation(String expr) {
+		try {
+			// if the expression is invalid this will throw an exception
+			BTParser tree = new BTParser(expr);
+			BTNode root = tree.root();
+			
+			return recursiveBuilder(root);
+		} catch (InvalidExpressionException e) {
+			displayException(e.getMessage());
+			return new String();
+		}
+	}
+
+	/**
+	 * recursively iterate through the binary tree to build up 
+	 * the string representation in CPT
+	 * 
+	 * @param root, current/root node of subtree
+	 * @return cpt string
+	 */
+	private String recursiveBuilder(BTNode root) {
+		if (root == null) {
+			return null;
+		}
+		String nodeStr = root.toString();
+		if (!nodeStr.matches("[a-zA-Z]")) {
+			String left = recursiveBuilder(root.left());
+			String right = recursiveBuilder(root.right());
+			right = right == null ? "" : " " + right; 
+			
+			return nodeStr + "(" + left + right + ")";
+		}
+		return nodeStr;
+	}
+
 }

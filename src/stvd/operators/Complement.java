@@ -45,7 +45,7 @@ public class Complement extends BTNode {
 	}
 
 	public String toString() {
-		return "complement";
+		return "~";
 	}
 
 }

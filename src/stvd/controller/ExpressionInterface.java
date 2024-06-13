@@ -1,9 +1,12 @@
 package stvd.controller;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -28,48 +31,54 @@ public class ExpressionInterface extends JDialog {
         super(frame, "Enter an expression", true);
         this.frame = frame;
         this.panel = new JPanel(); 
-        this.expressionField = new JTextField();
+        // set the default string in the text field, used for redoing an expr
+        this.expressionField = new JTextField(defaultExpr);
+        expressionField.setBounds(10, 10, 230, 25);
         
         panel.setVisible(true);
-        panel.setPreferredSize(new Dimension(250, 160));
+        panel.setPreferredSize(new Dimension(250, 170));
         panel.setLayout(null);
 
-        display();
         addButtons();
-        // set the default string in the text field, used for redoing an expr
-        expressionField.setText(defaultExpr);
 
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
-    /**
-     * display the expression interface dialog box
+   /**
+     * Adds the various buttons that allow the user to input the math notation 
+     * into their expressions 
      */
-    private void display() {
+    private void addButtons() {
         JButton confirmButton = new JButton("Confirm Expression");
-        confirmButton.setBounds(50, 110, 150, 25);
-        expressionField.setBounds(10, 10, 230, 25);
+        confirmButton.setBounds(50, 100, 150, 25);
 
         confirmButton.addActionListener(e -> {
             String text = expressionField.getText();
             boolean isValidExpression = frame.executeExpression(text);
             // if the expression was valid, then dispose of the interface
-            if (isValidExpression)
+            if (isValidExpression) {
                 dispose();
+            }
+        });
+
+        JButton showEvaluation = new JButton("Expression Evaluation Format");
+        showEvaluation.setBounds(20, 135, 210, 25);
+        showEvaluation.addActionListener(e -> {
+            String text = expressionField.getText();
+            String cptStr = frame.cPTRepresentation(text);
+            if (!cptStr.isBlank()) {
+                displayCPTExpression(cptStr);
+            }
         });
 
         panel.add(expressionField);
+        panel.add(showEvaluation);
         panel.add(confirmButton);
-        add(panel);
-    }
 
-    /**
-     * Adds the various buttons that allow the user to input the math notation 
-     * into their expressions 
-     */
-    private void addButtons() {
+        // --- operator buttons
+
         JButton intersect = new JButton("\u2229");
         intersect.setBounds(10, 40, 50, 50);
         intersect.addActionListener(e -> updateExprField("\u2229"));
@@ -90,8 +99,10 @@ public class ExpressionInterface extends JDialog {
         panel.add(union);
         panel.add(difference);
         panel.add(complement);
+
+        add(panel);
     }
-    
+   
     /**
      * Inserts the the operator into the textfield for the user to see. 
      * 
@@ -106,6 +117,27 @@ public class ExpressionInterface extends JDialog {
         expressionField.setText(ret.toString());
         expressionField.requestFocus();
         expressionField.setCaretPosition(pos + insertString.length());
+    }
+
+    /**
+     * @param cptStr, cambridge polish notation form of expression
+     */
+    private void displayCPTExpression(String cptStr) {
+        JDialog dialog = new JDialog(this, "CPT Representation", true);
+        JPanel newPanel = new JPanel(); 
+        JLabel label = new JLabel(cptStr);
+        label.setFont(new Font("Monospaced", 1, 15));
+
+        
+        newPanel.setLayout(new FlowLayout());
+        newPanel.add(label);
+        int width = cptStr.length() * 12 + 20;
+        newPanel.setPreferredSize(new Dimension(width, 40));
+
+        dialog.add(newPanel);
+        dialog.pack();
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
     }
 
 }

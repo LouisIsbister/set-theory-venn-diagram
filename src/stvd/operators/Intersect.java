@@ -30,6 +30,6 @@ public class Intersect extends BTNode {
 	}
 
 	public String toString() {
-		return "intersect";
+		return "\u2229";
 	}
 }

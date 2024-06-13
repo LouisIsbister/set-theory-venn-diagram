@@ -28,6 +28,6 @@ public class Union extends BTNode {
 	}
 
 	public String toString() {
-		return "union";
+		return "\u222A";
 	}
 }
