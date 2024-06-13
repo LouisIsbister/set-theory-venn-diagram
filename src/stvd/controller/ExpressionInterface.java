@@ -63,13 +63,13 @@ public class ExpressionInterface extends JDialog {
             }
         });
 
-        JButton showEvaluation = new JButton("Expression Evaluation Format");
+        JButton showEvaluation = new JButton("CPN Format");
         showEvaluation.setBounds(20, 135, 210, 25);
         showEvaluation.addActionListener(e -> {
             String text = expressionField.getText();
-            String cptStr = frame.cPTRepresentation(text);
-            if (!cptStr.isBlank()) {
-                displayCPTExpression(cptStr);
+            String cpnStr = frame.cPNRepresentation(text);
+            if (!cpnStr.isBlank()) {
+                displayCPNExpression(cpnStr);
             }
         });
 
@@ -120,18 +120,17 @@ public class ExpressionInterface extends JDialog {
     }
 
     /**
-     * @param cptStr, cambridge polish notation form of expression
+     * @param cpnStr, cambridge polish notation form of expression
      */
-    private void displayCPTExpression(String cptStr) {
-        JDialog dialog = new JDialog(this, "CPT Representation", true);
+    private void displayCPNExpression(String cpnStr) {
+        JDialog dialog = new JDialog(this, "CPN Representation", true);
         JPanel newPanel = new JPanel(); 
-        JLabel label = new JLabel(cptStr);
+        JLabel label = new JLabel(cpnStr);
         label.setFont(new Font("Monospaced", 1, 15));
 
-        
         newPanel.setLayout(new FlowLayout());
         newPanel.add(label);
-        int width = cptStr.length() * 12 + 20;
+        int width = cpnStr.length() * 12 + 20;
         newPanel.setPreferredSize(new Dimension(width, 40));
 
         dialog.add(newPanel);

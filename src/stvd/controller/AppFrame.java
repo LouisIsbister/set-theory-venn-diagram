@@ -216,9 +216,9 @@ public class AppFrame extends JFrame {
 	 * into what is actually happening.
 	 * 
 	 * @param expr, the user provided expression
-	 * @return, cpt string
+	 * @return, cpn string
 	 */
-	public String cPTRepresentation(String expr) {
+	public String cPNRepresentation(String expr) {
 		try {
 			// if the expression is invalid this will throw an exception
 			BTParser tree = new BTParser(expr);
@@ -233,10 +233,10 @@ public class AppFrame extends JFrame {
 
 	/**
 	 * recursively iterate through the binary tree to build up 
-	 * the string representation in CPT
+	 * the string representation in CPN
 	 * 
 	 * @param root, current/root node of subtree
-	 * @return cpt string
+	 * @return cpn string
 	 */
 	private String recursiveBuilder(BTNode root) {
 		if (root == null) {
