@@ -10,14 +10,17 @@ Example: `(c ∩ d) ∪ (a \ ((b ∪ c) ∩ (d ∪ e)))`
 <img width="377" alt="SetTheorySH" src="https://github.com/LouisIsbister/Set-Theory-Venn-Diagram/assets/104889878/d0e393b9-6c02-43e7-a570-7fa3d528f366">
 
 
-## Running the program:
+## Running the Program:
 The program is run via the main method which is located in the "Main" class. 
 When the program is executed a window will pop up where you can navigate to the "menu" icon in the top left hand corner. To enter your own expressions click on "Enter new expression", this will prompt a dialog box where you can enter your expression. Once you have entered your expression, click "confirm", this will parse and display your expression if it is valid.
 
 
-## Expression ambiguity:
-Sometimes it's not clear how an expression should be evaluated due to a lack of brackets to show precedence. For example, the expression `a ∩ b ∪ c` could be evaluated as `(a ∩ b) ∪ c` where the intersect of 'a' and 'b' is evaluated first. Or it could be evaluated as `a ∩ (b ∪ c)` where the union of 'b' and 'c' in evaluated first, both expressions will produce vastly different outputs. To remove this ambiguity an expression will always be treated as having 'right precedence' when it is ambiguous, i.e. the expression `a ∩ b ∪ c` will be evaluated as `a ∩ (b ∪ c)` by default. So, if you want `a ∩ b ∪ c` to evaluate the intersect of 'a' and 'b' first, then you must use brackets to show the precedence `(a ∩ b) ∪ c`. ***If you receive weird or unexpected results then make sure you are explicitly placing brackets where you want precedence!***
+## Expression Ambiguity and Execution:
+Each expression is executed in two phases, first it is parsed in Cambridge Polish Notation (CPT). This format is then used to build a binary tree that can be executed to retrieve the expression output. However, sometimes it isn't clear how an expression should be evaluated due to a lack of brackets to show precedence. For example, the expression `a ∩ b ∪ c` could be evaluated as `(a ∩ b) ∪ c` where the intersect of 'a' and 'b' is evaluated first. Or it could be evaluated as `a ∩ (b ∪ c)` where the union of 'b' and 'c' in evaluated first, both expressions will produce vastly different outputs. To remove this ambiguity an expression will always be treated as having 'right precedence' when it is ambiguous, i.e. the expression `a ∩ b ∪ c` will be evaluated as `a ∩ (b ∪ c)` by default. So, if you want `a ∩ b ∪ c` to evaluate the intersect of 'a' and 'b' first, then you must use brackets to show the precedence `(a ∩ b) ∪ c`. ***If you receive weird or unexpected results then make sure you are explicitly placing brackets where you want precedence!***  
 
+When pressing "Expression Evaluation Format" you can view the expression in its CPT form, showing the precedence that is enforced during parsing:
+
+<img width="204" alt="Screenshot 2024-06-13 182740" src="https://github.com/LouisIsbister/set-theory-venn-diagram/assets/104889878/b5f8d2dc-05ad-4a6d-9afd-2d3ba3416de6">
 
 ## Sets:
 A set is a collection of elements that represent a group of data. In this application the user does not need to provide any data as this is simply a visualisation.
