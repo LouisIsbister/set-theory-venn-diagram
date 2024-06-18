@@ -5,9 +5,10 @@
 This app evaluates expressions in set theory and graphically represents the result
 using Venn Diagrams.
 
-Example: `(c ∩ d) ∪ (a \ ((b ∪ c) ∩ (d ∪ e)))`
+Example: `(c ∩ d) ∪ (a \ (b ∩ e))`
 
-<img width="377" alt="SetTheorySH" src="https://github.com/LouisIsbister/Set-Theory-Venn-Diagram/assets/104889878/d0e393b9-6c02-43e7-a570-7fa3d528f366">
+![Screenshot 2024-06-18 165959](https://github.com/LouisIsbister/set-theory-venn-diagram/assets/104889878/3d77d2b2-20f6-4fb0-b45e-75d6bc1ec99c)
+
 
 
 ## Running the Program:
