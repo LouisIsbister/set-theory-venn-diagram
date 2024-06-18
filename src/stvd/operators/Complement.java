@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import stvd.expressionparser.BTParser;
+import stvd.expressionparser.ExpressionTree;
 import stvd.tree.*;
 import stvd.util.Coordinate;
 
@@ -21,8 +21,8 @@ public class Complement extends BTNode {
 	private static final HashSet<Coordinate> universalSet = new HashSet<>();
 
 	static {
-		for (int i = 0; i < 2 * BTParser.START_Y; i++) {
-			for (int j = 0; j < 2 * BTParser.START_X; j++) {
+		for (int i = 0; i < 2 * ExpressionTree.START_Y; i++) {
+			for (int j = 0; j < 2 * ExpressionTree.START_X; j++) {
 				universalSet.add(new Coordinate(i, j));
 			}
 		}
@@ -36,7 +36,7 @@ public class Complement extends BTNode {
 	 * @return, the complement of the left node
 	 */
 	@Override
-	public Set<Coordinate> evaluate() throws IllegalArgumentException {
+	public Set<Coordinate> evaluate() {
 		Set<Coordinate> leftSet = left().evaluate();
 
 		return universalSet.stream()

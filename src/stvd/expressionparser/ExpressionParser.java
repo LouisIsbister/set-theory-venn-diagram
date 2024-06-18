@@ -16,12 +16,27 @@ public class ExpressionParser {
      * @return, the restructured expression
      * @throws InvalidExpressionException
      */
-    public static Queue<String> parse(String expr) throws InvalidExpressionException {  
+    public static Queue<String> parse(String expr) throws InvalidExpressionException {
         expression = new ArrayDeque<>();
-        validateExpression(expr);
-        
+        if (expr.isBlank()) {
+            return expression;
+        }
+
+        validateExpressionCharacters(expr);
+        validateBracketFormatting(expr);
+
         return restructure(expr);
     }
+
+    /**
+	 * Check whether a given character is an operator
+	 * 
+	 * @param c, the provided character
+	 * @return
+	 */
+	protected static boolean isOperator(String value) {
+		return value.matches("[\u222A|\u2229|\\\\|~]");
+	}
 
     /**
      * convert the user provided expression into cambridge polish notation.
@@ -33,7 +48,7 @@ public class ExpressionParser {
             return expression;
         }
 
-        int exprCenter = getCenterIndex(str);    // the index to split the expression by
+        int exprCenter = getCenterIndex(str); // the index to split the expression by
         char centerChar = str.charAt(exprCenter);
         if (centerChar != ')' && centerChar != '(') {
             expression.add(String.valueOf(centerChar));
@@ -41,7 +56,7 @@ public class ExpressionParser {
 
         String left = str.substring(0, exprCenter).trim();
         String right = str.substring(exprCenter + 1, str.length()).trim();
-                
+
         if (left.length() > 0) {
             restructure(left);
         }
@@ -57,8 +72,8 @@ public class ExpressionParser {
      * The center is the most recent operator that is contained within
      * matching open and closed brackets.
      * i.e. a ∩ (b ∪ c)
-     *        ^ is the center of this expression as the brackets
-     *          are matching, i.e. there are none
+     * ^ is the center of this expression as the brackets
+     * are matching, i.e. there are none
      * 
      * @param str, the string that is being searched for an operator
      * @return, the index of the operator if one is found
@@ -80,67 +95,72 @@ public class ExpressionParser {
             closedBracketCount += ch == ')' ? 1 : 0;
 
             // if an operator has been found with matching brackets
-            if (BTParser.isOperator(String.valueOf(ch)) && openBracketCount == closedBracketCount) {
+            if (isOperator(String.valueOf(ch)) && openBracketCount == closedBracketCount) {
                 return i;
             }
         }
         return 0;
     }
 
-    /**
-     * Check that all the set ids are no longer than one letter. 
-     * Check that the open and closed bracket counts are equal.
-     * 
-     * @param str, the provided expression
-     * @throws InvalidExpressionException
-     */
-    private static void validateExpression(String str) throws InvalidExpressionException {
+    private static void validateExpressionCharacters(String expr) throws InvalidExpressionException {
         // check that there are not set ids with 2 or more characters
         Pattern pattern = Pattern.compile("[a-zA-Z]{2,}");
-        Matcher matcher = pattern.matcher(str);
+        Matcher matcher = pattern.matcher(expr);
         if (matcher.find()) {
             String s = matcher.group();
             String ret = s.length() > 10 ? s.substring(0, 10) + "..." : s;
             throw new InvalidExpressionException("Set ids must be one letter.<br>Found '" + ret + "'");
         }
 
-        // check bracket formatting
+        pattern = Pattern.compile("[a-zA-Z|\\(|\\)|\u222A|\u2229|\\\\|~|\s]");
+        for (char ch : expr.toCharArray()) {
+            matcher = pattern.matcher(String.valueOf(ch));
+            if (!matcher.find()) {
+                throw new InvalidExpressionException("Character '" + ch + "' is unrecognised!");
+            }
+        }
+    }
 
-        char[] arr = str.toCharArray();
-        int balance = 0, unbalancedIdx = 0;    // bracket balance and possible bad balance index
+    private static void validateBracketFormatting(String expr) throws InvalidExpressionException {
+        char[] arr = expr.toCharArray();
+        if (arr.length == 0) {
+            return;
+        }
+
+        int balance = 0, unbalancedIdx = 0; // bracket balance and possible bad balance index
         char currentCh = arr[0];
         for (int i = 0; i < arr.length; i++) {
             char nextCh = i == arr.length - 1 ? ' ' : arr[i + 1];
-            
+
             balance += arr[i] == '(' ? 1 : 0;
             balance += arr[i] == ')' ? -1 : 0;
-  
-            // -- used for formatting error msg when brackets are unblanced -- 
-            if (balance != 0 && (currentCh == '(' || currentCh == ')')) {
-                unbalancedIdx = i;
+
+            // if there are more closed than open brackets 
+            if (balance < 0 && currentCh == ')' && unbalancedIdx == 0) {
+                throwBracketException("Unmatched closed brackets.", expr, i);
             }
 
             // if there are recurring brackets that contains nothing, i.e. a ∩ () b
             if ((currentCh == '(' && nextCh == ')') || (nextCh == '(' && currentCh == ')')) {
-                throwBracketException("Brackets must contain an expression.", str, balance, unbalancedIdx);
+                throwBracketException("Brackets must contain an expression.", expr, unbalancedIdx);
             }
 
             // if an oeprator immediately follows another an isn't ~
-            if (BTParser.isOperator(String.valueOf(currentCh)) && 
-                    BTParser.isOperator(String.valueOf(nextCh)) && 
-                    nextCh != '~') {
-                throw new InvalidExpressionException("Operator: " + nextCh + " cannot immediately<br>follow " + currentCh);
+            if (isOperator(String.valueOf(currentCh)) && isOperator(String.valueOf(nextCh)) && nextCh != '~') {
+                throw new InvalidExpressionException(
+                    "Operator: " + nextCh + " cannot immediately<br>follow " + currentCh);
             }
 
-            // update the current character to point at the latest valid part of the expression 
+            // update the current character to point at the latest valid part of the
+            // expression
             if (nextCh != ' ') {
                 currentCh = nextCh;
             }
         }
 
-        // if the number of open brackets != number of closed brackets
-        if (balance != 0) {
-            throwBracketException("Found unmatched brackets.", str, balance, unbalancedIdx);
+        // if there were too many open brackets
+        if (balance > 0) {
+            throwBracketException("Unmatched open brackets.", expr, expr.length());
         }
     }
 
@@ -148,10 +168,10 @@ public class ExpressionParser {
      * Creates a formatted string that points to where the bracket imbalance occurs
      * 
      * @param str, the string that caused the error
-     * @return, the formatted string
-     * @throws InvalidExpressionException 
+     *            @return, the formatted string
+     * @throws InvalidExpressionException
      */
-    private static void throwBracketException(String msg, String expr, int balance, int errorIdx) throws InvalidExpressionException {
+    private static void throwBracketException(String msg, String expr, int errorIdx) throws InvalidExpressionException {
         String ret = msg + "<br>" + expr + "<br>";
         ret += "_".repeat(errorIdx) + "^" + "_".repeat(expr.length() - errorIdx);
         throw new InvalidExpressionException(ret);

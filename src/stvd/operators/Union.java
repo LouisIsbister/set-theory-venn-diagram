@@ -20,7 +20,7 @@ public class Union extends BTNode {
 	 * @return, the union of left and right nodes
 	 */
 	@Override
-	public Set<Coordinate> evaluate() throws IllegalArgumentException {
+	public Set<Coordinate> evaluate() {
 		Set<Coordinate> allCoords = new HashSet<>();
 		allCoords.addAll(left().evaluate());
 		allCoords.addAll(right().evaluate());

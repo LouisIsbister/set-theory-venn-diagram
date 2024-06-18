@@ -20,7 +20,7 @@ public class Difference extends BTNode {
 	 * @return, the difference between left and right nodes
 	 */
 	@Override
-	public Set<Coordinate> evaluate() throws IllegalArgumentException {
+	public Set<Coordinate> evaluate() {
 		Set<Coordinate> leftSet = left().evaluate();
 		Set<Coordinate> rightSet = right().evaluate();
 

@@ -3,6 +3,7 @@ package stvd.controller;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 import java.util.List;
 
@@ -16,9 +17,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import stvd.expressionparser.*;
-import stvd.tree.*;
-import stvd.util.*;
+import stvd.expressionparser.ExpressionTree;
+import stvd.tree.BTNode;
+import stvd.tree.BTSetNode;
+import stvd.util.Coordinate;
+import stvd.util.InvalidExpressionException;
 
 public class AppFrame extends JFrame {
 
@@ -123,12 +126,13 @@ public class AppFrame extends JFrame {
 	 * 
 	 * @param err, the exception to be displayed
 	 */
-	private void displayException(String errStr) {
-		JDialog dialogBox = new JDialog(this, "Enter your Expression", true);
+	private void displayException(String errStr, String expr) {
+		JDialog dialogBox = new JDialog(this, "Error!", true);
 
 		JPanel panel = new JPanel();
 		panel.setVisible(true);
-		panel.setPreferredSize(new Dimension(350, 175));
+		int width = expr.length() > 30 ? expr.length() * 12 : 350;
+		panel.setPreferredSize(new Dimension(width, 175));
 		panel.setLayout(null);
 
 		String errorMsg = "<html><center>----- Error -----" +
@@ -137,11 +141,11 @@ public class AppFrame extends JFrame {
 
 		JLabel errorLabel = new JLabel(errorMsg);
 		errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		errorLabel.setBounds(0, 0, 350, 130);
+		errorLabel.setBounds(0, 0, width, 130);
 		errorLabel.setFont(new Font("Monospaced", 4, 14));
 
 		JButton contiueButton = new JButton("Continue");
-		contiueButton.setBounds(100, 130, 150, 25);
+		contiueButton.setBounds(width / 2 - 75, 130, 150, 25);
 		// button to dispose the dialog box when user is satisfied
 		contiueButton.addActionListener(e -> dialogBox.dispose());
 
@@ -159,17 +163,15 @@ public class AppFrame extends JFrame {
 		public HistoryExpr(AppFrame frame, String text, JDialog dialog) {
 			super(text);
 			setFont(new Font("Monospaced", 1, 15));
-			setHorizontalAlignment(SwingConstants.LEFT);
+			//setHorizontalAlignment(SwingConstants.LEFT);
 			setLayout(null);
 
 			JButton redoButton = new JButton("Redo");
-
 			redoButton.setBounds(350, 10, 70, 30);
 			redoButton.addActionListener(e -> {
 				dialog.dispose();
 				new ExpressionInterface(frame, text);
 			});
-
 			add(redoButton);
 		}
 
@@ -184,22 +186,22 @@ public class AppFrame extends JFrame {
 	 * if an error is encountered then return false,
 	 * otherwise return true.
 	 * 
-	 * @param text, the expression to be parsed
-	 * @return, whether the parsing of the expression was successful
+	 * @param expr, the expression to be parsed
+	 * @return, whether the expression evaluation was successful
 	 */
-	public boolean executeExpression(String text) {
+	public boolean executeExpression(String expr) {
 		try {
-			BTParser tree = new BTParser(text);
-			Set<Coordinate> highlightCoords = tree.root().evaluate();
-			List<BTSetNode> nodes = tree.setNodes();
-			if (!exprHistory.contains(text)) {
-				exprHistory.add(text);
-			}
-
+			ExpressionTree tree = new ExpressionTree(expr);
+			Set<Coordinate> highlightCoords = tree.execute();
+			Collection<BTSetNode> nodes = tree.setNodes();
 			guiPanel.updateDisplayData(highlightCoords, nodes);
+
+			if (!exprHistory.contains(expr)) {
+				exprHistory.add(expr);
+			}
 		} 
-		catch (Exception err) {
-			displayException(err.getMessage());
+		catch (Exception e) {
+			displayException(e.getMessage(), expr);
 			return false;
 		}
 
@@ -221,12 +223,12 @@ public class AppFrame extends JFrame {
 	public String cPNRepresentation(String expr) {
 		try {
 			// if the expression is invalid this will throw an exception
-			BTParser tree = new BTParser(expr);
+			ExpressionTree tree = new ExpressionTree(expr);
 			BTNode root = tree.root();
 			
 			return recursiveBuilder(root);
 		} catch (InvalidExpressionException e) {
-			displayException(e.getMessage());
+			displayException(e.getMessage(), expr);
 			return new String();
 		}
 	}

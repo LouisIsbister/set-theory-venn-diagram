@@ -63,7 +63,7 @@ public class ExpressionInterface extends JDialog {
             }
         });
 
-        JButton showEvaluation = new JButton("CPN Format");
+        JButton showEvaluation = new JButton("CPN Representation");
         showEvaluation.setBounds(20, 135, 210, 25);
         showEvaluation.addActionListener(e -> {
             String text = expressionField.getText();

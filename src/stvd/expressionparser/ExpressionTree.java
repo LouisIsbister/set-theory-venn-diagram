@@ -1,19 +1,17 @@
 package stvd.expressionparser;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
-import stvd.util.*;
 import stvd.controller.AppPanel;
-import stvd.operators.Complement;
-import stvd.operators.Difference;
-import stvd.operators.Intersect;
-import stvd.operators.Union;
+import stvd.operators.*;
 import stvd.tree.*;
+import stvd.util.*;
 
-public class BTParser {
+public class ExpressionTree {
 
 	/**
 	 * The central x and y coordinates of the Venn diagram
@@ -36,7 +34,7 @@ public class BTParser {
 	 */
 	private Map<String, BTSetNode> setNodes = new HashMap<>();
 
-	public BTParser(String expr) throws InvalidExpressionException {
+	public ExpressionTree(String expr) throws InvalidExpressionException {
 		expression = ExpressionParser.parse(expr);
 
 		buildExpressionTree();
@@ -44,7 +42,14 @@ public class BTParser {
 	}
 
 	/**
-	 * @return, the root node of the binary tree
+	 * @return the resulting set of data when executing the expression
+	 */
+	public Set<Coordinate> execute() {
+		return root.evaluate();
+	}
+
+	/**
+	 * @return the root node of the tree
 	 */
 	public BTNode root() {
 		return root;
@@ -53,8 +58,8 @@ public class BTParser {
 	/**
 	 * @return, the collection of set nodes
 	 */
-	public ArrayList<BTSetNode> setNodes() {
-		return new ArrayList<>(setNodes.values());
+	public Collection<BTSetNode> setNodes() {
+		return setNodes.values();
 	}
 
 	/**
@@ -81,16 +86,6 @@ public class BTParser {
 	}
 
 	/**
-	 * Check whether a given character is an operator
-	 * 
-	 * @param c, the provided character
-	 * @return
-	 */
-	protected static boolean isOperator(String value) {
-		return value.matches("[\u222A|\u2229|\\\\|~]");
-	}
-
-	/**
 	 * This method recursively builds the binary tree of the expression.
 	 * It retrieves the next element from the scanner and checks whether it
 	 * is an operator. If so, create a new parent node and set its left and right
@@ -107,7 +102,7 @@ public class BTParser {
 		}
 
 		String next = expression.poll();
-		if (isOperator(next)) {
+		if (ExpressionParser.isOperator(next)) {
 			BTNode node = parseOperator(next);
 			node.setLeft(parseTree());
 
@@ -119,7 +114,7 @@ public class BTParser {
 		} else {    // found a set/leaf node
 			next = next.toLowerCase();
 			if (!setNodes.containsKey(next)) {
-				setNodes.put(next, new BTSetNode(String.valueOf(next)));
+				setNodes.put(next, new BTSetNode(next));
 			}
 			return setNodes.get(next);
 		}

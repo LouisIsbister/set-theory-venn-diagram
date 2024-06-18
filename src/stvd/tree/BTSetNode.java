@@ -33,7 +33,7 @@ public class BTSetNode extends BTNode {
 	/**
 	 * The diameter of the circle that graphically represents a set.
 	 */
-	public static final int DIAMETER = 150;
+	public static final int DIAMETER = 250;
 
 	/**
 	 * @param identifier, the unique id for this set

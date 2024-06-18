@@ -5,8 +5,8 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.swing.JPanel;
@@ -31,16 +31,16 @@ public class AppPanel extends JPanel {
 	/**
 	 * all the sets in the expression
 	 */
-	private List<BTSetNode> setNodes = new ArrayList<>();
+	private Collection<BTSetNode> setNodes = new ArrayList<>();
 
 	public AppPanel() {
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		setOpaque(true);
 	}
 
-	public void updateDisplayData(Set<Coordinate> c, List<BTSetNode> s) {
-		coords = c;
-		setNodes = s;
+	public void updateDisplayData(Set<Coordinate> coords, Collection<BTSetNode> setNodes) {
+		this.coords = coords;
+		this.setNodes = setNodes;
 	}
 
 	/**
