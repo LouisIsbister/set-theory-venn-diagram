@@ -72,8 +72,8 @@ public class ExpressionParser {
      * The center is the most recent operator that is contained within
      * matching open and closed brackets.
      * i.e. a ∩ (b ∪ c)
-     * ^ is the center of this expression as the brackets
-     * are matching, i.e. there are none
+     *        ^ is the center of this expression as the brackets
+     *          are matching, i.e. there are none
      * 
      * @param str, the string that is being searched for an operator
      * @return, the index of the operator if one is found
