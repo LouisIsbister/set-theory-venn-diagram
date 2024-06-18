@@ -98,11 +98,11 @@ public class AppFrame extends JFrame {
 		panel.setLayout(null);
 
 		for (int i = 0; i < exprHistory.size(); i++) {
-			String text = exprHistory.get(i);
-
-			HistoryExpr expr = new HistoryExpr(this, text, dialogBox);
-			expr.setBounds(10, 20 + i * 50, 450, 50);
-			panel.add(expr);
+			String expr = exprHistory.get(i);
+			
+			HistoryExpr exprLabel = new HistoryExpr(this, expr, dialogBox);
+			exprLabel.setBounds(10, 20 + i * 50, 450, 50);
+			panel.add(exprLabel);
 		}
 
 		String content = "<html><center>Previous expressions:</center></html>";
@@ -160,8 +160,9 @@ public class AppFrame extends JFrame {
 
 	private class HistoryExpr extends JLabel {
 
-		public HistoryExpr(AppFrame frame, String text, JDialog dialog) {
-			super(text);
+		public HistoryExpr(AppFrame frame, String expr, JDialog dialog) {
+			super(expr.length() <= 30 ? expr : expr.substring(0, 30) + "...");
+
 			setFont(new Font("Monospaced", 1, 15));
 			//setHorizontalAlignment(SwingConstants.LEFT);
 			setLayout(null);
@@ -170,7 +171,7 @@ public class AppFrame extends JFrame {
 			redoButton.setBounds(350, 10, 70, 30);
 			redoButton.addActionListener(e -> {
 				dialog.dispose();
-				new ExpressionInterface(frame, text);
+				new ExpressionInterface(frame, expr);
 			});
 			add(redoButton);
 		}

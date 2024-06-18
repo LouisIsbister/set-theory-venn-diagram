@@ -16,9 +16,10 @@ public class Main {
 	 * 
 	 * More complex expressions to test:
 	 * 
+	 * (c ∩ d) ∪ (a \ (b ∩ e))
 	 * (((b ∪ c) ∪ (d ∪ e)) \ a) ∪ ((b ∪ c) ∩ (d ∪ e))
-	 * (c ∩ d) ∪ (a \ ((b ∪ c) ∩ (d ∪ e)))
 	 * a ∪ (d \ c) ∪ (c \ d) ∪ ((c ∩ d) \ (b ∪ e))
+	 * (a \ (b ∪ e)) ∪ (b \ (a ∪ c)) ∪ (e \ (a ∪ d)) ∪ (d ∩ c)
 	 */
 	
 	public static void main(String args[]) {

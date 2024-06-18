@@ -2,6 +2,7 @@ package stvd.controller;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -51,6 +52,9 @@ public class AppPanel extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2D = (Graphics2D) g;
+
+		Font font = new Font("Monospaced", Font.BOLD, 20);
+		g2D.setFont(font);
 
 		// draw the shaded coordinates
 		g2D.setColor(Color.green);
