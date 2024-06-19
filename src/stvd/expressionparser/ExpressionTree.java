@@ -35,7 +35,7 @@ public class ExpressionTree {
 	private Map<String, BTSetNode> setNodes = new HashMap<>();
 
 	public ExpressionTree(String expr) throws InvalidExpressionException {
-		expression = ExpressionParser.parse(expr);
+		expression = ExpressionParser.parse(expr.trim());
 
 		buildExpressionTree();
 		propagateSetNodes();
@@ -43,8 +43,9 @@ public class ExpressionTree {
 
 	/**
 	 * @return the resulting set of data when executing the expression
+	 * @throws InvalidExpressionException 
 	 */
-	public Set<Coordinate> execute() {
+	public Set<Coordinate> execute() throws InvalidExpressionException {
 		return root.evaluate();
 	}
 

@@ -3,6 +3,7 @@ package stvd.tree;
 import java.util.Set;
 
 import stvd.util.Coordinate;
+import stvd.util.InvalidExpressionException;
 
 public abstract class BTNode {
 
@@ -11,11 +12,9 @@ public abstract class BTNode {
     private BTNode right;
 
     /**
-     * 
      * @return
-     * @throws IllegalArgumentException
      */
-    public abstract Set<Coordinate> evaluate() throws IllegalArgumentException;
+    public abstract Set<Coordinate> evaluate() throws InvalidExpressionException ;
 
     // -- getters and setters for the children nodes ---
 

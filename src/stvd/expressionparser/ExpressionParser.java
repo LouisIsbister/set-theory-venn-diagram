@@ -29,24 +29,25 @@ public class ExpressionParser {
     }
 
     /**
-	 * Check whether a given character is an operator
-	 * 
-	 * @param c, the provided character
-	 * @return
+	 * @param value
+	 * @return whether a an operator has been given
 	 */
 	protected static boolean isOperator(String value) {
 		return value.matches("[\u222A|\u2229|\\\\|~]");
 	}
 
     /**
-     * convert the user provided expression into cambridge polish notation.
+     * Converts the user provided expression into cambridge polish notation.
      * 
+     * @param str the expression
+     * @return queue of characters in CPN
      * @throws InvalidExpressionException
      */
     private static Queue<String> restructure(String str) throws InvalidExpressionException {
         if (str.equals("(") || str.equals(")")) {
             return expression;
         }
+        System.out.println(str);
 
         int exprCenter = getCenterIndex(str); // the index to split the expression by
         char centerChar = str.charAt(exprCenter);
@@ -123,11 +124,7 @@ public class ExpressionParser {
 
     private static void validateBracketFormatting(String expr) throws InvalidExpressionException {
         char[] arr = expr.toCharArray();
-        if (arr.length == 0) {
-            return;
-        }
-
-        int balance = 0, unbalancedIdx = 0; // bracket balance and possible bad balance index
+        int balance = 0; // bracket balance 
         char currentCh = arr[0];
         for (int i = 0; i < arr.length; i++) {
             char nextCh = i == arr.length - 1 ? ' ' : arr[i + 1];
@@ -136,13 +133,13 @@ public class ExpressionParser {
             balance += arr[i] == ')' ? -1 : 0;
 
             // if there are more closed than open brackets 
-            if (balance < 0 && currentCh == ')' && unbalancedIdx == 0) {
+            if (balance < 0) {
                 throwBracketException("Unmatched closed brackets.", expr, i);
             }
 
             // if there are recurring brackets that contains nothing, i.e. a ∩ () b
             if ((currentCh == '(' && nextCh == ')') || (nextCh == '(' && currentCh == ')')) {
-                throwBracketException("Brackets must contain an expression.", expr, unbalancedIdx);
+                throwBracketException("Brackets must contain an expression.", expr, i + 1);
             }
 
             // if an oeprator immediately follows another an isn't ~
@@ -151,8 +148,7 @@ public class ExpressionParser {
                     "Operator: " + nextCh + " cannot immediately<br>follow " + currentCh);
             }
 
-            // update the current character to point at the latest valid part of the
-            // expression
+            // update the current character pointer
             if (nextCh != ' ') {
                 currentCh = nextCh;
             }
@@ -168,7 +164,7 @@ public class ExpressionParser {
      * Creates a formatted string that points to where the bracket imbalance occurs
      * 
      * @param str, the string that caused the error
-     *            @return, the formatted string
+     * @return, the formatted string
      * @throws InvalidExpressionException
      */
     private static void throwBracketException(String msg, String expr, int errorIdx) throws InvalidExpressionException {

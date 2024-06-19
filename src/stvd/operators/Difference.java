@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import stvd.tree.BTNode;
 import stvd.util.Coordinate;
+import stvd.util.InvalidExpressionException;
 
 /**
  * Set difference class, in mathmatical notaion x\y
@@ -18,12 +19,16 @@ public class Difference extends BTNode {
 	 * in right.
 	 * 
 	 * @return, the difference between left and right nodes
+	 * @throws InvalidExpressionException 
 	 */
 	@Override
-	public Set<Coordinate> evaluate() {
+	public Set<Coordinate> evaluate() throws InvalidExpressionException {
+		if (left() == null || right() == null) {
+			throw new InvalidExpressionException("Failed to Execute<br>" + toString() + " is missing an arg.");
+		}
+
 		Set<Coordinate> leftSet = left().evaluate();
 		Set<Coordinate> rightSet = right().evaluate();
-
 		return leftSet.stream()
 				.filter(elem -> !rightSet.contains(elem))
 				.collect(Collectors.toSet());

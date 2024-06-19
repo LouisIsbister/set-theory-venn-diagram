@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import stvd.expressionparser.ExpressionTree;
 import stvd.tree.*;
 import stvd.util.Coordinate;
+import stvd.util.InvalidExpressionException;
 
 /**
  * Set complement class, in mathmatical notaion U\X
@@ -34,11 +35,15 @@ public class Complement extends BTNode {
 	 * Is represetned by U\A.
 	 * 
 	 * @return, the complement of the left node
+	 * @throws InvalidExpressionException 
 	 */
 	@Override
-	public Set<Coordinate> evaluate() {
-		Set<Coordinate> leftSet = left().evaluate();
+	public Set<Coordinate> evaluate() throws InvalidExpressionException {
+		if (left() == null) {
+			throw new InvalidExpressionException("Failed to Execute<br>" + toString() + " is missing an arg.");
+		}
 
+		Set<Coordinate> leftSet = left().evaluate();
 		return universalSet.stream()
 				.filter(e -> !leftSet.contains(e))
 				.collect(Collectors.toSet());

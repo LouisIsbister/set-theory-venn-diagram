@@ -1,6 +1,7 @@
 package stvd.controller;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,13 +16,12 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import stvd.expressionparser.ExpressionTree;
-import stvd.tree.BTNode;
-import stvd.tree.BTSetNode;
-import stvd.util.Coordinate;
-import stvd.util.InvalidExpressionException;
+import stvd.tree.*;
+import stvd.util.*;
 
 public class AppFrame extends JFrame {
 
@@ -63,7 +63,7 @@ public class AppFrame extends JFrame {
 		});
 
 		JMenuItem exit = new JMenuItem("Exit");
-		exit.addActionListener(e -> dispose());
+		exit.addActionListener(e -> this.dispose());
 
 		JMenuItem expressionHistory = new JMenuItem("View previous expressions");
 		expressionHistory.addActionListener(e -> displayExpressionHistory());
@@ -81,7 +81,7 @@ public class AppFrame extends JFrame {
 	 * to enter their expression
 	 */
 	private void askForExpression() {
-		new ExpressionInterface(this, "");
+		new ExpressionInterface(this, new String());
 	}
 
 	/**
@@ -89,31 +89,34 @@ public class AppFrame extends JFrame {
 	 */
 	private void displayExpressionHistory() {
 		JDialog dialogBox = new JDialog(this, "Your Previous Expressions", true);
+		dialogBox.setResizable(false);
 
-		int height = 30 + exprHistory.size() * 50;
+		final int EXPR_HEIGHT = 40;
+		final int PANEL_WIDTH = 450;
+		final int PANEL_HEIGHT = 25 + exprHistory.size() * EXPR_HEIGHT;
+		final int DIALOG_HEIGHT = PANEL_HEIGHT > 300 ? 300 : PANEL_HEIGHT + 40;
 
 		JPanel panel = new JPanel();
-		panel.setVisible(true);
-		panel.setPreferredSize(new Dimension(450, height));
-		panel.setLayout(null);
-
-		for (int i = 0; i < exprHistory.size(); i++) {
-			String expr = exprHistory.get(i);
-			
-			HistoryExpr exprLabel = new HistoryExpr(this, expr, dialogBox);
-			exprLabel.setBounds(10, 20 + i * 50, 450, 50);
-			panel.add(exprLabel);
-		}
+		panel.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 
 		String content = "<html><center>Previous expressions:</center></html>";
 		JLabel label = new JLabel(content);
 		label.setFont(new Font("Monospaced", 1, 15));
 		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setBounds(0, 0, 450, 25);
-
+		label.setPreferredSize(new Dimension(PANEL_WIDTH, 25));
+		
 		panel.add(label);
+		for (String expr : exprHistory) {
+			panel.add(new HistoryExpr(this, expr, dialogBox, PANEL_WIDTH - 20, EXPR_HEIGHT));
+		}
 
-		dialogBox.add(panel);
+		JScrollPane scroller = new JScrollPane();
+		scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scroller.setViewportView(panel);
+
+		dialogBox.add(scroller);
+		dialogBox.setPreferredSize(new Dimension(PANEL_WIDTH + 10, DIALOG_HEIGHT));
 		dialogBox.pack();
 		dialogBox.setLocationRelativeTo(this);
 		dialogBox.setVisible(true);
@@ -160,15 +163,15 @@ public class AppFrame extends JFrame {
 
 	private class HistoryExpr extends JLabel {
 
-		public HistoryExpr(AppFrame frame, String expr, JDialog dialog) {
+		public HistoryExpr(AppFrame frame, String expr, JDialog dialog, int width, int height) {
 			super(expr.length() <= 30 ? expr : expr.substring(0, 30) + "...");
+			setPreferredSize(new Dimension(width, height));
 
 			setFont(new Font("Monospaced", 1, 15));
-			//setHorizontalAlignment(SwingConstants.LEFT);
 			setLayout(null);
 
 			JButton redoButton = new JButton("Redo");
-			redoButton.setBounds(350, 10, 70, 30);
+			redoButton.setBounds(350, 10, 70, 25);
 			redoButton.addActionListener(e -> {
 				dialog.dispose();
 				new ExpressionInterface(frame, expr);
@@ -226,6 +229,7 @@ public class AppFrame extends JFrame {
 			// if the expression is invalid this will throw an exception
 			ExpressionTree tree = new ExpressionTree(expr);
 			BTNode root = tree.root();
+			tree.execute();
 			
 			return recursiveBuilder(root);
 		} catch (InvalidExpressionException e) {

@@ -20,6 +20,7 @@ public class Main {
 	 * (((b ∪ c) ∪ (d ∪ e)) \ a) ∪ ((b ∪ c) ∩ (d ∪ e))
 	 * a ∪ (d \ c) ∪ (c \ d) ∪ ((c ∩ d) \ (b ∪ e))
 	 * (a \ (b ∪ e)) ∪ (b \ (a ∪ c)) ∪ (e \ (a ∪ d)) ∪ (d ∩ c)
+	 * ((a ∩ (b ∪ d)) ∪ (c ∩ (b ∪ d))) \ ((a ∩ c) ∪ (b ∩ d))
 	 */
 	
 	public static void main(String args[]) {
