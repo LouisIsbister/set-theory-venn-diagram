@@ -5,9 +5,10 @@
 This app evaluates expressions in set theory and graphically represents the result
 using Venn Diagrams.
 
-Example: `(c ∩ d) ∪ (a \ ((b ∪ c) ∩ (d ∪ e)))`
+Example: `(c ∩ d) ∪ (a \ (b ∩ e))`
 
-<img width="377" alt="SetTheorySH" src="https://github.com/LouisIsbister/Set-Theory-Venn-Diagram/assets/104889878/d0e393b9-6c02-43e7-a570-7fa3d528f366">
+![Screenshot 2024-06-18 165959](https://github.com/LouisIsbister/set-theory-venn-diagram/assets/104889878/3d77d2b2-20f6-4fb0-b45e-75d6bc1ec99c)
+
 
 
 ## Running the Program:
@@ -16,9 +17,7 @@ When the program is executed a window will pop up where you can navigate to the 
 
 
 ## Expression Ambiguity and Execution:
-Each expression is executed in two phases, first it is parsed in Cambridge Polish Notation (CPN). This format is then used to build a binary tree that can be executed to retrieve the expression output. However, sometimes it isn't clear how an expression should be evaluated due to a lack of brackets to show precedence. For example, the expression `a ∩ b ∪ c` could be evaluated as `(a ∩ b) ∪ c` where the intersect of 'a' and 'b' is evaluated first. Or it could be evaluated as `a ∩ (b ∪ c)` where the union of 'b' and 'c' in evaluated first, both expressions will produce vastly different outputs. To remove this ambiguity an expression will always be treated as having 'right precedence' when it is ambiguous, i.e. the expression `a ∩ b ∪ c` will be evaluated as `a ∩ (b ∪ c)` by default. So, if you want `a ∩ b ∪ c` to evaluate the intersect of 'a' and 'b' first, then you must use brackets to show the precedence `(a ∩ b) ∪ c`. ***If you receive weird or unexpected results then make sure you are explicitly placing brackets where you want precedence!***  
-
-When pressing "CPN Representation" you can view the expression in its CPN form before you execute it, showing the precedence that is enforced during parsing. This may help with debugging where to put brackets in an expression:
+Each expression is executed in two phases, first it is parsed in Cambridge Polish Notation (CPN). This format is then used to build a binary tree that can be executed to retrieve the expression output. However, sometimes it isn't clear how an expression should be evaluated due to a lack of brackets to show precedence. For example, the expression `a ∩ b ∪ c` could be evaluated as `(a ∩ b) ∪ c` where the intersect of 'a' and 'b' is evaluated first. Or it could be evaluated as `a ∩ (b ∪ c)` where the union of 'b' and 'c' in evaluated first, both expressions will produce vastly different outputs. To remove this ambiguity an expression will always be treated as having 'right precedence' when it is ambiguous, i.e. the expression `a ∩ b ∪ c` will be evaluated as `a ∩ (b ∪ c)` by default. So, if you want `a ∩ b ∪ c` to evaluate the intersect of 'a' and 'b' first, then you must use brackets to show the precedence `(a ∩ b) ∪ c`. You can check this by pressing "CPN Representation" which lets you view the expression in its CPN form and see the precedence that is enforced during parsing. This may help with debugging where to put brackets in an expression:
 
 ![Screenshot 2024-06-13 204803](https://github.com/LouisIsbister/set-theory-venn-diagram/assets/104889878/39e47a01-1cf0-4b2f-a1bb-adfb327f4f87)
 ![Screenshot 2024-06-13 205307](https://github.com/LouisIsbister/set-theory-venn-diagram/assets/104889878/830d3f7f-dd2c-4bec-8f28-ec66a5cba8be)
