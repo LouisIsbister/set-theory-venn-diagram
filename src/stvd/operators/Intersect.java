@@ -1,4 +1,4 @@
-package stvd.operators;
+package src.stvd.operators;
 
 import java.util.Set;
 import java.util.stream.Collectors;

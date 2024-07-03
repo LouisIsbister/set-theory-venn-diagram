@@ -5,7 +5,7 @@ import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import stvd.util.InvalidExpressionException;
+import src.stvd.util.InvalidExpressionException;
 
 public class ExpressionParser {
 
