@@ -1,4 +1,4 @@
-package stvd.controller;
+package src.stvd.controller;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -19,9 +19,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-import stvd.expressionparser.ExpressionTree;
-import stvd.tree.*;
-import stvd.util.*;
+import src.stvd.expressionparser.ExpressionTree;
+import src.stvd.tree.*;
+import src.stvd.util.*;
 
 public class AppFrame extends JFrame {
 

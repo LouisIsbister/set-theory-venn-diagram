@@ -1,10 +1,10 @@
-package stvd.tree;
+package src.stvd.tree;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import stvd.util.Coordinate;
+import src.stvd.util.Coordinate;
 
 public class BTSetNode extends BTNode {
 

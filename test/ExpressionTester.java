@@ -1,3 +1,5 @@
+package test;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -5,8 +7,8 @@ import java.util.Queue;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import stvd.expressionparser.ExpressionParser;
-import stvd.util.InvalidExpressionException;
+import src.stvd.expressionparser.ExpressionParser;
+import src.stvd.util.InvalidExpressionException;
 
 
 public class ExpressionTester {

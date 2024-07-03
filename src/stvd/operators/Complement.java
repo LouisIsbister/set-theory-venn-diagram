@@ -1,13 +1,12 @@
-package stvd.operators;
+package src.stvd.operators;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import stvd.controller.AppPanel;
-import stvd.tree.*;
-import stvd.util.Coordinate;
-import stvd.util.InvalidExpressionException;
+import src.stvd.controller.AppPanel;
+import src.stvd.tree.*;
+import src.stvd.util.*;
 
 /**
  * Set complement class, in mathmatical notaion U\X

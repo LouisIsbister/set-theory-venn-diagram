@@ -1,9 +1,8 @@
-package stvd.tree;
+package src.stvd.tree;
 
 import java.util.Set;
 
-import stvd.util.Coordinate;
-import stvd.util.InvalidExpressionException;
+import src.stvd.util.*;
 
 public abstract class BTNode {
 

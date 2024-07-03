@@ -1,11 +1,10 @@
-package stvd.operators;
+package src.stvd.operators;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import stvd.tree.BTNode;
-import stvd.util.Coordinate;
-import stvd.util.InvalidExpressionException;
+import src.stvd.tree.BTNode;
+import src.stvd.util.*;
 
 /**
  * Set difference class, in mathmatical notaion x\y

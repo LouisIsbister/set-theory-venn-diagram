@@ -1,4 +1,4 @@
-package stvd.expressionparser;
+package src.stvd.expressionparser;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import stvd.controller.AppPanel;
-import stvd.operators.*;
-import stvd.tree.*;
-import stvd.util.*;
+import src.stvd.controller.AppPanel;
+import src.stvd.operators.*;
+import src.stvd.tree.*;
+import src.stvd.util.*;
 
 public class ExpressionTree {
 
