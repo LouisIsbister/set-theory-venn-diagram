@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.JPanel;
@@ -42,6 +43,12 @@ public class AppPanel extends JPanel {
 	public void updateDisplayData(Set<Coordinate> coords, Collection<BTSetNode> setNodes) {
 		this.coords = coords;
 		this.setNodes = setNodes;
+		repaint();
+	}
+
+	public void clearData() {
+		this.coords = Set.of();
+		this.setNodes = List.of();
 	}
 
 	/**

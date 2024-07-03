@@ -57,8 +57,8 @@ public class AppFrame extends JFrame {
 
 		JMenuItem newExpr = new JMenuItem("Enter new expression");
 		newExpr.addActionListener(e -> {
-			// clear the pane and ask user for another expression
-			getContentPane().removeAll();
+			// clear display data
+			guiPanel.clearData();
 			askForExpression();
 		});
 
@@ -199,20 +199,16 @@ public class AppFrame extends JFrame {
 			Set<Coordinate> highlightCoords = tree.execute();
 			Collection<BTSetNode> nodes = tree.setNodes();
 			guiPanel.updateDisplayData(highlightCoords, nodes);
-
-			if (!exprHistory.contains(expr)) {
-				exprHistory.add(expr);
-			}
+			repaint();
 		} 
 		catch (Exception e) {
 			displayException(e.getMessage(), expr);
 			return false;
 		}
-
-		// this is stupid but so is swing
-		getContentPane().remove(guiPanel);
-		getContentPane().add(guiPanel);
-		repaint();
+		
+		if (!exprHistory.contains(expr)) {
+			exprHistory.add(expr);
+		}
 		return true;
 	}
 

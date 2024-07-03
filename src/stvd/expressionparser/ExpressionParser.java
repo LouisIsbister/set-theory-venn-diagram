@@ -18,9 +18,6 @@ public class ExpressionParser {
      */
     public static Queue<String> parse(String expr) throws InvalidExpressionException {
         expression = new ArrayDeque<>();
-        if (expr.isBlank()) {
-            return expression;
-        }
 
         validateExpressionCharacters(expr);
         validateBracketFormatting(expr);
@@ -44,10 +41,9 @@ public class ExpressionParser {
      * @throws InvalidExpressionException
      */
     private static Queue<String> restructure(String str) throws InvalidExpressionException {
-        if (str.equals("(") || str.equals(")")) {
+        if (str.equals("(") || str.equals(")") || str.length() == 0) {
             return expression;
         }
-        System.out.println(str);
 
         int exprCenter = getCenterIndex(str); // the index to split the expression by
         char centerChar = str.charAt(exprCenter);
@@ -124,6 +120,11 @@ public class ExpressionParser {
 
     private static void validateBracketFormatting(String expr) throws InvalidExpressionException {
         char[] arr = expr.toCharArray();
+
+        if (arr.length == 0) {
+            return;
+        }
+
         int balance = 0; // bracket balance 
         char currentCh = arr[0];
         for (int i = 0; i < arr.length; i++) {

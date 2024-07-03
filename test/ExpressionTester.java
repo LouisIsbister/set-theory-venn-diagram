@@ -1,10 +1,9 @@
-package test;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import org.junit.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import stvd.expressionparser.ExpressionParser;
 import stvd.util.InvalidExpressionException;
@@ -30,10 +29,10 @@ public class ExpressionTester {
             String expr = e.getKey();
             List<String> expected = e.getValue();
             Queue<String> recieved = handleParsing(expr);
-            Assert.assertNotEquals(null, recieved);
-            Assert.assertEquals(expected.size(), recieved.size());
+            assertNotEquals(null, recieved);
+            assertEquals(expected.size(), recieved.size());
             for (int i = 0; i < expected.size(); i++) {
-                Assert.assertEquals(expected.get(i), recieved.poll());
+                assertEquals(expected.get(i), recieved.poll());
             }
         }
     }
@@ -41,7 +40,7 @@ public class ExpressionTester {
     @Test
     public void testInvalidExpression() {
         for (String expr : invalidExpressions) {
-            Assert.assertThrows(InvalidExpressionException.class, () -> {
+            assertThrows(InvalidExpressionException.class, () -> {
                 ExpressionParser.parse(expr);
             });
         }

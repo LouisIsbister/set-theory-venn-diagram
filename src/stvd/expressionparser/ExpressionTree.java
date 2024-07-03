@@ -14,12 +14,6 @@ import stvd.util.*;
 public class ExpressionTree {
 
 	/**
-	 * The central x and y coordinates of the Venn diagram
-	 */
-	public static final int START_X = AppPanel.WIDTH / 2;
-	public static final int START_Y = AppPanel.HEIGHT / 2;
-
-	/**
 	 * root node of the binary tree
 	 */
 	private BTNode root;
@@ -42,18 +36,18 @@ public class ExpressionTree {
 	}
 
 	/**
+	 * @return the root node of the tree
+	 */
+	public BTNode root() {
+		return root;
+	}
+
+	/**
 	 * @return the resulting set of data when executing the expression
 	 * @throws InvalidExpressionException 
 	 */
 	public Set<Coordinate> execute() throws InvalidExpressionException {
 		return root.evaluate();
-	}
-
-	/**
-	 * @return the root node of the tree
-	 */
-	public BTNode root() {
-		return root;
 	}
 
 	/**
@@ -146,11 +140,12 @@ public class ExpressionTree {
 	 * Each pixel represents a piece of data within the set.
 	 */
 	private void propagateSetNodes() {
-		final int NUMBER_OF_SETS = setNodes.size();
-		final int RADIUS = BTSetNode.DIAMETER / 2;
+	    final int START_X = AppPanel.WIDTH / 2;
+	    final int START_Y = AppPanel.HEIGHT / 2;
 
 		// the angle difference of each circle from the center
-		final double ANGLE_OFFSET = 360 / NUMBER_OF_SETS;
+		final double ANGLE_OFFSET = 360 / setNodes.size();
+		final int RADIUS = BTSetNode.DIAMETER / 2;
 
 		int setCount = 0;
 		for (BTSetNode setNode : setNodes.values()) {

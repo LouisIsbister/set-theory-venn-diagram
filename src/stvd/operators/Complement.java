@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import stvd.expressionparser.ExpressionTree;
+import stvd.controller.AppPanel;
 import stvd.tree.*;
 import stvd.util.Coordinate;
 import stvd.util.InvalidExpressionException;
@@ -22,8 +22,8 @@ public class Complement extends BTNode {
 	private static final HashSet<Coordinate> universalSet = new HashSet<>();
 
 	static {
-		for (int i = 0; i < 2 * ExpressionTree.START_Y; i++) {
-			for (int j = 0; j < 2 * ExpressionTree.START_X; j++) {
+		for (int i = 0; i < AppPanel.WIDTH; i++) {
+			for (int j = 0; j < AppPanel.HEIGHT; j++) {
 				universalSet.add(new Coordinate(i, j));
 			}
 		}
