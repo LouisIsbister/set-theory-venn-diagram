@@ -6,18 +6,12 @@ import java.util.stream.Collectors;
 import src.stvd.tree.BTNode;
 import src.stvd.util.*;
 
-/**
- * Set intersect class, in mathmatical notaion (x ∩ y)
- * "Find all the coordinates in x that also in y"
- */
 public class Intersect extends BTNode {
 
 	/**
-	 * Find the set intersect between of two nodes.
-	 * returns all the values in left that also in
-	 * right.
+	 * Returns all the values in left and right nodes.
 	 * 
-	 * @return, the intersect of left and right nodes
+	 * @return the intersect of left and right nodes
 	 * @throws InvalidExpressionException 
 	 */
 	@Override

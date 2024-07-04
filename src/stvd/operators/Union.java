@@ -6,19 +6,14 @@ import java.util.Set;
 import src.stvd.tree.BTNode;
 import src.stvd.util.*;
 
-/**
- * Set union class, in mathmatical notaion (x U y)
- * "Find all the coordinates in x that are also in y"
- */
 public class Union extends BTNode {
 
 	/**
-	 * Find the set union between of two nodes.
-	 * returns all the values in left that are also in
+	 * Returns all the values in left and all the values in
 	 * right.
 	 * 
-	 * @return, the union of left and right nodes
-	 * @throws InvalidExpressionException 
+	 * @return the set union between of two nodes
+	 * @throws InvalidExpressionException
 	 */
 	@Override
 	public Set<Coordinate> evaluate() throws InvalidExpressionException {

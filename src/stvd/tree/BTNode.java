@@ -11,26 +11,25 @@ public abstract class BTNode {
     private BTNode right;
 
     /**
-     * @return
+     * @return the data of the expression
+     * @throws InvalidExpressionException
      */
     public abstract Set<Coordinate> evaluate() throws InvalidExpressionException ;
 
-    // -- getters and setters for the children nodes ---
+    public BTNode left() {
+        return left;
+    }
 
     public void setLeft(BTNode left) {
         this.left = left;
-    }
-
-    public void setRight(BTNode right) {
-        this.right = right;
-    }
-
-    public BTNode left() {
-        return left;
     }
 
     public BTNode right() {
         return right;
     }
 
+    public void setRight(BTNode right) {
+        this.right = right;
+    }
+    
 }

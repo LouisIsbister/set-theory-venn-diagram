@@ -88,7 +88,7 @@ public class ExpressionTree {
 	 * Otherwise, find or create a new set node (leaf) and return it.
 	 * 
 	 * @param scan, the scanner that traverses the expression
-	 *              @return, the root node of the binary tree
+	 * @return, the root node of the binary tree
 	 * @throws InvalidExpressionException
 	 */
 	private BTNode parseTree() throws InvalidExpressionException {
@@ -120,7 +120,7 @@ public class ExpressionTree {
 	 * the given character.
 	 * 
 	 * @param c, the operator
-	 *           @return, an instance of the operator
+	 * @return, an instance of the operator
 	 * @throws InvalidExpressionException
 	 */
 	private BTNode parseOperator(String str) throws InvalidExpressionException {

@@ -9,7 +9,7 @@ import src.stvd.util.Coordinate;
 public class BTSetNode extends BTNode {
 
 	/**
-	 * The unique identifier of a set, will always be an uppercase letter.
+	 * Set's id
 	 */
 	private String identifier;
 
@@ -35,33 +35,20 @@ public class BTSetNode extends BTNode {
 	 */
 	public static final int DIAMETER = 250;
 
-	/**
-	 * @param identifier, the unique id for this set
-	 */
 	public BTSetNode(String identifier) {
 		this.identifier = identifier;
 		pixels = new HashSet<>();
 	}
 
-	/**
-	 * Evaluating a set node means only to retrieve its "data" which is
-	 * represented by the collection of Coordinates (pixels).
-	 */
 	@Override
 	public Set<Coordinate> evaluate() {
 		return Collections.unmodifiableSet(pixels);
 	}
 
-	/**
-	 * Add a pixel to this sets pixels.
-	 * 
-	 * @param coord, the coordinate that represents the pixel.
-	 */
 	public void addPixel(Coordinate coord) {
 		pixels.add(coord);
 	}
 
-	// ----- getters and setters ----- //
 	public void setCenter(Coordinate center) {
 		this.center = center;
 	}

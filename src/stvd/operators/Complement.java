@@ -5,14 +5,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import src.stvd.controller.AppPanel;
-import src.stvd.tree.*;
+import src.stvd.tree.BTNode;
 import src.stvd.util.*;
 
-/**
- * Set complement class, in mathmatical notaion U\X
- * "Find all the coordinates in the universal set
- * that are not in X"
- */
 public class Complement extends BTNode {
 
 	/**
@@ -31,9 +26,8 @@ public class Complement extends BTNode {
 	/**
 	 * Returns all the values in the universal set
 	 * excluding the those in the left set.
-	 * Is represetned by U\A.
 	 * 
-	 * @return, the complement of the left node
+	 * @return the complement of the left node
 	 * @throws InvalidExpressionException 
 	 */
 	@Override

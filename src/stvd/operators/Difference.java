@@ -6,18 +6,13 @@ import java.util.stream.Collectors;
 import src.stvd.tree.BTNode;
 import src.stvd.util.*;
 
-/**
- * Set difference class, in mathmatical notaion x\y
- * "Find all the coordinates in x that are not in y"
- */
 public class Difference extends BTNode {
 
 	/**
-	 * Find the set difference between of two nodes.
-	 * returns all the values in left that are not
+	 * Returns all the values in left that are not
 	 * in right.
 	 * 
-	 * @return, the difference between left and right nodes
+	 * @return the difference between left and right nodes
 	 * @throws InvalidExpressionException 
 	 */
 	@Override
