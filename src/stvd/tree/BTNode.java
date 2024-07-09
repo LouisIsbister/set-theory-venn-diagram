@@ -14,7 +14,7 @@ public abstract class BTNode {
      * @return the data of the expression
      * @throws InvalidExpressionException
      */
-    public abstract Set<Coordinate> evaluate() throws InvalidExpressionException ;
+    public abstract Set<Coordinate> evaluate() throws InvalidExpressionException;
 
     public BTNode left() {
         return left;

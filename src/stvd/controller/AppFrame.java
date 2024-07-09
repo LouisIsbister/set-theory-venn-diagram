@@ -56,20 +56,20 @@ public class AppFrame extends JFrame {
 		JMenu menu = new JMenu("Menu");
 
 		JMenuItem newExpr = new JMenuItem("Enter new expression");
-		newExpr.addActionListener(e -> {
-			// clear display data
-			guiPanel.clearData();
-			askForExpression();
-		});
+		newExpr.addActionListener(e -> this.askForExpression());
+
+		JMenuItem expressionHistory = new JMenuItem("View previous expressions");
+		expressionHistory.addActionListener(e -> this.displayExpressionHistory());
+
+		JMenuItem homePage = new JMenuItem("Home page");
+		homePage.addActionListener(e -> guiPanel.createDefaultView());
 
 		JMenuItem exit = new JMenuItem("Exit");
 		exit.addActionListener(e -> this.dispose());
 
-		JMenuItem expressionHistory = new JMenuItem("View previous expressions");
-		expressionHistory.addActionListener(e -> displayExpressionHistory());
-
 		menu.add(newExpr);
 		menu.add(expressionHistory);
+		menu.add(homePage);
 		menu.add(exit);
 
 		menuBar.add(menu);
