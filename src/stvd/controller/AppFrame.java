@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.IntStream;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -199,14 +200,14 @@ public class AppFrame extends JFrame {
 			Set<Coordinate> highlightCoords = tree.execute();
 			Collection<BTSetNode> nodes = tree.setNodes();
 			guiPanel.updateDisplayData(highlightCoords, nodes);
-			repaint();
 		} 
 		catch (Exception e) {
 			displayException(e.getMessage(), expr);
 			return false;
 		}
-		
-		if (!exprHistory.contains(expr)) {
+
+		// check whether the expr should be added to history
+		if (exprHistory.stream().noneMatch(e -> stringValue(e) == stringValue(expr))) {
 			exprHistory.add(expr);
 		}
 		return true;
@@ -254,6 +255,12 @@ public class AppFrame extends JFrame {
 			return nodeStr + "(" + left + right + ")";
 		}
 		return nodeStr;
+	}
+
+	private int stringValue(String s) {
+		return IntStream.range(0, s.length()).boxed()
+				.filter(e -> s.charAt(e) != ' ') 
+				.reduce(0, (a, b) -> a + s.charAt(b));
 	}
 
 }

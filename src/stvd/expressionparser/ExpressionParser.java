@@ -41,7 +41,7 @@ public class ExpressionParser {
      * @throws InvalidExpressionException
      */
     private static Queue<String> restructure(String str) throws InvalidExpressionException {
-        if (str.equals("(") || str.equals(")") || str.length() == 0) {
+        if (str.matches("^$|\\(|\\)")) {    // string is empty or is a bracket
             return expression;
         }
 
@@ -54,12 +54,8 @@ public class ExpressionParser {
         String left = str.substring(0, exprCenter).trim();
         String right = str.substring(exprCenter + 1, str.length()).trim();
 
-        if (left.length() > 0) {
-            restructure(left);
-        }
-        if (right.length() > 0) {
-            restructure(right);
-        }
+        restructure(left);
+        restructure(right);
 
         return expression;
     }
@@ -69,11 +65,10 @@ public class ExpressionParser {
      * The center is the most recent operator that is contained within
      * matching open and closed brackets.
      * i.e. a ∩ (b ∪ c)
-     *        ^ is the center of this expression as the brackets
-     *          are matching, i.e. there are none
+     *        ^ 
      * 
      * @param str, the string that is being searched for an operator
-     * @return, the index of the operator if one is found
+     * @return, the center operator if it exists
      * @throws InvalidExpressionException
      */
     private static int getCenterIndex(String str) throws InvalidExpressionException {

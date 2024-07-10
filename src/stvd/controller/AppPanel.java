@@ -90,8 +90,7 @@ public class AppPanel extends JPanel {
 		super.paintComponent(g);
 		Graphics2D g2D = (Graphics2D) g;
 
-		Font font = new Font("Monospaced", Font.BOLD, 20);
-		g2D.setFont(font);
+		g2D.setFont(new Font("Monospaced", Font.BOLD, 20));
 
 		// draw the shaded coordinates
 		g2D.setColor(Color.green);
