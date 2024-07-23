@@ -1,12 +1,16 @@
 package test;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
 import main.expressionparser.*;
+import main.tree.BTSetNode;
+import main.util.Coordinate;
 import main.util.InvalidExpressionException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +30,7 @@ public class ExpressionTester {
     );
     
     @Test
-    public void testValidExpressions() throws InvalidExpressionException {
+    public void testValidExpressionParsing() throws InvalidExpressionException {
         for (Map.Entry<String, List<String>> e : expectedParsingFormat.entrySet()) {
             String expr = e.getKey();
             List<String> expected = e.getValue();
@@ -41,7 +45,7 @@ public class ExpressionTester {
     }
 
     @Test
-    public void testInvalidExpression() {
+    public void testInvalidExpressionParsing() {
         for (String expr : invalidExpressions) {
             assertThrows(InvalidExpressionException.class, () -> {
                 ExpressionParser.parse(expr);
@@ -50,8 +54,24 @@ public class ExpressionTester {
     }
 
     @Test
-    public void testExpression1() throws InvalidExpressionException {
+    public void testExpressionExecution1() throws InvalidExpressionException {
         // a ∪ (b ∩ c)
         ExpressionTree tree = new ExpressionTree("a ∪ (b ∩ c)");
+        Set<Coordinate> res = tree.execute();
+        Collection<BTSetNode> leaves = tree.setNodes();
+
+        final Set<Coordinate> A = Util.retrieveNodeByID(leaves, "a").evaluate();
+        final Set<Coordinate> B = Util.retrieveNodeByID(leaves, "b").evaluate();
+        final Set<Coordinate> C = Util.retrieveNodeByID(leaves, "c").evaluate();
+
+        for (Coordinate coord : res) {
+            if (!A.contains(coord)) {
+                assertTrue(B.contains(coord) && C.contains(coord));
+            } 
+            if (!B.contains(coord) && !C.contains(coord)) {
+                assertTrue(A.contains(coord));
+            }
+            assertTrue(A.contains(coord) || B.contains(coord) || C.contains(coord));
+        }
     }
 }
