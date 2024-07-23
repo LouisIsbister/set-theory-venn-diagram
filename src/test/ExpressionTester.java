@@ -59,7 +59,6 @@ public class ExpressionTester {
         ExpressionTree tree = new ExpressionTree("a ∪ (b ∩ c)");
         Set<Coordinate> res = tree.execute();
         Collection<BTSetNode> leaves = tree.setNodes();
-
         final Set<Coordinate> A = Util.retrieveNodeByID(leaves, "a").evaluate();
         final Set<Coordinate> B = Util.retrieveNodeByID(leaves, "b").evaluate();
         final Set<Coordinate> C = Util.retrieveNodeByID(leaves, "c").evaluate();
@@ -72,6 +71,35 @@ public class ExpressionTester {
                 assertTrue(A.contains(coord));
             }
             assertTrue(A.contains(coord) || B.contains(coord) || C.contains(coord));
+        }
+    }
+
+    @Test
+    public void testExpressionExecution2() throws InvalidExpressionException {
+        // ~(a ∪ b)
+        ExpressionTree tree = new ExpressionTree("~(a ∪ b)");
+        Set<Coordinate> res = tree.execute();
+        Collection<BTSetNode> leaves = tree.setNodes();
+        final Set<Coordinate> A = Util.retrieveNodeByID(leaves, "a").evaluate();
+        final Set<Coordinate> B = Util.retrieveNodeByID(leaves, "b").evaluate();
+
+        for (Coordinate coord : res) {
+            assertFalse(A.contains(coord) && B.contains(coord));
+        }
+    }
+
+    @Test
+    public void testExpressionExecution3() throws InvalidExpressionException {
+        // ~a ∩ b
+        ExpressionTree tree = new ExpressionTree("~a ∩ b");
+        Set<Coordinate> res = tree.execute();
+        Collection<BTSetNode> leaves = tree.setNodes();
+        final Set<Coordinate> A = Util.retrieveNodeByID(leaves, "a").evaluate();
+        final Set<Coordinate> B = Util.retrieveNodeByID(leaves, "b").evaluate();
+
+        for (Coordinate coord : res) {
+            assertTrue(!A.contains(coord));
+            assertTrue(B.contains(coord));
         }
     }
 }
