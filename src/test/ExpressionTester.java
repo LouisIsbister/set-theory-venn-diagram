@@ -53,7 +53,7 @@ public class ExpressionTester {
     @Test
     public void testExpressionExecution1() throws InvalidExpressionException {
         // a ∩ b
-        ExpressionTree tree = new ExpressionTree("~(a ∪ b)");
+        ExpressionTree tree = new ExpressionTree("a ∩ b");
         final Set<Coordinate> A = Util.retrieveSetNodeData(tree, "a");
         final Set<Coordinate> B = Util.retrieveSetNodeData(tree, "b");
 
