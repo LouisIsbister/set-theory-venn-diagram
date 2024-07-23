@@ -1,4 +1,4 @@
-package src.stvd.util;
+package main.util;
 
 public class InvalidExpressionException extends Exception {
     public InvalidExpressionException(String str) {

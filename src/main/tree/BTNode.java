@@ -1,8 +1,8 @@
-package src.stvd.tree;
+package main.tree;
 
 import java.util.Set;
 
-import src.stvd.util.*;
+import main.util.*;
 
 public abstract class BTNode {
 

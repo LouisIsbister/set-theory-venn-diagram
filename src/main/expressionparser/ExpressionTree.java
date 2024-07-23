@@ -1,4 +1,4 @@
-package src.stvd.expressionparser;
+package main.expressionparser;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -6,10 +6,10 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import src.stvd.controller.AppPanel;
-import src.stvd.operators.*;
-import src.stvd.tree.*;
-import src.stvd.util.*;
+import main.controller.AppPanel;
+import main.operators.*;
+import main.tree.*;
+import main.util.*;
 
 public class ExpressionTree {
 
@@ -29,7 +29,7 @@ public class ExpressionTree {
 	private Map<String, BTSetNode> setNodes = new HashMap<>();
 
 	public ExpressionTree(String expr) throws InvalidExpressionException {
-		expression = ExpressionParser.parse(expr.trim());
+		expression = ExpressionParser.parse(expr);
 
 		buildExpressionTree();
 		propagateSetNodes();

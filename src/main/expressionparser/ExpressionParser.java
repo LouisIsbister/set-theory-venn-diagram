@@ -1,11 +1,11 @@
-package src.stvd.expressionparser;
+package main.expressionparser;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import src.stvd.util.InvalidExpressionException;
+import main.util.InvalidExpressionException;
 
 public class ExpressionParser {
 
@@ -17,11 +17,10 @@ public class ExpressionParser {
      * @throws InvalidExpressionException
      */
     public static Queue<String> parse(String expr) throws InvalidExpressionException {
-        expression = new ArrayDeque<>();
-
         validateExpressionCharacters(expr);
         validateBracketFormatting(expr);
 
+        expression = new ArrayDeque<>();
         return restructure(expr);
     }
 
@@ -86,8 +85,8 @@ public class ExpressionParser {
             openBracketCount += ch == '(' ? 1 : 0;
             closedBracketCount += ch == ')' ? 1 : 0;
 
-            // if an operator has been found with matching brackets
-            if (isOperator(String.valueOf(ch)) && openBracketCount == closedBracketCount) {
+            // if an operator has been found with matching brackets, and is not a complement (should always be index 0)
+            if (isOperator(String.valueOf(ch)) && openBracketCount == closedBracketCount && ch != '~') {
                 return i;
             }
         }

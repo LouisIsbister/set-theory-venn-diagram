@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.junit.jupiter.api.Test;
+
+import main.expressionparser.*;
+import main.util.InvalidExpressionException;
+
 import static org.junit.jupiter.api.Assertions.*;
-
-import src.stvd.expressionparser.ExpressionParser;
-import src.stvd.util.InvalidExpressionException;
-
 
 public class ExpressionTester {
 
@@ -26,12 +26,13 @@ public class ExpressionTester {
     );
     
     @Test
-    public void testValidExpressions() {
+    public void testValidExpressions() throws InvalidExpressionException {
         for (Map.Entry<String, List<String>> e : expectedParsingFormat.entrySet()) {
             String expr = e.getKey();
             List<String> expected = e.getValue();
-            Queue<String> recieved = handleParsing(expr);
-            assertNotEquals(null, recieved);
+            
+            assertDoesNotThrow(() -> ExpressionParser.parse(expr));
+            Queue<String> recieved = ExpressionParser.parse(expr);
             assertEquals(expected.size(), recieved.size());
             for (int i = 0; i < expected.size(); i++) {
                 assertEquals(expected.get(i), recieved.poll());
@@ -48,11 +49,9 @@ public class ExpressionTester {
         }
     }
 
-    // --- helpers ---
-
-    static Queue<String> handleParsing(String expr) {
-        try {
-            return ExpressionParser.parse(expr);
-        } catch (InvalidExpressionException e) { return null; }
+    @Test
+    public void testExpression1() throws InvalidExpressionException {
+        // a ∪ (b ∩ c)
+        ExpressionTree tree = new ExpressionTree("a ∪ (b ∩ c)");
     }
 }

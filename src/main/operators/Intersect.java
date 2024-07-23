@@ -1,18 +1,17 @@
-package src.stvd.operators;
+package main.operators;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import src.stvd.tree.BTNode;
-import src.stvd.util.*;
+import main.tree.BTNode;
+import main.util.*;
 
-public class Difference extends BTNode {
+public class Intersect extends BTNode {
 
 	/**
-	 * Returns all the values in left that are not
-	 * in right.
+	 * Returns all the values in left and right nodes.
 	 * 
-	 * @return the difference between left and right nodes
+	 * @return the intersect of left and right nodes
 	 * @throws InvalidExpressionException 
 	 */
 	@Override
@@ -20,15 +19,15 @@ public class Difference extends BTNode {
 		if (left() == null || right() == null) {
 			throw new InvalidExpressionException("Failed to Execute<br>" + toString() + " is missing an arg.");
 		}
-
+		
 		Set<Coordinate> leftSet = left().evaluate();
 		Set<Coordinate> rightSet = right().evaluate();
 		return leftSet.stream()
-				.filter(elem -> !rightSet.contains(elem))
+				.filter(elem -> rightSet.contains(elem))
 				.collect(Collectors.toSet());
 	}
 
 	public String toString() {
-		return "\\";
+		return "\u2229";
 	}
 }

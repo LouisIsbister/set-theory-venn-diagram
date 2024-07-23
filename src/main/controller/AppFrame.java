@@ -1,4 +1,4 @@
-package src.stvd.controller;
+package main.controller;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -6,7 +6,6 @@ import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
-import java.util.stream.IntStream;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -20,9 +19,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-import src.stvd.expressionparser.ExpressionTree;
-import src.stvd.tree.*;
-import src.stvd.util.*;
+import main.expressionparser.ExpressionTree;
+import main.tree.*;
+import main.util.*;
 
 public class AppFrame extends JFrame {
 
@@ -200,16 +199,16 @@ public class AppFrame extends JFrame {
 			Set<Coordinate> highlightCoords = tree.execute();
 			Collection<BTSetNode> nodes = tree.setNodes();
 			guiPanel.updateDisplayData(highlightCoords, nodes);
-		} 
-		catch (Exception e) {
+		} catch (Exception e) {
 			displayException(e.getMessage(), expr);
 			return false;
 		}
+		exprHistory.add(expr.trim());
 
 		// check whether the expr should be added to history
-		if (exprHistory.stream().noneMatch(e -> stringValue(e) == stringValue(expr))) {
-			exprHistory.add(expr);
-		}
+		// if (exprHistory.stream().noneMatch(e -> exprCompare(e, expr))) {
+		// 	exprHistory.add(expr.trim());
+		// }
 		return true;
 	}
 
@@ -225,10 +224,8 @@ public class AppFrame extends JFrame {
 		try {
 			// if the expression is invalid this will throw an exception
 			ExpressionTree tree = new ExpressionTree(expr);
-			BTNode root = tree.root();
 			tree.execute();
-			
-			return recursiveBuilder(root);
+			return recursiveBuilder(tree.root());
 		} catch (InvalidExpressionException e) {
 			displayException(e.getMessage(), expr);
 			return new String();
@@ -250,17 +247,32 @@ public class AppFrame extends JFrame {
 		if (!nodeStr.matches("[a-zA-Z]")) {
 			String left = recursiveBuilder(root.left());
 			String right = recursiveBuilder(root.right());
-			right = right == null ? "" : " " + right; 
-			
+			right = right == null ? "" : " " + right;
+
 			return nodeStr + "(" + left + right + ")";
 		}
 		return nodeStr;
 	}
 
-	private int stringValue(String s) {
-		return IntStream.range(0, s.length()).boxed()
-				.filter(e -> s.charAt(e) != ' ') 
-				.reduce(0, (a, b) -> a + s.charAt(b));
-	}
+	// private static boolean exprCompare(String s1, String s2) {
+	// 	try {
+	// 		ExpressionTree tree1 = new ExpressionTree(s1);
+	// 		ExpressionTree tree2 = new ExpressionTree(s2);
 
+	// 		Set<Coordinate> t1Coords = tree1.execute();
+	// 		Set<Coordinate> t2Coords = tree2.execute();
+
+	// 		return t1Coords.containsAll(t2Coords) && t2Coords.containsAll(t1Coords);
+	// 	} catch(InvalidExpressionException e) {
+	// 		return false;
+	// 	}
+
+	// 	// String str1 = s1.replaceAll(" ", "");
+	// 	// String str2 = s2.replaceAll(" ", "");
+	// 	// if (str1.length() != str2.length()) {
+	// 	// 	return false;
+	// 	// }
+	// 	// return IntStream.range(0, s1.length()).boxed()
+	// 	// 		.allMatch(e -> str1.charAt(e) == str2.charAt(e));
+	// }
 }

@@ -1,12 +1,12 @@
-package src.stvd.operators;
+package main.operators;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import src.stvd.controller.AppPanel;
-import src.stvd.tree.BTNode;
-import src.stvd.util.*;
+import main.controller.AppPanel;
+import main.tree.BTNode;
+import main.util.*;
 
 public class Complement extends BTNode {
 
@@ -45,5 +45,4 @@ public class Complement extends BTNode {
 	public String toString() {
 		return "~";
 	}
-
 }
