@@ -1,11 +1,11 @@
-package test;
+
 
 import java.util.Collection;
 import java.util.Set;
 
-import main.expressionparser.ExpressionTree;
-import main.tree.BTSetNode;
-import main.util.Coordinate;
+import com.stvd.expressionparser.ExpressionTree;
+import com.stvd.tree.BTSetNode;
+import com.stvd.util.Coordinate;
 
 public class Util {
 

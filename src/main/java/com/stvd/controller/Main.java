@@ -1,4 +1,4 @@
-package main.controller;
+package com.stvd.controller;
 
 public class Main {
 

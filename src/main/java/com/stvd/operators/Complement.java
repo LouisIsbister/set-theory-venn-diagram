@@ -1,12 +1,12 @@
-package main.operators;
+package com.stvd.operators;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import main.controller.AppPanel;
-import main.tree.BTNode;
-import main.util.*;
+import com.stvd.controller.AppPanel;
+import com.stvd.tree.BTNode;
+import com.stvd.util.*;
 
 public class Complement extends BTNode {
 

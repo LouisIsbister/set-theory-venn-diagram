@@ -1,4 +1,4 @@
-package main.controller;
+package com.stvd.controller;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;

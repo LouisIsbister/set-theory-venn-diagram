@@ -1,4 +1,4 @@
-package main.controller;
+package com.stvd.controller;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,8 +16,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import main.tree.BTSetNode;
-import main.util.Coordinate;
+import com.stvd.tree.BTSetNode;
+import com.stvd.util.Coordinate;
 
 /**
  * panel that displays the Venn diagrams

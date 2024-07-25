@@ -1,10 +1,10 @@
-package main.operators;
+package com.stvd.operators;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import main.tree.BTNode;
-import main.util.*;
+import com.stvd.tree.BTNode;
+import com.stvd.util.*;
 
 public class Union extends BTNode {
 
