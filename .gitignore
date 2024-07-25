@@ -49,16 +49,6 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 
-# Gradle
-.gradle
-build/
-out/
-!gradle/wrapper/gradle-wrapper.jar
-
-# Gradle Wrapper
-!gradle-wrapper.jar
-!gradle-wrapper.properties
-
 # OS-specific files
 .DS_Store
 Thumbs.db
