@@ -20,9 +20,9 @@ Afterwards, run the project using the command:
 
 `mvn exec:java`  
 
-If you do not have Maven installed you can simply execute the `.jar` from the root project directory using the command:  
+If you do not have Maven installed you can execute the `.jar` file that is located in the `bin` directory using the command:  
 
-`java -jar Set-Theory-Venn-Diagram-1.0-SNAPSHOT.jar`  
+`java -jar bin\Set-Theory-Venn-Diagram-1.0-SNAPSHOT.jar`  
 
 When the program is executed a window will pop up where you can navigate to the "menu" icon in the top left hand corner. To enter your own expressions click on "Enter new expression", this will prompt a dialog box where you can enter your expression. Once you have entered your expression, click "confirm", this will parse and display your expression if it is valid.
 
