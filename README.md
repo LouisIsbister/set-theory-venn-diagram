@@ -1,23 +1,17 @@
 # Set Theory Venn Diagrams
 
 
-## About:
-This app evaluates expressions in set theory and graphically represents the result
-using Venn Diagrams.
-
-Example: `(c ∩ d) ∪ (a \ (b ∩ e))`
+This app evaluates expressions in set theory and graphically represents the result using venn diagrams.  
+`e.g. (c ∩ d) ∪ (a \ (b ∩ e))`
 
 ![Screenshot 2024-06-18 165959](https://github.com/LouisIsbister/set-theory-venn-diagram/assets/104889878/3d77d2b2-20f6-4fb0-b45e-75d6bc1ec99c)
 
 
 
 ## Building and Running the Program:
-You can build the project using Maven by navigating to the Set-Theory-Venn-Diagram directory and running:  
+You can build and run the project using Maven by navigating to the Set-Theory-Venn-Diagram directory and running the following commands:  
 
 `mvn clean install`  
-
-Afterwards, run the project using the command:  
-
 `mvn exec:java`  
 
 If you do not have Maven installed you can execute the `.jar` file that is located in the `bin` directory using the command:  
