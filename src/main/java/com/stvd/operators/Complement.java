@@ -1,8 +1,8 @@
 package com.stvd.operators;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import com.stvd.controller.AppPanel;
 import com.stvd.tree.BTNode;
@@ -11,17 +11,12 @@ import com.stvd.util.*;
 public class Complement extends BTNode {
 
 	/**
-	 * The universal set represents all possible data and is constant.
+	 * The universal set represents all the display pixels
 	 */
-	private static final HashSet<Coordinate> universalSet = new HashSet<>();
-
-	static {
-		for (int i = 0; i < AppPanel.WIDTH; i++) {
-			for (int j = 0; j < AppPanel.HEIGHT; j++) {
-				universalSet.add(new Coordinate(i, j));
-			}
-		}
-	}
+	private static final Set<Coordinate> universalSet = 
+		IntStream.range(0, AppPanel.WIDTH * AppPanel.HEIGHT).boxed()
+				.map(e -> new Coordinate(e % AppPanel.WIDTH, e / AppPanel.HEIGHT))
+				.collect(Collectors.toSet());
 
 	/**
 	 * Returns all the values in the universal set
@@ -45,4 +40,5 @@ public class Complement extends BTNode {
 	public String toString() {
 		return "~";
 	}
+
 }

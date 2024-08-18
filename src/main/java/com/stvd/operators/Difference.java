@@ -13,7 +13,7 @@ public class Difference extends BTNode {
 	 * in right.
 	 * 
 	 * @return the difference between left and right nodes
-	 * @throws InvalidExpressionException 
+	 * @throws InvalidExpressionException
 	 */
 	@Override
 	public Set<Coordinate> evaluate() throws InvalidExpressionException {
@@ -31,4 +31,5 @@ public class Difference extends BTNode {
 	public String toString() {
 		return "\\";
 	}
+
 }

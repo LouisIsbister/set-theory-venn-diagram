@@ -30,4 +30,5 @@ public class Union extends BTNode {
 	public String toString() {
 		return "\u222A";
 	}
+
 }
