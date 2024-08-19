@@ -74,19 +74,18 @@ public class ExpressionParser {
         if (str.length() <= 1) {
             return 0;
         }
-
-        int openBracketCount = 0, closedBracketCount = 0;
+        int bracketBalance = 0;
         for (int i = 0; i < str.length(); i++) {
             if (str.charAt(i) == ' ') {
                 continue;
             }
 
             char ch = str.charAt(i);
-            openBracketCount += ch == '(' ? 1 : 0;
-            closedBracketCount += ch == ')' ? 1 : 0;
-
+            bracketBalance += ch == '(' ? 1 : 0;
+            bracketBalance += ch == ')' ? -1 : 0;
+            
             // if an operator has been found with matching brackets, and is not a complement (should always be index 0)
-            if (isOperator(String.valueOf(ch)) && openBracketCount == closedBracketCount && ch != '~') {
+            if (isOperator(String.valueOf(ch)) && bracketBalance == 0 && ch != '~') {
                 return i;
             }
         }

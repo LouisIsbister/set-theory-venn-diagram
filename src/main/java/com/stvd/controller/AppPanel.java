@@ -58,7 +58,7 @@ public class AppPanel extends JPanel {
 		// clear the current drawings on the panel
 		updateDisplayData(Set.of(), List.of());
 		
-		JLabel label = new JLabel("Set Theory Venn Diagram");
+		JLabel label = new JLabel("Set Theory Venn Diagrams");
 		label.setPreferredSize(new Dimension(300, 75));
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("Monospaced", 1, 20));
