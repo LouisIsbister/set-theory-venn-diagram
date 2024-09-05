@@ -1,14 +1,10 @@
 
 
-import java.util.Collection;
-import java.util.Set;
-
 import org.junit.jupiter.api.function.Executable;
 
 import com.stvd.expressionparser.ExpressionTree;
 import com.stvd.tree.BTSetNode;
-import com.stvd.util.Coordinate;
-import com.stvd.util.InvalidExpressionException;
+import com.stvd.util.*;
 
 public class Util {
 
@@ -19,8 +15,8 @@ public class Util {
      * @param id, id of the set node
      * @return
      */
-    public static Set<Coordinate> retrieveSetNodeData(ExpressionTree tree, String id) {
-        Collection<BTSetNode> leaves = tree.setNodes();
+    public static java.util.Set<Coordinate> retrieveSetNodeData(ExpressionTree tree, String id) {
+        java.util.Collection<BTSetNode> leaves = tree.setNodes();
         return leaves.stream()
                 .filter(e -> e.toString().equals(id))
                 .findFirst()

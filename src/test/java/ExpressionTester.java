@@ -2,7 +2,6 @@
 
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -33,7 +32,7 @@ public class ExpressionTester {
             List<String> expected = e.getValue();
 
             Util.assertDoesNotThrowExpressionException(() -> ExpressionParser.parse(expr));
-            Queue<String> recieved = ExpressionParser.parse(expr);
+            java.util.Queue<String> recieved = ExpressionParser.parse(expr);
             assertEquals(expected.size(), recieved.size());
             for (int i = 0; i < expected.size(); i++) {
                 assertEquals(expected.get(i), recieved.poll());
