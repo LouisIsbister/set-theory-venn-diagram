@@ -11,8 +11,10 @@ This app evaluates expressions in set theory and graphically represents the resu
 ## Building and Running the Program:
 You can build and run the project using Maven by navigating to the Set-Theory-Venn-Diagram directory and running the following commands:  
 
-`mvn clean install`  
-`mvn exec:java`  
+```
+mvn clean install
+mvn exec:java
+```
 
 If you do not have Maven installed you can execute the `.jar` file that is located in the `bin` directory using the command:  
 
