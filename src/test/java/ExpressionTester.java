@@ -31,8 +31,8 @@ public class ExpressionTester {
         for (Map.Entry<String, List<String>> e : expectedParsingFormat.entrySet()) {
             String expr = e.getKey();
             List<String> expected = e.getValue();
-            
-            assertDoesNotThrow(() -> ExpressionParser.parse(expr));
+
+            Util.assertDoesNotThrowExpressionException(() -> ExpressionParser.parse(expr));
             Queue<String> recieved = ExpressionParser.parse(expr);
             assertEquals(expected.size(), recieved.size());
             for (int i = 0; i < expected.size(); i++) {
@@ -59,7 +59,8 @@ public class ExpressionTester {
 
         Set<Coordinate> res = tree.execute();
         for (Coordinate coord : res) {
-            assertTrue(A.contains(coord) && B.contains(coord));
+            assertTrue(A.contains(coord));
+            assertTrue(B.contains(coord));
         }
     }
 
@@ -79,7 +80,6 @@ public class ExpressionTester {
         }
     }
 
-
     @Test
     public void testExpressionExecution3() throws InvalidExpressionException {
         // ~(a ∪ b)
@@ -89,8 +89,8 @@ public class ExpressionTester {
 
         Set<Coordinate> res = tree.execute();
         for (Coordinate coord : res) {
-            assertFalse(A.contains(coord));
-            assertFalse(B.contains(coord));
+            assertTrue(!A.contains(coord));
+            assertTrue(!B.contains(coord));
         }
     }
 
