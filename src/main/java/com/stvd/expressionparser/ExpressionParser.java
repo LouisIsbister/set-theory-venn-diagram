@@ -21,27 +21,28 @@ public class ExpressionParser {
         validateBracketFormatting(expr);
 
         expression = new ArrayDeque<>();
-        return restructure(expr);
+        toPolishNotation(expr);
+        return expression;
     }
 
     /**
-	 * @param value
-	 * @return whether a an operator has been given
-	 */
-	protected static boolean isOperator(String value) {
-		return value.matches("[\u222A|\u2229|\\\\|~]");
-	}
+     * @param input
+     * @return whether the input is an operator
+     */
+    protected static boolean isOperator(String input) {
+        return input.matches("[\u222A|\u2229|\\\\|~]");
+    }
 
     /**
-     * Converts the user provided expression into cambridge polish notation.
+     * Converts the user provided expression into polish notation.
      * 
      * @param str the expression
      * @return queue of characters in CPN
      * @throws InvalidExpressionException
      */
-    private static Queue<String> restructure(String str) throws InvalidExpressionException {
+    private static void toPolishNotation(String str) throws InvalidExpressionException {
         if (str.matches("^$|\\(|\\)")) {    // string is empty or is a bracket
-            return expression;
+            return;
         }
 
         int exprCenter = getCenterIndex(str); // the index to split the expression by
@@ -53,16 +54,14 @@ public class ExpressionParser {
         String left = str.substring(0, exprCenter).trim();
         String right = str.substring(exprCenter + 1, str.length()).trim();
 
-        restructure(left);
-        restructure(right);
-
-        return expression;
+        toPolishNotation(left);
+        toPolishNotation(right);
     }
 
     /**
      * Method that finds the "center" of an expression or sub-expression.
      * The center is the most recent operator that is contained within
-     * matching open and closed brackets.
+     * balanced open and closed brackets.
      * i.e. a ∩ (b ∪ c)
      *        ^ 
      * 
@@ -92,6 +91,13 @@ public class ExpressionParser {
         return 0;
     }
 
+    /**
+     * ensure that there are no invalid characters/strings in the 
+     * expression
+     *  
+     * @param expr
+     * @throws InvalidExpressionException
+     */
     private static void validateExpressionCharacters(String expr) throws InvalidExpressionException {
         // check that there are not set ids with 2 or more characters
         Pattern pattern = Pattern.compile("[a-zA-Z]{2,}");
@@ -111,6 +117,12 @@ public class ExpressionParser {
         }
     }
 
+    /**
+     * check that the brackets in the expression are balanced 
+     * 
+     * @param expr
+     * @throws InvalidExpressionException
+     */
     private static void validateBracketFormatting(String expr) throws InvalidExpressionException {
         char[] arr = expr.toCharArray();
 
@@ -155,10 +167,11 @@ public class ExpressionParser {
     }
 
     /**
-     * Creates a formatted string that points to where the bracket imbalance occurs
+     * creates a formatted string that points to where the bracket imbalance occurs
      * 
-     * @param str, the string that caused the error
-     * @return, the formatted string
+     * @param msg, cause of the error
+     * @param expr, the user provided expression
+     * @param errorIdx, the index at which the brackets are imbalanced
      * @throws InvalidExpressionException
      */
     private static void throwBracketException(String msg, String expr, int errorIdx) throws InvalidExpressionException {

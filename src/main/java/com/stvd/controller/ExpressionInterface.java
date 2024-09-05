@@ -69,7 +69,7 @@ public class ExpressionInterface extends JDialog {
             String text = expressionField.getText();
             String cpnStr = frame.cPNRepresentation(text);
             if (!cpnStr.isBlank()) {
-                displayCPNExpression(cpnStr);
+                displayPNExpression(cpnStr);
             }
         });
 
@@ -120,17 +120,17 @@ public class ExpressionInterface extends JDialog {
     }
 
     /**
-     * @param cpnStr, cambridge polish notation form of expression
+     * @param pnStr, polish notation form of expression
      */
-    private void displayCPNExpression(String cpnStr) {
+    private void displayPNExpression(String pnStr) {
         JDialog dialog = new JDialog(this, "CPN Representation", true);
         JPanel newPanel = new JPanel(); 
-        JLabel label = new JLabel(cpnStr);
+        JLabel label = new JLabel(pnStr);
         label.setFont(new Font("Monospaced", 1, 15));
 
         newPanel.setLayout(new FlowLayout());
         newPanel.add(label);
-        int width = cpnStr.length() * 12 + 20;
+        int width = pnStr.length() * 12 + 20;
         newPanel.setPreferredSize(new Dimension(width, 40));
 
         dialog.add(newPanel);
