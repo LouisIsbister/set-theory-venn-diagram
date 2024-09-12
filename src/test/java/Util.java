@@ -32,7 +32,7 @@ public class Util {
     public static void assertDoesNotThrowExpressionException(Executable exec) {
         try {
             exec.execute();
-        } catch (InvalidExpressionException actualException) {
+        } catch (InvalidExpressionException ex) {
             assert false : "ATTENTION - InvalidExpressionException incorrectly thrown";
         } catch (Throwable e) {}
     }

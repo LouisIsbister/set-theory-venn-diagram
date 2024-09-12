@@ -13,6 +13,8 @@ import com.stvd.util.*;
 
 public class ExpressionTree {
 
+    public final String EXPR_STRING; 
+
     /**
      * root node of the binary tree
      */
@@ -29,6 +31,7 @@ public class ExpressionTree {
     private Map<String, BTSetNode> setNodes = new HashMap<>();
 
     public ExpressionTree(String expr) throws InvalidExpressionException {
+        EXPR_STRING = expr;
         expression = ExpressionParser.parse(expr);
 
         buildExpressionTree();

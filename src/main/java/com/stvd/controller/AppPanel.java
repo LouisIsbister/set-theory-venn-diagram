@@ -63,16 +63,19 @@ public class AppPanel extends JPanel {
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setFont(new Font("Monospaced", 1, 20));
 
-        final String LANDING_PAGE_TEXT = "<html>To enter your own expressions navigate to " + 
-            "'Menu -> Enter new Expression'<br><br>Execute the expression by pressing 'Confirm Expression'" + 
-            ", to view the execution structure of the expression press 'CPN Representation'<br><br>" +
-            "Expressions that have been successfully executed can be re-executed by navigating to " + 
-            "'Menu -> View previous expressions', and click 'Redo' on the expression to re-execute it<br><br>" +
-            "To view this page again navigate to 'Menu -> Home page', and to exit this application simply navigate to " + 
-            "'Menu -> Exit'</html>";
+        final String LANDING_PAGE_TEXT = """
+            <html>To enter your own expressions navigate to 'Menu -> Enter new Expression'
+            <br><br>Execute the expression by pressing 'Confirm Expression', to view the 
+                    execution structure of the expression press 'CPN Representation'
+            <br><br>Expressions that have been successfully executed can be re-executed 
+                    by navigating to 'Menu -> View previous expressions', and click 'Redo' 
+                    on the expression to re-open it in the expression interface
+            <br><br>To view this page again navigate to 'Menu -> Home page', and to exit 
+                    this application simply navigate to 'Menu -> Exit'
+            </html>""";
         
         JLabel content = new JLabel(LANDING_PAGE_TEXT);
-        content.setPreferredSize(new Dimension(480, 425));
+        content.setPreferredSize(new Dimension(WIDTH - 20, HEIGHT - label.getHeight()));
         content.setVerticalAlignment(SwingConstants.NORTH);
         content.setFont(new Font("Monospaced", 0, 14));
 

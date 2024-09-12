@@ -28,22 +28,24 @@ public class AppFrame extends JFrame {
     /**
      * the panel that displays the diagrams
      */
-    private static AppPanel guiPanel = new AppPanel();
+    private static AppPanel guiPanel;
 
     /**
      * all the executed expressions so far
      */
-    private static List<String> exprHistory = new ArrayList<>();
+    private static List<ExpressionTree> exprHistory;
 
-    public AppFrame() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public static void start() {
+        guiPanel = new AppPanel();
+        exprHistory = new ArrayList<>();
+        final AppFrame WINDOW = new AppFrame();
 
-        getContentPane().add(guiPanel);
-        initialiseMenu();
-
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        WINDOW.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        WINDOW.initialiseMenu();
+        WINDOW.getContentPane().add(guiPanel);
+        WINDOW.pack();
+        WINDOW.setLocationRelativeTo(null);
+        WINDOW.setVisible(true);
     }
 
     /**
@@ -53,7 +55,7 @@ public class AppFrame extends JFrame {
      */
     private void initialiseMenu() {
         JMenuItem newExpr = new JMenuItem("Enter new expression");
-        newExpr.addActionListener(e -> this.askForExpression());
+        newExpr.addActionListener(e -> this.askForExpression(new String()));
 
         JMenuItem expressionHistory = new JMenuItem("View previous expressions");
         expressionHistory.addActionListener(e -> this.displayExpressionHistory());
@@ -79,9 +81,11 @@ public class AppFrame extends JFrame {
     /**
      * Creates a new expression interface that allows the user
      * to enter their expression
+     * 
+     * @param defString, default expression in the expression field
      */
-    private void askForExpression() {
-        new ExpressionInterface(this, new String());
+    private void askForExpression(String defString) {
+        new ExpressionInterface(this, defString);
     }
 
     /**
@@ -107,8 +111,8 @@ public class AppFrame extends JFrame {
         label.setPreferredSize(new Dimension(PANEL_WIDTH, 25));
         
         panel.add(label);
-        for (String expr : exprHistory) {
-            panel.add(new HistoryExpr(this, expr, dialogBox, PANEL_WIDTH - 20, EXPR_HEIGHT));
+        for (ExpressionTree expr : exprHistory) {
+            panel.add(new HistoryExpr(this, expr.EXPR_STRING, dialogBox, PANEL_WIDTH - 20, EXPR_HEIGHT));
         }
 
         JScrollPane scroller = new JScrollPane();
@@ -166,16 +170,17 @@ public class AppFrame extends JFrame {
         public HistoryExpr(AppFrame frame, String expr, JDialog dialog, int width, int height) {
             super(expr.length() <= 30 ? expr : expr.substring(0, 30) + "...");
             setPreferredSize(new Dimension(width, height));
-
             setFont(new Font("Monospaced", 1, 15));
             setLayout(null);
-
+            
+            final int BUTTON_WIDTH = 65;
             JButton redoButton = new JButton("Redo");
-            redoButton.setBounds(350, 10, 70, 25);
+            redoButton.setBounds(width - BUTTON_WIDTH - 5, 10, BUTTON_WIDTH, 25);
             redoButton.addActionListener(e -> {
                 dialog.dispose();
-                new ExpressionInterface(frame, expr);
+                askForExpression(expr);
             });
+            
             add(redoButton);
         }
 
@@ -199,16 +204,16 @@ public class AppFrame extends JFrame {
             Set<Coordinate> highlightCoords = tree.execute();
             Collection<BTSetNode> nodes = tree.setNodes();
             guiPanel.updateDisplayData(highlightCoords, nodes);
+
+            // check whether the user has already entered an expression with the same outcome
+            // if they haven't then add it to expression history
+            if (exprHistory.stream().noneMatch(e -> exprCompare(tree, e))) {
+                exprHistory.add(tree);
+            }
         } catch (Exception e) {
             displayException(e.getMessage(), expr);
             return false;
         }
-        exprHistory.add(expr.trim());
-
-        // check whether the expr should be added to history
-        // if (exprHistory.stream().noneMatch(e -> exprCompare(e, expr))) {
-        //     exprHistory.add(expr.trim());
-        // }
         return true;
     }
 
@@ -239,7 +244,7 @@ public class AppFrame extends JFrame {
      * @param root, current/root node of subtree
      * @return cpn string
      */
-    private String recursiveBuilder(BTNode root) {
+    private static String recursiveBuilder(BTNode root) {
         if (root == null) {
             return null;
         }
@@ -254,25 +259,21 @@ public class AppFrame extends JFrame {
         return nodeStr;
     }
 
-    // private static boolean exprCompare(String s1, String s2) {
-    //     try {
-    //         ExpressionTree tree1 = new ExpressionTree(s1);
-    //         ExpressionTree tree2 = new ExpressionTree(s2);
-
-    //         Set<Coordinate> t1Coords = tree1.execute();
-    //         Set<Coordinate> t2Coords = tree2.execute();
-
-    //         return t1Coords.containsAll(t2Coords) && t2Coords.containsAll(t1Coords);
-    //     } catch(InvalidExpressionException e) {
-    //         return false;
-    //     }
-
-    //     // String str1 = s1.replaceAll(" ", "");
-    //     // String str2 = s2.replaceAll(" ", "");
-    //     // if (str1.length() != str2.length()) {
-    //     //     return false;
-    //     // }
-    //     // return IntStream.range(0, s1.length()).boxed()
-    //     //         .allMatch(e -> str1.charAt(e) == str2.charAt(e));
-    // }
+    /**
+     * Given two expression trees, check if they are equivalent, i.e. they 
+     * contain the same data points/coordinates when evaulated
+     * 
+     * @param tree1
+     * @param tree2
+     * @return whether the trees are equivalent
+     */
+    private static boolean exprCompare(ExpressionTree tree1, ExpressionTree tree2) {
+        try {
+            Set<Coordinate> t1Coords = tree1.execute();
+            Set<Coordinate> t2Coords = tree2.execute();
+            return t1Coords.containsAll(t2Coords) && t2Coords.containsAll(t1Coords);
+        } catch(InvalidExpressionException e) {
+            return false;
+        }
+    }
 }
