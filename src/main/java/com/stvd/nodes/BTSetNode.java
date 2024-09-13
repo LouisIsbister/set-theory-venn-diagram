@@ -1,4 +1,4 @@
-package com.stvd.tree;
+package com.stvd.nodes;
 
 import java.util.Collections;
 import java.util.HashSet;

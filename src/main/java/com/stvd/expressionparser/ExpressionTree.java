@@ -7,8 +7,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import com.stvd.controller.AppPanel;
-import com.stvd.operators.*;
-import com.stvd.tree.*;
+import com.stvd.nodes.*;
 import com.stvd.util.*;
 
 public class ExpressionTree {

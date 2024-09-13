@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import com.stvd.tree.BTSetNode;
+import com.stvd.nodes.BTSetNode;
 import com.stvd.util.Coordinate;
 
 /**

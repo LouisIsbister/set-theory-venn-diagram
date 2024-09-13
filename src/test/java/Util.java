@@ -3,7 +3,7 @@
 import org.junit.jupiter.api.function.Executable;
 
 import com.stvd.expressionparser.ExpressionTree;
-import com.stvd.tree.BTSetNode;
+import com.stvd.nodes.BTSetNode;
 import com.stvd.util.*;
 
 public class Util {

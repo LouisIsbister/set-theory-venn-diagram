@@ -20,7 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import com.stvd.expressionparser.ExpressionTree;
-import com.stvd.tree.*;
+import com.stvd.nodes.*;
 import com.stvd.util.*;
 
 public class AppFrame extends JFrame {
@@ -112,7 +112,7 @@ public class AppFrame extends JFrame {
         
         panel.add(label);
         for (ExpressionTree expr : exprHistory) {
-            panel.add(new HistoryExpr(this, expr.EXPR_STRING, dialogBox, PANEL_WIDTH - 20, EXPR_HEIGHT));
+            panel.add(new HistoryExpr(expr, dialogBox, PANEL_WIDTH - 20, EXPR_HEIGHT));
         }
 
         JScrollPane scroller = new JScrollPane();
@@ -137,10 +137,10 @@ public class AppFrame extends JFrame {
         JDialog dialogBox = new JDialog(this, "Error!", true);
 
         JPanel panel = new JPanel();
-        panel.setVisible(true);
         int width = expr.length() > 30 ? expr.length() * 12 : 350;
         panel.setPreferredSize(new Dimension(width, 175));
         panel.setLayout(null);
+        panel.setVisible(true);
 
         String errorMsg = "<html><center>----- Error -----" +
                 "<br>Expression evaluation failed." +
@@ -167,21 +167,35 @@ public class AppFrame extends JFrame {
 
     private class HistoryExpr extends JLabel {
 
-        public HistoryExpr(AppFrame frame, String expr, JDialog dialog, int width, int height) {
-            super(expr.length() <= 30 ? expr : expr.substring(0, 30) + "...");
+        public HistoryExpr(ExpressionTree tree, JDialog dialog, int width, int height) {
+            super(tree.EXPR_STRING.length() <= 26 ? 
+                    tree.EXPR_STRING : 
+                    tree.EXPR_STRING.substring(0, 26) + "...");
             setPreferredSize(new Dimension(width, height));
             setFont(new Font("Monospaced", 1, 15));
             setLayout(null);
+
+            final int OFFSET = 5;
+
+            final int DELETE_WIDTH = 45;
+            JButton delete = new JButton("X");
+            delete.setBounds(width - DELETE_WIDTH - OFFSET, 10, DELETE_WIDTH, 25);
+            delete.addActionListener(e -> {
+                exprHistory.remove(tree);
+                dialog.dispose();
+                displayExpressionHistory();
+            });
             
-            final int BUTTON_WIDTH = 65;
+            final int REDO_WIDTH = 65;
             JButton redoButton = new JButton("Redo");
-            redoButton.setBounds(width - BUTTON_WIDTH - 5, 10, BUTTON_WIDTH, 25);
+            redoButton.setBounds(width - REDO_WIDTH - DELETE_WIDTH - (2 * OFFSET), 10, REDO_WIDTH, 25);
             redoButton.addActionListener(e -> {
                 dialog.dispose();
-                askForExpression(expr);
+                askForExpression(tree.EXPR_STRING);
             });
             
             add(redoButton);
+            add(delete);
         }
 
     }

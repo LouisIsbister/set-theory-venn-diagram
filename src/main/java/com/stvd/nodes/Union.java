@@ -1,9 +1,8 @@
-package com.stvd.operators;
+package com.stvd.nodes;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import com.stvd.tree.BTNode;
 import com.stvd.util.*;
 
 public class Union extends BTNode {

@@ -1,11 +1,10 @@
-package com.stvd.operators;
+package com.stvd.nodes;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.stvd.controller.AppPanel;
-import com.stvd.tree.BTNode;
 import com.stvd.util.*;
 
 public class Complement extends BTNode {
