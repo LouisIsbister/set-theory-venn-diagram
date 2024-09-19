@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-import com.stvd.expressionparser.ExpressionTree;
+import com.stvd.expressionparser.*;
 import com.stvd.nodes.*;
 import com.stvd.util.*;
 
@@ -89,44 +89,6 @@ public class AppFrame extends JFrame {
     }
 
     /**
-     * displays all the expressions the current user has tested
-     */
-    private void displayExpressionHistory() {
-        JDialog dialogBox = new JDialog(this, "Your Previous Expressions", true);
-        dialogBox.setResizable(false);
-
-        final int EXPR_HEIGHT = 40;
-        final int PANEL_WIDTH = 450;
-        final int PANEL_HEIGHT = 25 + exprHistory.size() * EXPR_HEIGHT;
-        final int DIALOG_HEIGHT = PANEL_HEIGHT > 300 ? 300 : PANEL_HEIGHT + 40;
-
-        JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(PANEL_WIDTH, PANEL_HEIGHT));
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-
-        String content = "<html><center>Previous expressions:</center></html>";
-        JLabel label = new JLabel(content);
-        label.setFont(new Font("Monospaced", 1, 15));
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setPreferredSize(new Dimension(PANEL_WIDTH, 25));
-        
-        panel.add(label);
-        for (ExpressionTree expr : exprHistory) {
-            panel.add(new HistoryExpr(expr, dialogBox, PANEL_WIDTH - 20, EXPR_HEIGHT));
-        }
-
-        JScrollPane scroller = new JScrollPane();
-        scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scroller.setViewportView(panel);
-
-        dialogBox.add(scroller);
-        dialogBox.setPreferredSize(new Dimension(PANEL_WIDTH + 10, DIALOG_HEIGHT));
-        dialogBox.pack();
-        dialogBox.setLocationRelativeTo(this);
-        dialogBox.setVisible(true);
-    }
-
-    /**
      * Creates a new JDialog box popup that contains
      * a notification that the expression parsing failed
      * and provides the error message.
@@ -165,13 +127,51 @@ public class AppFrame extends JFrame {
         dialogBox.setVisible(true);
     }
 
+    /**
+     * displays all the expressions the current user has tested
+     */
+    private void displayExpressionHistory() {
+        JDialog dialogBox = new JDialog(this, "Your Previous Expressions", true);
+        dialogBox.setResizable(false);
+
+        final int PANEL_HEIGHT = exprHistory.size() * HistoryExpr.H_EXPR_HEIGHT + 25;
+        
+        JPanel panel = new JPanel();
+        panel.setPreferredSize(new Dimension(AppPanel.WIDTH, PANEL_HEIGHT));
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+
+        String content = "<html><center>Previous expressions:</center></html>";
+        JLabel label = new JLabel(content);
+        label.setFont(new Font("Monospaced", 1, 15));
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setPreferredSize(new Dimension(AppPanel.WIDTH, 25));
+        
+        panel.add(label);
+        for (ExpressionTree expr : exprHistory) {
+            panel.add(new HistoryExpr(expr, dialogBox));
+        }
+
+        JScrollPane scroller = new JScrollPane();
+        scroller.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroller.setViewportView(panel);
+
+        dialogBox.add(scroller);
+        dialogBox.setPreferredSize(new Dimension(AppPanel.WIDTH + 10, PANEL_HEIGHT > 300 ? 300 : PANEL_HEIGHT + 40));
+        dialogBox.pack();
+        dialogBox.setLocationRelativeTo(this);
+        dialogBox.setVisible(true);
+    }
+
     private class HistoryExpr extends JLabel {
 
-        public HistoryExpr(ExpressionTree tree, JDialog dialog, int width, int height) {
+        static final int H_EXPR_WIDTH = AppPanel.WIDTH - 20;
+        static final int H_EXPR_HEIGHT = 40;
+
+        public HistoryExpr(ExpressionTree tree, JDialog dialog) {
             super(tree.EXPR_STRING.length() <= 26 ? 
                     tree.EXPR_STRING : 
                     tree.EXPR_STRING.substring(0, 26) + "...");
-            setPreferredSize(new Dimension(width, height));
+            setPreferredSize(new Dimension(H_EXPR_WIDTH, H_EXPR_HEIGHT));
             setFont(new Font("Monospaced", 1, 15));
             setLayout(null);
 
@@ -179,7 +179,7 @@ public class AppFrame extends JFrame {
 
             final int DELETE_WIDTH = 45;
             JButton delete = new JButton("X");
-            delete.setBounds(width - DELETE_WIDTH - OFFSET, 10, DELETE_WIDTH, 25);
+            delete.setBounds(H_EXPR_WIDTH - DELETE_WIDTH - OFFSET, 10, DELETE_WIDTH, 25);
             delete.addActionListener(e -> {
                 exprHistory.remove(tree);
                 dialog.dispose();
@@ -188,7 +188,7 @@ public class AppFrame extends JFrame {
             
             final int REDO_WIDTH = 65;
             JButton redoButton = new JButton("Redo");
-            redoButton.setBounds(width - REDO_WIDTH - DELETE_WIDTH - (2 * OFFSET), 10, REDO_WIDTH, 25);
+            redoButton.setBounds(H_EXPR_WIDTH - REDO_WIDTH - DELETE_WIDTH - (2 * OFFSET), 10, REDO_WIDTH, 25);
             redoButton.addActionListener(e -> {
                 dialog.dispose();
                 askForExpression(tree.EXPR_STRING);
@@ -220,15 +220,16 @@ public class AppFrame extends JFrame {
             guiPanel.updateDisplayData(highlightCoords, nodes);
 
             // check whether the user has already entered an expression with the same outcome
-            // if they haven't then add it to expression history
-            if (exprHistory.stream().noneMatch(e -> exprCompare(tree, e))) {
+            // if they haven't add it to expression history
+            if (exprHistory.stream()
+                        .noneMatch(e -> ExpressionTree.areEqual(tree, e))) {    
                 exprHistory.add(tree);
             }
+            return true;
         } catch (Exception e) {
             displayException(e.getMessage(), expr);
             return false;
         }
-        return true;
     }
 
     /**
@@ -237,14 +238,12 @@ public class AppFrame extends JFrame {
      * into what is actually happening.
      * 
      * @param expr, the user provided expression
-     * @return, cpn string
+     * @return, cpn string 
      */
-    public String cPNRepresentation(String expr) {
+    public String pnRepresentation(String expr) {
         try {
-            // if the expression is invalid this will throw an exception
-            ExpressionTree tree = new ExpressionTree(expr);
-            tree.execute();
-            return recursiveBuilder(tree.root());
+            java.util.Queue<String> expression = ExpressionParser.parse(expr);
+            return recursiveBuilder(expression);
         } catch (InvalidExpressionException e) {
             displayException(e.getMessage(), expr);
             return new String();
@@ -252,42 +251,26 @@ public class AppFrame extends JFrame {
     }
 
     /**
-     * recursively iterate through the binary tree to build up 
-     * the string representation in CPN
+     * recursively build the PN string representation of the expression 
      * 
-     * @param root, current/root node of subtree
+     * @param expression, current/root node of subtree
      * @return cpn string
      */
-    private static String recursiveBuilder(BTNode root) {
-        if (root == null) {
+    private static String recursiveBuilder(java.util.Queue<String> expression) {
+        if (expression.isEmpty()) {
             return null;
         }
-        String nodeStr = root.toString();
-        if (!nodeStr.matches("[a-zA-Z]")) {
-            String left = recursiveBuilder(root.left());
-            String right = recursiveBuilder(root.right());
-            right = right == null ? "" : " " + right;
 
-            return nodeStr + "(" + left + right + ")";
+        String elem = expression.poll();
+        if (ExpressionParser.isOperator(elem)) {
+            String left = recursiveBuilder(expression);
+            String right = new String();
+            if (!elem.equals("~")) {    // complement should only have a left child node!
+                right = " " + recursiveBuilder(expression);
+            }
+            return elem + "(" + left + right + ")";
         }
-        return nodeStr;
+        return elem;
     }
 
-    /**
-     * Given two expression trees, check if they are equivalent, i.e. they 
-     * contain the same data points/coordinates when evaulated
-     * 
-     * @param tree1
-     * @param tree2
-     * @return whether the trees are equivalent
-     */
-    private static boolean exprCompare(ExpressionTree tree1, ExpressionTree tree2) {
-        try {
-            Set<Coordinate> t1Coords = tree1.execute();
-            Set<Coordinate> t2Coords = tree2.execute();
-            return t1Coords.containsAll(t2Coords) && t2Coords.containsAll(t1Coords);
-        } catch(InvalidExpressionException e) {
-            return false;
-        }
-    }
 }

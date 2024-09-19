@@ -67,7 +67,7 @@ public class ExpressionInterface extends JDialog {
         showEvaluation.setBounds(20, 135, 210, 25);
         showEvaluation.addActionListener(e -> {
             String text = expressionField.getText();
-            String cpnStr = frame.cPNRepresentation(text);
+            String cpnStr = frame.pnRepresentation(text);
             if (!cpnStr.isBlank()) {
                 displayPNExpression(cpnStr);
             }

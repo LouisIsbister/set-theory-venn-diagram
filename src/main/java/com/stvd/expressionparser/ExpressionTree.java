@@ -33,15 +33,8 @@ public class ExpressionTree {
         EXPR_STRING = expr;
         expression = ExpressionParser.parse(expr);
 
-        buildExpressionTree();
+        intialiseExpressionTree();
         propagateSetNodes();
-    }
-
-    /**
-     * @return the root node of the tree
-     */
-    public BTNode root() {
-        return root;
     }
 
     /**
@@ -68,7 +61,7 @@ public class ExpressionTree {
      * 
      * @throws InvalidExpressionException
      */
-    private void buildExpressionTree() throws InvalidExpressionException {
+    private void intialiseExpressionTree() throws InvalidExpressionException {
         root = parseTree();
 
         // user provided too many arguments
@@ -133,6 +126,24 @@ public class ExpressionTree {
             case "~" -> new Complement();
             default -> throw new InvalidExpressionException("'" + str + "' is an invalid operator.");
         };
+    }
+
+    /**
+     * Given two expression trees, check if they are equivalent, i.e. they 
+     * contain the same data points/coordinates when evaulated
+     * 
+     * @param tree1
+     * @param tree2
+     * @return whether the trees are equivalent
+     */
+    public static boolean areEqual(ExpressionTree tree1, ExpressionTree tree2) {
+        try {
+            Set<Coordinate> t1Coords = tree1.execute();
+            Set<Coordinate> t2Coords = tree2.execute();
+            return t1Coords.containsAll(t2Coords) && t2Coords.containsAll(t1Coords);
+        } catch(InvalidExpressionException e) {
+            return false;
+        }
     }
 
     /**

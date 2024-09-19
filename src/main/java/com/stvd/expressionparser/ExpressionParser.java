@@ -29,7 +29,7 @@ public class ExpressionParser {
      * @param input
      * @return whether the input is an operator
      */
-    protected static boolean isOperator(String input) {
+    public static boolean isOperator(String input) {
         return input.matches("[\u222A|\u2229|\\\\|~]");
     }
 
