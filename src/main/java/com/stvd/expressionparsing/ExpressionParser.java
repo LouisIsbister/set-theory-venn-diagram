@@ -1,27 +1,37 @@
-package com.stvd.expressionparser;
+package com.stvd.expressionparsing;
 
-import java.util.ArrayDeque;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Queue;
+import java.util.Stack;
+import java.util.ArrayDeque;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.stvd.util.InvalidExpressionException;
+import com.stvd.util.ParserFailureException;
 
 public class ExpressionParser {
+
+    private static final String OPERATORS = "[\u222A|\u2229|\\\\|~]";
+    private static final String VALID_CHARACTERS = "[a-zA-Z|\\(|\\)|\u222A|\u2229|\\\\|~|\s]";
+    private static final String INVALID_SET_IDS = "[a-zA-Z]{2,}";
 
     private static Queue<String> expression;
 
     /**
      * @param expr, the user provided expression
      * @return, the restructured expression
-     * @throws InvalidExpressionException
+     * @throws ParserFailureException
      */
-    public static Queue<String> parse(String expr) throws InvalidExpressionException {
+    public static Queue<String> parse(String expr) throws ParserFailureException {
         validateExpressionCharacters(expr);
         validateBracketFormatting(expr);
 
         expression = new ArrayDeque<>();
         toPolishNotation(expr);
+
+        checkIsExecutableExpression();
+
         return expression;
     }
 
@@ -30,7 +40,7 @@ public class ExpressionParser {
      * @return whether the input is an operator
      */
     public static boolean isOperator(String input) {
-        return input.matches("[\u222A|\u2229|\\\\|~]");
+        return input.matches(OPERATORS);
     }
 
     /**
@@ -38,9 +48,9 @@ public class ExpressionParser {
      * 
      * @param str the expression
      * @return queue of characters in CPN
-     * @throws InvalidExpressionException
+     * @throws ParserFailureException
      */
-    private static void toPolishNotation(String str) throws InvalidExpressionException {
+    private static void toPolishNotation(String str) throws ParserFailureException {
         if (str.matches("^$|\\(|\\)")) {    // string is empty or is a bracket
             return;
         }
@@ -67,9 +77,9 @@ public class ExpressionParser {
      * 
      * @param str, the string that is being searched for an operator
      * @return, the center operator if it exists
-     * @throws InvalidExpressionException
+     * @throws ParserFailureException
      */
-    private static int getCenterIndex(String str) throws InvalidExpressionException {
+    private static int getCenterIndex(String str) throws ParserFailureException {
         if (str.length() <= 1) {
             return 0;
         }
@@ -96,23 +106,24 @@ public class ExpressionParser {
      * expression
      *  
      * @param expr
-     * @throws InvalidExpressionException
+     * @throws ParserFailureException
      */
-    private static void validateExpressionCharacters(String expr) throws InvalidExpressionException {
+    private static void validateExpressionCharacters(String expr) throws ParserFailureException {
         // check that there are not set ids with 2 or more characters
-        Pattern pattern = Pattern.compile("[a-zA-Z]{2,}");
+        Pattern pattern = Pattern.compile(INVALID_SET_IDS);
         Matcher matcher = pattern.matcher(expr);
         if (matcher.find()) {
             String s = matcher.group();
             String ret = s.length() > 10 ? s.substring(0, 10) + "..." : s;
-            throw new InvalidExpressionException("Set ids must be one letter.<br>Found '" + ret + "'");
+            throw new ParserFailureException("Set ids must be one letter.<br>Found '" + ret + "'");
         }
 
-        pattern = Pattern.compile("[a-zA-Z|\\(|\\)|\u222A|\u2229|\\\\|~|\s]");
+
+        pattern = Pattern.compile(VALID_CHARACTERS);
         for (char ch : expr.toCharArray()) {
             matcher = pattern.matcher(String.valueOf(ch));
             if (!matcher.find()) {
-                throw new InvalidExpressionException("Character '" + ch + "' is unrecognised!");
+                throw new ParserFailureException("Character '" + ch + "' is unrecognised!");
             }
         }
     }
@@ -121,9 +132,9 @@ public class ExpressionParser {
      * check that the brackets in the expression are balanced 
      * 
      * @param expr
-     * @throws InvalidExpressionException
+     * @throws ParserFailureException
      */
-    private static void validateBracketFormatting(String expr) throws InvalidExpressionException {
+    private static void validateBracketFormatting(String expr) throws ParserFailureException {
         char[] arr = expr.toCharArray();
 
         if (arr.length == 0) {
@@ -150,7 +161,7 @@ public class ExpressionParser {
 
             // if an oeprator immediately follows another an isn't ~
             if (isOperator(String.valueOf(currentCh)) && isOperator(String.valueOf(nextCh)) && nextCh != '~') {
-                throw new InvalidExpressionException(
+                throw new ParserFailureException(
                     "Operator: " + nextCh + " cannot immediately<br>follow " + currentCh);
             }
 
@@ -167,16 +178,56 @@ public class ExpressionParser {
     }
 
     /**
+     * Emulate the construction of a binary tree to ensure that the arguments provided by 
+     * the user will result in an executable tree. This method performs all the necassary 
+     * preconditions to ensure no node will encounter null pointers during execution!
+     * 
+     * @throws ParserFailureException
+     */
+    private static void checkIsExecutableExpression() throws ParserFailureException {
+        List<String> exp = new ArrayList<>(expression);
+        Stack<String> operands = new Stack<>();
+        for (int i = exp.size() - 1; i >= 0; i--) {
+            String elem = exp.get(i);
+            if (!isOperator(elem)) {
+                operands.push(elem);
+            }
+            else if (isOperator(elem) && elem.equals("~")) {    // unary operators
+                if (operands.size() < 1) {
+                    throw new ParserFailureException(elem + " must have one arg.");
+                }
+                else {
+                    operands.pop();
+                    operands.push(elem);
+                }
+            }
+            else if (isOperator(elem) && !elem.equals("~")) {    // unary operators
+                if (operands.size() < 2) {
+                    throw new ParserFailureException(elem + " must have two args.");
+                }
+                else {
+                    operands.pop(); operands.pop();
+                    operands.push(elem);
+                }
+            }
+        }
+
+        if (operands.size() != 1) {
+            throw new ParserFailureException("Invalid expression,<br>too many args given.");
+        }
+    }
+
+    /**
      * creates a formatted string that points to where the bracket imbalance occurs
      * 
      * @param msg, cause of the error
      * @param expr, the user provided expression
      * @param errorIdx, the index at which the brackets are imbalanced
-     * @throws InvalidExpressionException
+     * @throws ParserFailureException
      */
-    private static void throwBracketException(String msg, String expr, int errorIdx) throws InvalidExpressionException {
+    private static void throwBracketException(String msg, String expr, int errorIdx) throws ParserFailureException {
         String ret = msg + "<br>" + expr + "<br>";
         ret += "_".repeat(errorIdx) + "^" + "_".repeat(expr.length() - errorIdx);
-        throw new InvalidExpressionException(ret);
+        throw new ParserFailureException(ret);
     }
 }

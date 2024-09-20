@@ -15,10 +15,6 @@ public class Intersect extends BTNode {
      */
     @Override
     public Set<Coordinate> evaluate() throws InvalidExpressionException {
-        if (left() == null || right() == null) {
-            throw new InvalidExpressionException("Failed to Execute<br>" + toString() + " is missing an arg.");
-        }
-        
         Set<Coordinate> leftSet = left().evaluate();
         Set<Coordinate> rightSet = right().evaluate();
         return leftSet.stream()

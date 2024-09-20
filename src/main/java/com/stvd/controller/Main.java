@@ -21,6 +21,10 @@ public class Main {
      * a ∪ (d \ c) ∪ (c \ d) ∪ ((c ∩ d) \ (b ∪ e))
      * (a \ (b ∪ e)) ∪ (b \ (a ∪ c)) ∪ (e \ (a ∪ d)) ∪ (d ∩ c)
      * ((a ∩ (b ∪ d)) ∪ (c ∩ (b ∪ d))) \ ((a ∩ c) ∪ (b ∩ d))
+     * 
+     * Cool pattern:
+     * 
+     * (a ∩ b ∩ c ∩ d) ∪ (((a ∩ (b ∪ d)) ∪ (c ∩ (b ∪ d))) \ ((a ∩ c) ∪ (b ∩ d)))
      */
     
     public static void main(String args[]) {

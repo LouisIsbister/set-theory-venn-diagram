@@ -18,6 +18,7 @@ public class Complement extends BTNode {
                 .collect(Collectors.toSet());
 
     /**
+     * {@inheritDoc}
      * Returns all the values in the universal set
      * excluding the those in the left set.
      * 
@@ -26,10 +27,6 @@ public class Complement extends BTNode {
      */
     @Override
     public Set<Coordinate> evaluate() throws InvalidExpressionException {
-        if (left() == null) {
-            throw new InvalidExpressionException("Failed to Execute<br>" + toString() + " is missing an arg.");
-        }
-
         Set<Coordinate> leftSet = left().evaluate();
         return universalSet.stream()
                 .filter(e -> !leftSet.contains(e))

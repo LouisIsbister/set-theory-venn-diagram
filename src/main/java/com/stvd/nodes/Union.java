@@ -16,10 +16,6 @@ public class Union extends BTNode {
      */
     @Override
     public Set<Coordinate> evaluate() throws InvalidExpressionException {
-        if (left() == null || right() == null) {
-            throw new InvalidExpressionException("Failed to Execute<br>" + toString() + " is missing an arg.");
-        }
-
         Set<Coordinate> allCoords = new HashSet<>();
         allCoords.addAll(left().evaluate());
         allCoords.addAll(right().evaluate());

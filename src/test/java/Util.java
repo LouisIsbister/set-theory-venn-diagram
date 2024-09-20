@@ -2,7 +2,7 @@
 
 import org.junit.jupiter.api.function.Executable;
 
-import com.stvd.expressionparser.ExpressionTree;
+import com.stvd.expressionparsing.ExpressionTree;
 import com.stvd.nodes.BTSetNode;
 import com.stvd.util.*;
 

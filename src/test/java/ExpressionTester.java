@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import com.stvd.expressionparser.*;
+import com.stvd.expressionparsing.*;
 import com.stvd.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,13 +20,27 @@ public class ExpressionTester {
         "a ∩ b ∩ ~(c ∪ d)", List.of("∩","a","∩","b","~","∪","c","d"),
         "((a ∩ b) ∪ c) ∪ d", List.of("∪","∪","∩","a","b","c","d")
     );
-    private static List<String> invalidExpressions = List.of(
+    
+    /**
+     * invalid expressions, these are invalid due to either unbalanced brackets, 
+     * enclosed brackets with no contents, invalid set ids, or invalid operators.
+     */
+    private static List<String> invalidExpression1 = List.of(
         "(a ∪ (b ∩ c)", "a ∪ () (b ∩ c)", "a ∪ (b ∩ cc)",
-         "a ∪ (b + c)"
+         "a ∪ (b + c)", "a - b", ""
+    );
+
+    /**
+     * some more invalid expressions, each of these expressions is testing the
+     * checkIsExecutableExpression() method in ExpressionParser.java
+     */
+    private static List<String> invalidExpression2 = List.of(
+        "a ∪ (b ∩ )", "a ∪ b ∩ c)", "∪ b ∩ c",
+         "~a a", "a \\ b ~c", "∪ ~a"
     );
     
     @Test
-    public void testValidExpressionParsing() throws InvalidExpressionException {
+    public void testValidExpressionParsing() throws ParserFailureException {
         for (Map.Entry<String, List<String>> e : expectedParsingFormat.entrySet()) {
             String expr = e.getKey();
             List<String> expected = e.getValue();
@@ -41,16 +55,25 @@ public class ExpressionTester {
     }
 
     @Test
-    public void testInvalidExpressionParsing() {
-        for (String expr : invalidExpressions) {
-            assertThrows(InvalidExpressionException.class, () -> {
+    public void testInvalidExpressionParsing1() {
+        for (String expr : invalidExpression1) {
+            assertThrows(ParserFailureException.class, () -> {
                 ExpressionParser.parse(expr);
             });
         }
     }
 
     @Test
-    public void testExpressionExecution1() throws InvalidExpressionException {
+    public void testInvalidExpressionParsing2() {
+        for (String expr : invalidExpression2) {
+            assertThrows(ParserFailureException.class, () -> {
+                ExpressionParser.parse(expr);
+            });
+        }
+    }
+
+    @Test
+    public void testExpressionExecution1() throws InvalidExpressionException, ParserFailureException {
         // a ∩ b
         ExpressionTree tree = new ExpressionTree("a ∩ b");
         final Set<Coordinate> A = Util.retrieveSetNodeData(tree, "a");
@@ -64,7 +87,7 @@ public class ExpressionTester {
     }
 
     @Test
-    public void testExpressionExecution2() throws InvalidExpressionException {
+    public void testExpressionExecution2() throws InvalidExpressionException, ParserFailureException {
         // a \ (b ∪ c)
         ExpressionTree tree = new ExpressionTree("a \\ (b ∪ c)");
         final Set<Coordinate> A = Util.retrieveSetNodeData(tree, "a");
@@ -80,7 +103,7 @@ public class ExpressionTester {
     }
 
     @Test
-    public void testExpressionExecution3() throws InvalidExpressionException {
+    public void testExpressionExecution3() throws InvalidExpressionException, ParserFailureException {
         // ~(a ∪ b)
         ExpressionTree tree = new ExpressionTree("~(a ∪ b)");
         final Set<Coordinate> A = Util.retrieveSetNodeData(tree, "a");
@@ -94,7 +117,7 @@ public class ExpressionTester {
     }
 
     @Test
-    public void testExpressionExecution4() throws InvalidExpressionException {
+    public void testExpressionExecution4() throws InvalidExpressionException, ParserFailureException {
         // ~a ∩ b
         ExpressionTree tree = new ExpressionTree("~a ∩ b");
         final Set<Coordinate> A = Util.retrieveSetNodeData(tree, "a");
@@ -108,7 +131,7 @@ public class ExpressionTester {
     }
 
     @Test
-    public void testExpressionExecution5() throws InvalidExpressionException {
+    public void testExpressionExecution5() throws InvalidExpressionException, ParserFailureException {
         // a ∩ b ∩ ~(c ∪ d)
         ExpressionTree tree = new ExpressionTree("a ∩ b ∩ ~(c ∪ d)");
         final Set<Coordinate> A = Util.retrieveSetNodeData(tree, "a");
@@ -126,7 +149,7 @@ public class ExpressionTester {
     }
 
     @Test
-    public void testExpressionExecution6() throws InvalidExpressionException {
+    public void testExpressionExecution6() throws InvalidExpressionException, ParserFailureException {
         // a ∪ (b ∩ c)
         ExpressionTree tree = new ExpressionTree("a ∪ (b ∩ c)");
         final Set<Coordinate> A = Util.retrieveSetNodeData(tree, "a");

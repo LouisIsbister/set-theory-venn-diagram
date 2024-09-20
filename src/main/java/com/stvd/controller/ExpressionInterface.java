@@ -56,10 +56,13 @@ public class ExpressionInterface extends JDialog {
 
         confirmButton.addActionListener(e -> {
             String text = expressionField.getText();
-            boolean isValidExpression = frame.executeExpression(text);
-            // if the expression was valid, then dispose of the interface
-            if (isValidExpression) {
-                dispose();
+            
+            if (!text.isBlank()) {
+                boolean isValidExpression = frame.executeExpression(text);
+                // if the expression was valid, then dispose of the interface
+                if (isValidExpression) {
+                    dispose();
+                }
             }
         });
 

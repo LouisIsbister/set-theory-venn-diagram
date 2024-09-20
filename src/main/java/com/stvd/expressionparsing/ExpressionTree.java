@@ -1,4 +1,4 @@
-package com.stvd.expressionparser;
+package com.stvd.expressionparsing;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -29,11 +29,10 @@ public class ExpressionTree {
      */
     private Map<String, BTSetNode> setNodes = new HashMap<>();
 
-    public ExpressionTree(String expr) throws InvalidExpressionException {
+    public ExpressionTree(String expr) throws ParserFailureException, InvalidExpressionException {
         EXPR_STRING = expr;
         expression = ExpressionParser.parse(expr);
-
-        intialiseExpressionTree();
+        root = parseTree();
         propagateSetNodes();
     }
 
@@ -51,29 +50,6 @@ public class ExpressionTree {
      */
     public Collection<BTSetNode> setNodes() {
         return setNodes.values();
-    }
-
-    /**
-     * This method intialises the creation of the tree structure.
-     * It first calls the recursive method to build the binary tree. It
-     * then checks for formatting errors where too many arguments were
-     * provided or if there are invalid set identifiers.
-     * 
-     * @throws InvalidExpressionException
-     */
-    private void intialiseExpressionTree() throws InvalidExpressionException {
-        root = parseTree();
-
-        // user provided too many arguments
-        if (!expression.isEmpty()) {
-            String ret = "Invalid expression: too many arguments were provided.<br>"
-                    + "Remaining unrecogised args: " + expression;
-            throw new InvalidExpressionException(ret);
-        }
-
-        if (setNodes.size() < 1) {
-            throw new InvalidExpressionException("Invalid expression: no set/data was provided.");
-        }
     }
 
     /**
@@ -99,7 +75,8 @@ public class ExpressionTree {
             // if the operator is not a complement then set the right node
             if (!(node instanceof Complement)) {
                 node.setRight(parseTree());
-            } 
+            }
+
             return node;
         } else {    // found a set/leaf node
             next = next.toLowerCase();

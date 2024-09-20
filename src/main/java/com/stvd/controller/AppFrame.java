@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-import com.stvd.expressionparser.*;
+import com.stvd.expressionparsing.*;
 import com.stvd.nodes.*;
 import com.stvd.util.*;
 
@@ -95,7 +95,7 @@ public class AppFrame extends JFrame {
      * 
      * @param err, the exception to be displayed
      */
-    private void displayException(String errStr, String expr) {
+    private void displayException(Exception err, String expr) {
         JDialog dialogBox = new JDialog(this, "Error!", true);
 
         JPanel panel = new JPanel();
@@ -105,8 +105,8 @@ public class AppFrame extends JFrame {
         panel.setVisible(true);
 
         String errorMsg = "<html><center>----- Error -----" +
-                "<br>Expression evaluation failed." +
-                "<br>Error message:<b><br>" + errStr + "</center></html>";
+                "<br>Expression evaluation failed.<br>Threw: <b>" + err.getClass().getSimpleName() + 
+                "</b><br>Cause: <b>" + err.getMessage() + "</center></html>";
 
         JLabel errorLabel = new JLabel(errorMsg);
         errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -227,7 +227,7 @@ public class AppFrame extends JFrame {
             }
             return true;
         } catch (Exception e) {
-            displayException(e.getMessage(), expr);
+            displayException(e, expr);
             return false;
         }
     }
@@ -244,8 +244,8 @@ public class AppFrame extends JFrame {
         try {
             java.util.Queue<String> expression = ExpressionParser.parse(expr);
             return recursiveBuilder(expression);
-        } catch (InvalidExpressionException e) {
-            displayException(e.getMessage(), expr);
+        } catch (ParserFailureException e) {
+            displayException(e, expr);
             return new String();
         }
     }
