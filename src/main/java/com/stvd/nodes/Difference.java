@@ -12,10 +12,9 @@ public class Difference extends BTNode {
      * in right.
      * 
      * @return the difference between left and right nodes
-     * @throws InvalidExpressionException
      */
     @Override
-    public Set<Coordinate> evaluate() throws InvalidExpressionException {
+    public Set<Coordinate> evaluate() {
         Set<Coordinate> leftSet = left().evaluate();
         Set<Coordinate> rightSet = right().evaluate();
         return leftSet.stream()

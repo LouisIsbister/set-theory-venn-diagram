@@ -188,6 +188,7 @@ public class ExpressionParser {
         List<String> exp = new ArrayList<>(expression);
         Stack<String> operands = new Stack<>();
         for (int i = exp.size() - 1; i >= 0; i--) {
+            
             String elem = exp.get(i);
             if (!isOperator(elem)) {
                 operands.push(elem);

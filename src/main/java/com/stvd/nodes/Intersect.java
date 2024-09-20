@@ -11,10 +11,9 @@ public class Intersect extends BTNode {
      * Returns all the values in left and right nodes.
      * 
      * @return the intersect of left and right nodes
-     * @throws InvalidExpressionException 
      */
     @Override
-    public Set<Coordinate> evaluate() throws InvalidExpressionException {
+    public Set<Coordinate> evaluate() {
         Set<Coordinate> leftSet = left().evaluate();
         Set<Coordinate> rightSet = right().evaluate();
         return leftSet.stream()

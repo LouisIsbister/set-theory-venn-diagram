@@ -18,15 +18,13 @@ public class Complement extends BTNode {
                 .collect(Collectors.toSet());
 
     /**
-     * {@inheritDoc}
      * Returns all the values in the universal set
      * excluding the those in the left set.
      * 
      * @return the complement of the left node
-     * @throws InvalidExpressionException 
      */
     @Override
-    public Set<Coordinate> evaluate() throws InvalidExpressionException {
+    public Set<Coordinate> evaluate() {
         Set<Coordinate> leftSet = left().evaluate();
         return universalSet.stream()
                 .filter(e -> !leftSet.contains(e))

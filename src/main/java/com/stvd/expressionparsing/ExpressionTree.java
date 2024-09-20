@@ -29,7 +29,7 @@ public class ExpressionTree {
      */
     private Map<String, BTSetNode> setNodes = new HashMap<>();
 
-    public ExpressionTree(String expr) throws ParserFailureException, InvalidExpressionException {
+    public ExpressionTree(String expr) throws ParserFailureException {
         EXPR_STRING = expr;
         expression = ExpressionParser.parse(expr);
         root = parseTree();
@@ -38,10 +38,8 @@ public class ExpressionTree {
 
     /**
      * @return the resulting set of data when executing the expression
-     * 
-     * @throws InvalidExpressionException 
      */
-    public Set<Coordinate> execute() throws InvalidExpressionException {
+    public Set<Coordinate> execute() {
         return root.evaluate();
     }
 
@@ -60,9 +58,9 @@ public class ExpressionTree {
      * Otherwise, find or create a new set node (leaf) and return it.
      * 
      * @return, the root node of the binary tree
-     * @throws InvalidExpressionException
+     * @throws ParserFailureException
      */
-    private BTNode parseTree() throws InvalidExpressionException {
+    private BTNode parseTree() throws ParserFailureException {
         if (expression.isEmpty()) {
             return null;
         }
@@ -95,13 +93,13 @@ public class ExpressionTree {
      * @return, an instance of the operator
      * @throws InvalidExpressionException
      */
-    private BTNode parseOperator(String str) throws InvalidExpressionException {
+    private BTNode parseOperator(String str) throws ParserFailureException {
         return switch (str) {
             case "\u222A" -> new Union();
             case "\u2229" -> new Intersect();
             case "\\" -> new Difference();
             case "~" -> new Complement();
-            default -> throw new InvalidExpressionException("'" + str + "' is an invalid operator.");
+            default -> throw new ParserFailureException("'" + str + "' is an invalid operator.");
         };
     }
 
@@ -114,13 +112,9 @@ public class ExpressionTree {
      * @return whether the trees are equivalent
      */
     public static boolean areEqual(ExpressionTree tree1, ExpressionTree tree2) {
-        try {
-            Set<Coordinate> t1Coords = tree1.execute();
-            Set<Coordinate> t2Coords = tree2.execute();
-            return t1Coords.containsAll(t2Coords) && t2Coords.containsAll(t1Coords);
-        } catch(InvalidExpressionException e) {
-            return false;
-        }
+        Set<Coordinate> t1Coords = tree1.execute();
+        Set<Coordinate> t2Coords = tree2.execute();
+        return t1Coords.containsAll(t2Coords) && t2Coords.containsAll(t1Coords);
     }
 
     /**

@@ -29,11 +29,11 @@ public class Util {
      * 
      * @param exec, executable block
      */
-    public static void assertDoesNotThrowExpressionException(Executable exec) {
+    public static void assertDoesNotThrowParserException(Executable exec) {
         try {
             exec.execute();
-        } catch (InvalidExpressionException ex) {
-            assert false : "ATTENTION - InvalidExpressionException incorrectly thrown";
+        } catch (ParserFailureException ex) {
+            assert false : "ATTENTION - ParserFailureException incorrectly thrown";
         } catch (Throwable e) {}
     }
 

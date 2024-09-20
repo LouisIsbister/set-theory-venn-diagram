@@ -45,7 +45,7 @@ public class ExpressionTester {
             String expr = e.getKey();
             List<String> expected = e.getValue();
 
-            Util.assertDoesNotThrowExpressionException(() -> ExpressionParser.parse(expr));
+            Util.assertDoesNotThrowParserException(() -> ExpressionParser.parse(expr));
             java.util.Queue<String> recieved = ExpressionParser.parse(expr);
             assertEquals(expected.size(), recieved.size());
             for (int i = 0; i < expected.size(); i++) {
@@ -73,7 +73,7 @@ public class ExpressionTester {
     }
 
     @Test
-    public void testExpressionExecution1() throws InvalidExpressionException, ParserFailureException {
+    public void testExpressionExecution1() throws ParserFailureException {
         // a ∩ b
         ExpressionTree tree = new ExpressionTree("a ∩ b");
         final Set<Coordinate> A = Util.retrieveSetNodeData(tree, "a");
@@ -87,7 +87,7 @@ public class ExpressionTester {
     }
 
     @Test
-    public void testExpressionExecution2() throws InvalidExpressionException, ParserFailureException {
+    public void testExpressionExecution2() throws ParserFailureException {
         // a \ (b ∪ c)
         ExpressionTree tree = new ExpressionTree("a \\ (b ∪ c)");
         final Set<Coordinate> A = Util.retrieveSetNodeData(tree, "a");
@@ -103,7 +103,7 @@ public class ExpressionTester {
     }
 
     @Test
-    public void testExpressionExecution3() throws InvalidExpressionException, ParserFailureException {
+    public void testExpressionExecution3() throws ParserFailureException {
         // ~(a ∪ b)
         ExpressionTree tree = new ExpressionTree("~(a ∪ b)");
         final Set<Coordinate> A = Util.retrieveSetNodeData(tree, "a");
@@ -117,7 +117,7 @@ public class ExpressionTester {
     }
 
     @Test
-    public void testExpressionExecution4() throws InvalidExpressionException, ParserFailureException {
+    public void testExpressionExecution4() throws ParserFailureException {
         // ~a ∩ b
         ExpressionTree tree = new ExpressionTree("~a ∩ b");
         final Set<Coordinate> A = Util.retrieveSetNodeData(tree, "a");
@@ -131,7 +131,7 @@ public class ExpressionTester {
     }
 
     @Test
-    public void testExpressionExecution5() throws InvalidExpressionException, ParserFailureException {
+    public void testExpressionExecution5() throws ParserFailureException {
         // a ∩ b ∩ ~(c ∪ d)
         ExpressionTree tree = new ExpressionTree("a ∩ b ∩ ~(c ∪ d)");
         final Set<Coordinate> A = Util.retrieveSetNodeData(tree, "a");
@@ -149,7 +149,7 @@ public class ExpressionTester {
     }
 
     @Test
-    public void testExpressionExecution6() throws InvalidExpressionException, ParserFailureException {
+    public void testExpressionExecution6() throws ParserFailureException {
         // a ∪ (b ∩ c)
         ExpressionTree tree = new ExpressionTree("a ∪ (b ∩ c)");
         final Set<Coordinate> A = Util.retrieveSetNodeData(tree, "a");

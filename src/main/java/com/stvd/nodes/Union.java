@@ -12,10 +12,9 @@ public class Union extends BTNode {
      * right.
      * 
      * @return the set union between of two nodes
-     * @throws InvalidExpressionException
      */
     @Override
-    public Set<Coordinate> evaluate() throws InvalidExpressionException {
+    public Set<Coordinate> evaluate() {
         Set<Coordinate> allCoords = new HashSet<>();
         allCoords.addAll(left().evaluate());
         allCoords.addAll(right().evaluate());
