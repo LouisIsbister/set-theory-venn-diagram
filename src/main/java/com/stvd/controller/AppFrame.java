@@ -240,7 +240,7 @@ public class AppFrame extends JFrame {
      */
     public String pnRepresentation(String expr) {
         try {
-            java.util.Queue<String> expression = ExpressionParser.parse(expr);
+            java.util.Queue<String> expression = Parser.parse(expr);
             return recursiveBuilder(expression);
         } catch (ParserFailureException e) {
             displayException(e, expr);
@@ -260,7 +260,7 @@ public class AppFrame extends JFrame {
         }
 
         String elem = expression.poll();
-        if (ExpressionParser.isOperator(elem)) {
+        if (ExpressionValidator.isOperator(elem)) {
             String left = recursiveBuilder(expression);
             String right = new String();
             if (!elem.equals("~")) {    // complement should only have a left child node!

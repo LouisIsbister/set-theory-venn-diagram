@@ -1,35 +1,19 @@
 package com.stvd.expressionparsing;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
-import java.util.ArrayDeque;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.stvd.util.ParserFailureException;
 
-public class ExpressionParser {
+public class ExpressionValidator {
 
     private static final String OPERATORS = "[\u222A|\u2229|\\\\|~]";
     private static final String VALID_CHARACTERS = "[a-zA-Z|\\(|\\)|\u222A|\u2229|\\\\|~|\s]";
     private static final String INVALID_SET_IDS = "[a-zA-Z]{2,}";
-
-    /**
-     * @param expr, the user provided expression
-     * @return, the restructured expression
-     * @throws ParserFailureException
-     */
-    public static Queue<String> parse(String expr) throws ParserFailureException {
-        validateExpressionCharacters(expr);
-        validateBracketFormatting(expr);
-
-        Queue<String> polishExp = toPolishNotation(expr, new ArrayDeque<>());
-
-        checkIsExecutableExpression(polishExp);
-        return polishExp;
-    }
 
     /**
      * @param input
@@ -40,71 +24,13 @@ public class ExpressionParser {
     }
 
     /**
-     * Converts the user provided expression into polish notation.
-     * 
-     * @param str the expression
-     * @return the expression in polish notation
-     */
-    private static Queue<String> toPolishNotation(String str, Queue<String> queue) {
-        if (str.matches("^$|\\(|\\)")) {    // string is empty or is a bracket
-            return queue;
-        }
-
-        int exprCenter = getCenterIndex(str); // the index to split the expression by
-        char centerChar = str.charAt(exprCenter);
-        if (centerChar != ')' && centerChar != '(') {
-            queue.add(String.valueOf(centerChar));
-        }
-
-        String left = str.substring(0, exprCenter).trim();
-        String right = str.substring(exprCenter + 1, str.length()).trim();
-
-        toPolishNotation(left, queue);
-        toPolishNotation(right, queue);
-
-        return queue;
-    }
-
-    /**
-     * Method that finds the "center" of an expression or sub-expression.
-     * The center is the most recent operator that is contained within
-     * balanced open and closed brackets.
-     * i.e. a ∩ (b ∪ c)
-     *        ^ 
-     * 
-     * @param str, the string that is being searched for an operator
-     * @return, the center operator if it exists
-     */
-    private static int getCenterIndex(String str) {
-        if (str.length() <= 1) {
-            return 0;
-        }
-        int bracketBalance = 0;
-        for (int i = 0; i < str.length(); i++) {
-            if (str.charAt(i) == ' ') {
-                continue;
-            }
-
-            char ch = str.charAt(i);
-            bracketBalance += ch == '(' ? 1 : 0;
-            bracketBalance += ch == ')' ? -1 : 0;
-            
-            // if an operator has been found with matching brackets, and is not a complement (should always be index 0)
-            if (isOperator(String.valueOf(ch)) && bracketBalance == 0 && ch != '~') {
-                return i;
-            }
-        }
-        return 0;
-    }
-
-    /**
      * ensure that there are no invalid characters/strings in the 
      * expression
      *  
      * @param expr
      * @throws ParserFailureException
      */
-    private static void validateExpressionCharacters(String expr) throws ParserFailureException {
+    public static void checkCharacters(String expr) throws ParserFailureException {
         // check that there are not set ids with 2 or more characters
         Pattern pattern = Pattern.compile(INVALID_SET_IDS);
         Matcher matcher = pattern.matcher(expr);
@@ -114,7 +40,7 @@ public class ExpressionParser {
             throw new ParserFailureException("Set ids must be one letter.<br>Found '" + ret + "'");
         }
 
-
+        // ensure the expression only has valid characters
         pattern = Pattern.compile(VALID_CHARACTERS);
         for (char ch : expr.toCharArray()) {
             matcher = pattern.matcher(String.valueOf(ch));
@@ -130,7 +56,7 @@ public class ExpressionParser {
      * @param expr
      * @throws ParserFailureException
      */
-    private static void validateBracketFormatting(String expr) throws ParserFailureException {
+    public static void checkBracketFormatting(String expr) throws ParserFailureException {
         char[] arr = expr.toCharArray();
 
         if (arr.length == 0) {
@@ -181,7 +107,7 @@ public class ExpressionParser {
      * @param exp polish notation for of expression
      * @throws ParserFailureException
      */
-    private static void checkIsExecutableExpression(Queue<String> exp) throws ParserFailureException {
+    public static void checkIsExecutableExpression(Queue<String> exp) throws ParserFailureException {
         List<String> elems = new ArrayList<>(exp);
         Stack<String> operands = new Stack<>();
 

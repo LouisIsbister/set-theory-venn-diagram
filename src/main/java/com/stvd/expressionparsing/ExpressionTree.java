@@ -31,7 +31,7 @@ public class ExpressionTree {
 
     public ExpressionTree(String expr) throws ParserFailureException {
         EXPR_STRING = expr;
-        expression = ExpressionParser.parse(expr);
+        expression = Parser.parse(expr);
         root = parseTree();
         propagateSetNodes();
     }
@@ -65,7 +65,7 @@ public class ExpressionTree {
         }
 
         String next = expression.poll();
-        if (ExpressionParser.isOperator(next)) {
+        if (ExpressionValidator.isOperator(next)) {
             BTNode node = parseOperator(next);
             node.setLeft(parseTree());
 
