@@ -1,4 +1,4 @@
-package com.stvd.expressionparsing;
+package com.stvd.parsing;
 
 import java.util.Queue;
 import java.util.ArrayDeque;

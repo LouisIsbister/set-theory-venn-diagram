@@ -1,4 +1,4 @@
-package com.stvd.expressionparsing;
+package com.stvd.parsing;
 
 import java.util.ArrayList;
 import java.util.List;

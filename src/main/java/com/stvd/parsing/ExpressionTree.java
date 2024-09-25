@@ -1,4 +1,4 @@
-package com.stvd.expressionparsing;
+package com.stvd.parsing;
 
 import java.util.Collection;
 import java.util.HashMap;

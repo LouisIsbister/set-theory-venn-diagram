@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-import com.stvd.expressionparsing.*;
+import com.stvd.parsing.*;
 import com.stvd.util.*;
 
 public class AppFrame extends JFrame {

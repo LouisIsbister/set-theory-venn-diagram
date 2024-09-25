@@ -2,8 +2,8 @@
 
 import org.junit.jupiter.api.function.Executable;
 
-import com.stvd.expressionparsing.ExpressionTree;
 import com.stvd.nodes.BTSetNode;
+import com.stvd.parsing.ExpressionTree;
 import com.stvd.util.*;
 
 public class Util {
