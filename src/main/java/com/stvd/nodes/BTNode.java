@@ -2,7 +2,7 @@ package com.stvd.nodes;
 
 import java.util.Set;
 
-import com.stvd.util.*;
+import com.stvd.util.Coordinate;
 
 public abstract class BTNode {
 

@@ -16,8 +16,6 @@ public class ExpressionParser {
     private static final String VALID_CHARACTERS = "[a-zA-Z|\\(|\\)|\u222A|\u2229|\\\\|~|\s]";
     private static final String INVALID_SET_IDS = "[a-zA-Z]{2,}";
 
-    private static Queue<String> expression;
-
     /**
      * @param expr, the user provided expression
      * @return, the restructured expression
@@ -27,12 +25,10 @@ public class ExpressionParser {
         validateExpressionCharacters(expr);
         validateBracketFormatting(expr);
 
-        expression = new ArrayDeque<>();
-        toPolishNotation(expr);
+        Queue<String> polishExp = toPolishNotation(expr, new ArrayDeque<>());
 
-        checkIsExecutableExpression();
-
-        return expression;
+        checkIsExecutableExpression(polishExp);
+        return polishExp;
     }
 
     /**
@@ -47,25 +43,26 @@ public class ExpressionParser {
      * Converts the user provided expression into polish notation.
      * 
      * @param str the expression
-     * @return queue of characters in CPN
-     * @throws ParserFailureException
+     * @return the expression in polish notation
      */
-    private static void toPolishNotation(String str) throws ParserFailureException {
+    private static Queue<String> toPolishNotation(String str, Queue<String> queue) {
         if (str.matches("^$|\\(|\\)")) {    // string is empty or is a bracket
-            return;
+            return queue;
         }
 
         int exprCenter = getCenterIndex(str); // the index to split the expression by
         char centerChar = str.charAt(exprCenter);
         if (centerChar != ')' && centerChar != '(') {
-            expression.add(String.valueOf(centerChar));
+            queue.add(String.valueOf(centerChar));
         }
 
         String left = str.substring(0, exprCenter).trim();
         String right = str.substring(exprCenter + 1, str.length()).trim();
 
-        toPolishNotation(left);
-        toPolishNotation(right);
+        toPolishNotation(left, queue);
+        toPolishNotation(right, queue);
+
+        return queue;
     }
 
     /**
@@ -77,9 +74,8 @@ public class ExpressionParser {
      * 
      * @param str, the string that is being searched for an operator
      * @return, the center operator if it exists
-     * @throws ParserFailureException
      */
-    private static int getCenterIndex(String str) throws ParserFailureException {
+    private static int getCenterIndex(String str) {
         if (str.length() <= 1) {
             return 0;
         }
@@ -182,14 +178,16 @@ public class ExpressionParser {
      * the user will result in an executable tree. This method performs all the necassary 
      * preconditions to ensure no node will encounter null pointers during execution!
      * 
+     * @param exp polish notation for of expression
      * @throws ParserFailureException
      */
-    private static void checkIsExecutableExpression() throws ParserFailureException {
-        List<String> exp = new ArrayList<>(expression);
+    private static void checkIsExecutableExpression(Queue<String> exp) throws ParserFailureException {
+        List<String> elems = new ArrayList<>(exp);
         Stack<String> operands = new Stack<>();
-        for (int i = exp.size() - 1; i >= 0; i--) {
+
+        for (int i = elems.size() - 1; i >= 0; i--) {
             
-            String elem = exp.get(i);
+            String elem = elems.get(i);
             if (!isOperator(elem)) {
                 operands.push(elem);
             }

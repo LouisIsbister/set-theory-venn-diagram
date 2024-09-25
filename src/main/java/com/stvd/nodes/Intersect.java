@@ -3,7 +3,7 @@ package com.stvd.nodes;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.stvd.util.*;
+import com.stvd.util.Coordinate;
 
 public class Intersect extends BTNode {
 

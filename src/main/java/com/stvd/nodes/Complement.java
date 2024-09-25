@@ -5,17 +5,16 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import com.stvd.controller.AppPanel;
-import com.stvd.util.*;
+import com.stvd.util.Coordinate;
 
 public class Complement extends BTNode {
 
     /**
      * The universal set represents all the display pixels
      */
-    private static final Set<Coordinate> universalSet = 
-        IntStream.range(0, AppPanel.WIDTH * AppPanel.HEIGHT).boxed()
-                .map(e -> new Coordinate(e % AppPanel.WIDTH, e / AppPanel.HEIGHT))
-                .collect(Collectors.toSet());
+    private static final Set<Coordinate> universalSet = IntStream.range(0, AppPanel.WIDTH * AppPanel.HEIGHT).boxed()
+            .map(e -> new Coordinate(e % AppPanel.WIDTH, e / AppPanel.HEIGHT))
+            .collect(Collectors.toSet());
 
     /**
      * Returns all the values in the universal set

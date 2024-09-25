@@ -3,7 +3,7 @@ package com.stvd.nodes;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.stvd.util.*;
+import com.stvd.util.Coordinate;
 
 public class Union extends BTNode {
 

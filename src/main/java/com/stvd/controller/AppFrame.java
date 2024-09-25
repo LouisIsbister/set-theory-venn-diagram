@@ -4,8 +4,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -20,7 +18,6 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import com.stvd.expressionparsing.*;
-import com.stvd.nodes.*;
 import com.stvd.util.*;
 
 public class AppFrame extends JFrame {
@@ -35,11 +32,12 @@ public class AppFrame extends JFrame {
      */
     private static List<ExpressionTree> exprHistory;
 
+    private static final AppFrame WINDOW = new AppFrame() {};
+
     public static void start() {
         guiPanel = new AppPanel();
         exprHistory = new ArrayList<>();
-        final AppFrame WINDOW = new AppFrame();
-
+        
         WINDOW.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         WINDOW.initialiseMenu();
         WINDOW.getContentPane().add(guiPanel);
@@ -99,22 +97,22 @@ public class AppFrame extends JFrame {
         JDialog dialogBox = new JDialog(this, "Error!", true);
 
         JPanel panel = new JPanel();
-        int width = expr.length() > 30 ? expr.length() * 12 : 350;
-        panel.setPreferredSize(new Dimension(width, 175));
+        final int WIDTH = expr.length() > 30 ? expr.length() * 12 : 350;
+        panel.setPreferredSize(new Dimension(WIDTH, 175));
         panel.setLayout(null);
         panel.setVisible(true);
 
-        String errorMsg = "<html><center>----- Error -----" +
+        final String ERROR_MSG = "<html><center>----- Error -----" +
                 "<br>Expression evaluation failed.<br>Threw: <b>" + err.getClass().getSimpleName() + 
                 "</b><br>Cause: <b>" + err.getMessage() + "</center></html>";
 
-        JLabel errorLabel = new JLabel(errorMsg);
+        JLabel errorLabel = new JLabel(ERROR_MSG);
         errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        errorLabel.setBounds(0, 0, width, 130);
+        errorLabel.setBounds(0, 0, WIDTH, 130);
         errorLabel.setFont(new Font("Monospaced", 4, 14));
 
         JButton contiueButton = new JButton("Continue");
-        contiueButton.setBounds(width / 2 - 75, 130, 150, 25);
+        contiueButton.setBounds(WIDTH / 2 - 75, 130, 150, 25);
         // button to dispose the dialog box when user is satisfied
         contiueButton.addActionListener(e -> dialogBox.dispose());
 
@@ -213,23 +211,23 @@ public class AppFrame extends JFrame {
      * @return, whether the expression evaluation was successful
      */
     public boolean executeExpression(String expr) {
+        ExpressionTree tree;
         try {
-            ExpressionTree tree = new ExpressionTree(expr);
-            Set<Coordinate> highlightCoords = tree.execute();
-            Collection<BTSetNode> nodes = tree.setNodes();
-            guiPanel.updateDisplayData(highlightCoords, nodes);
-
-            // check whether the user has already entered an expression with the same outcome
-            // if they haven't add it to expression history
-            if (exprHistory.stream()
-                        .noneMatch(e -> ExpressionTree.areEqual(tree, e))) {    
-                exprHistory.add(tree);
-            }
-            return true;
+            tree = new ExpressionTree(expr);
         } catch (Exception e) {
             displayException(e, expr);
             return false;
         }
+
+        guiPanel.updateDisplayData(tree.execute(), tree.setNodes());
+
+        // check whether the user has already entered an expression with the same outcome
+        // if they haven't add it to expression history
+        if (exprHistory.stream()
+                .noneMatch(e -> ExpressionTree.areEqual(tree, e))) {    
+            exprHistory.add(tree);
+        }
+        return true;
     }
 
     /**

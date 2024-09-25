@@ -58,9 +58,8 @@ public class ExpressionTree {
      * Otherwise, find or create a new set node (leaf) and return it.
      * 
      * @return, the root node of the binary tree
-     * @throws ParserFailureException
      */
-    private BTNode parseTree() throws ParserFailureException {
+    private BTNode parseTree() {
         if (expression.isEmpty()) {
             return null;
         }
@@ -91,15 +90,13 @@ public class ExpressionTree {
      * 
      * @param str, the operator
      * @return, an instance of the operator
-     * @throws InvalidExpressionException
      */
-    private BTNode parseOperator(String str) throws ParserFailureException {
+    private BTNode parseOperator(String str) {
         return switch (str) {
             case "\u222A" -> new Union();
             case "\u2229" -> new Intersect();
             case "\\" -> new Difference();
-            case "~" -> new Complement();
-            default -> throw new ParserFailureException("'" + str + "' is an invalid operator.");
+            default -> new Complement();   // default case is "~"
         };
     }
 
