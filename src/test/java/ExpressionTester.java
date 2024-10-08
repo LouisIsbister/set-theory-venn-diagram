@@ -2,51 +2,60 @@
 
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import com.stvd.expressionparsing.*;
+import com.stvd.parsing.*;
 import com.stvd.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ExpressionTester {
 
-    private static Map<String, List<String>> expectedParsingFormat = Map.of(
-        "a ∪ (b ∩ c)", List.of("∪","a","∩","b","c"),
-        "(a ∩ b) ∪ (c ∩ d)", List.of("∪","∩","a","b","∩","c","d"),
-        "~(a \\ b)", List.of("~","\\","a","b"),
-        "a ∩ b ∩ ~(c ∪ d)", List.of("∩","a","∩","b","~","∪","c","d"),
-        "((a ∩ b) ∪ c) ∪ d", List.of("∪","∪","∩","a","b","c","d")
-    );
-    
-    /**
-     * invalid expressions, these are invalid due to either unbalanced brackets, 
-     * enclosed brackets with no contents, invalid set ids, or invalid operators.
-     */
-    private static List<String> invalidExpression1 = List.of(
-        "(a ∪ (b ∩ c)", "a ∪ () (b ∩ c)", "a ∪ (b ∩ cc)",
-         "a ∪ (b + c)", "a - b", ""
-    );
+    private static Map<String, List<String>> expectedParsingFormat;
+    private static List<String> badBracketExpressions;
+    private static List<String> badCharacterExpressions;
+    private static List<Queue<String>> unexecutableExpressions;
+     
+    static {
+        expectedParsingFormat = Map.of(
+            "a ∪ (b ∩ c)", List.of("∪","a","∩","b","c"),
+            "(a ∩ b) ∪ (c ∩ d)", List.of("∪","∩","a","b","∩","c","d"),
+            "~(a \\ b)", List.of("~","\\","a","b"),
+            "a ∩ b ∩ ~(c ∪ d)", List.of("∩","a","∩","b","~","∪","c","d"),
+            "((a ∩ b) ∪ c) ∪ d", List.of("∪","∪","∩","a","b","c","d")
+        );
 
-    /**
-     * some more invalid expressions, each of these expressions is testing the
-     * checkIsExecutableExpression() method in ExpressionParser.java
-     */
-    private static List<String> invalidExpression2 = List.of(
-        "a ∪ (b ∩ )", "a ∪ b ∩ c)", "∪ b ∩ c",
-         "~a a", "a \\ b ~c", "∪ ~a"
-    );
+        badBracketExpressions = List.of(
+            "(a ∪ (b ∩ c)", "a ∪ () (b ∩ c)", "a)",
+            "(((a ∪ (b ∩ c)))"
+        );
+
+        badCharacterExpressions = List.of(
+            "a ∪ (b ∩ cc)",  "a ∪ (b + c)", "a - b",
+            "a \t b"
+        );
+
+        unexecutableExpressions = List.of(
+            Util.generateQueue("a", "∪","∩"),
+            Util.generateQueue("∪", "b", "∩", "c"),
+            Util.generateQueue("~", "a", "a"),
+            Util.generateQueue("a", "\\", "b",  "~", "c"), 
+            Util.generateQueue("∪", "~", "a")
+        );
+    }
+
+    
     
     @Test
     public void testValidExpressionParsing() throws ParserFailureException {
-        for (Map.Entry<String, List<String>> e : expectedParsingFormat.entrySet()) {
-            String expr = e.getKey();
-            List<String> expected = e.getValue();
-
-            Util.assertDoesNotThrowParserException(() -> ExpressionParser.parse(expr));
-            java.util.Queue<String> recieved = ExpressionParser.parse(expr);
+        for (String expr : expectedParsingFormat.keySet()) {
+            List<String> expected = expectedParsingFormat.get(expr);
+            
+            assertDoesNotThrow(() -> Parser.parse(expr));
+            Queue<String> recieved = Parser.parse(expr);
             assertEquals(expected.size(), recieved.size());
             for (int i = 0; i < expected.size(); i++) {
                 assertEquals(expected.get(i), recieved.poll());
@@ -55,19 +64,28 @@ public class ExpressionTester {
     }
 
     @Test
-    public void testInvalidExpressionParsing1() {
-        for (String expr : invalidExpression1) {
+    public void testInvalidBracketFormatting() {
+        for (String expr : badBracketExpressions) {
             assertThrows(ParserFailureException.class, () -> {
-                ExpressionParser.parse(expr);
+                ExpressionValidator.checkBracketFormatting(expr);
             });
         }
     }
 
     @Test
-    public void testInvalidExpressionParsing2() {
-        for (String expr : invalidExpression2) {
+    public void testInvalidCharacters() throws NoSuchMethodException, SecurityException {
+        for (String expr : badCharacterExpressions) {
             assertThrows(ParserFailureException.class, () -> {
-                ExpressionParser.parse(expr);
+                ExpressionValidator.checkCharacters(expr);
+            });
+        }
+    }
+
+    @Test
+    public void testUnexecutableExpressions() throws NoSuchMethodException, SecurityException {
+        for (Queue<String> expr : unexecutableExpressions) {
+            assertThrows(ParserFailureException.class, () -> {
+                ExpressionValidator.checkIsExecutableExpression(expr);
             });
         }
     }

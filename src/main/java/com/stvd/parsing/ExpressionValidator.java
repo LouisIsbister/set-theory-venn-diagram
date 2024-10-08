@@ -104,7 +104,7 @@ public class ExpressionValidator {
      * the user will result in an executable tree. This method performs all the necassary 
      * preconditions to ensure no node will encounter null pointers during execution!
      * 
-     * @param exp polish notation for of expression
+     * @param exp polish notation form of an expression
      * @throws ParserFailureException
      */
     public static void checkIsExecutableExpression(Queue<String> exp) throws ParserFailureException {
@@ -126,7 +126,7 @@ public class ExpressionValidator {
                     operands.push(elem);
                 }
             }
-            else if (isOperator(elem) && !elem.equals("~")) {    // unary operators
+            else if (isOperator(elem) && !elem.equals("~")) {    // binary operators
                 if (operands.size() < 2) {
                     throw new ParserFailureException(elem + " must have two args.");
                 }

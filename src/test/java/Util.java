@@ -1,5 +1,9 @@
 
 
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Queue;
+
 import org.junit.jupiter.api.function.Executable;
 
 import com.stvd.nodes.BTSetNode;
@@ -7,6 +11,14 @@ import com.stvd.parsing.ExpressionTree;
 import com.stvd.util.*;
 
 public class Util {
+
+    /**
+     * @param args elements to be added to the queue
+     * @return a queue containing all the passed elements
+     */
+    public static final Queue<String> generateQueue(String... args) {
+        return new ArrayDeque<>(Arrays.asList(args));
+    }
 
     /**
      * retrieves the data of a given set node
