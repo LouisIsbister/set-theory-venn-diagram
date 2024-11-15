@@ -17,8 +17,8 @@ public class Parser {
         ExpressionValidator.checkBracketFormatting(expr);
 
         Queue<String> polishExp = toPolishNotation(expr, new ArrayDeque<>());
-
         ExpressionValidator.checkIsExecutableExpression(polishExp);
+
         return polishExp;
     }
 
@@ -29,7 +29,7 @@ public class Parser {
      * @return the expression in polish notation
      */
     private static Queue<String> toPolishNotation(String str, Queue<String> queue) {
-        if (str.matches("^$|\\(|\\)")) {    // string is empty or is a bracket
+        if (str.matches("^$|\\(|\\)")) { // string is empty or is a bracket
             return queue;
         }
 
@@ -71,8 +71,9 @@ public class Parser {
             char ch = str.charAt(i);
             bracketBalance += ch == '(' ? 1 : 0;
             bracketBalance += ch == ')' ? -1 : 0;
-            
-            // if an operator has been found with matching brackets, and is not a complement (should always be index 0)
+
+            // if an operator has been found with matching brackets, and is not a complement
+            // (should always be index 0)
             if (ExpressionValidator.isOperator(String.valueOf(ch)) && bracketBalance == 0 && ch != '~') {
                 return i;
             }

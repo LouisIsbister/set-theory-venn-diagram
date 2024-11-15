@@ -103,7 +103,7 @@ public class AppFrame extends JFrame {
         panel.setVisible(true);
 
         final String ERROR_MSG = "<html><center>----- Error -----" +
-                "<br>Expression evaluation failed.<br>Threw: <b>" + err.getClass().getSimpleName() + 
+                "<br>Expression evaluation failed<br>Threw: <b>" + err.getClass().getSimpleName() + 
                 "</b><br>Cause: <b>" + err.getMessage() + "</center></html>";
 
         JLabel errorLabel = new JLabel(ERROR_MSG);

@@ -11,8 +11,8 @@ import com.stvd.util.ParserFailureException;
 
 public class ExpressionValidator {
 
-    private static final String OPERATORS = "[\u222A|\u2229|\\\\|~]";
-    private static final String VALID_CHARACTERS = "[a-zA-Z|\\(|\\)|\u222A|\u2229|\\\\|~|\s]";
+    private static final String OPERATORS = "[\u222A\u2229\\\\~]";
+    private static final String VALID_CHARACTERS = "[a-zA-Z\\(\\)\u222A\u2229\\\\~\s]";
     private static final String INVALID_SET_IDS = "[a-zA-Z]{2,}";
 
     /**
@@ -119,7 +119,7 @@ public class ExpressionValidator {
             }
             else if (isOperator(elem) && elem.equals("~")) {    // unary operators
                 if (operands.size() < 1) {
-                    throw new ParserFailureException(elem + " must have one arg.");
+                    throw new ParserFailureException(elem + " must have one arg");
                 }
                 else {
                     operands.pop();
@@ -128,7 +128,7 @@ public class ExpressionValidator {
             }
             else if (isOperator(elem) && !elem.equals("~")) {    // binary operators
                 if (operands.size() < 2) {
-                    throw new ParserFailureException(elem + " must have two args.");
+                    throw new ParserFailureException(elem + " must have two args");
                 }
                 else {
                     operands.pop(); operands.pop();
@@ -138,7 +138,7 @@ public class ExpressionValidator {
         }
 
         if (operands.size() != 1) {
-            throw new ParserFailureException("Invalid expression,<br>too many args given.");
+            throw new ParserFailureException("Invalid expression,<br>too many args given");
         }
     }
 
