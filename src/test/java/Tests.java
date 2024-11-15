@@ -12,7 +12,7 @@ import com.stvd.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ExpressionTester {
+public class Tests {
 
     private static Map<String, List<String>> expectedParsingFormat;
     private static List<String> badBracketExpressions;
