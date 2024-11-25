@@ -3,6 +3,11 @@ package com.stvd.parsing;
 import java.util.Queue;
 import java.util.ArrayDeque;
 
+import com.stvd.nodes.BTNode;
+import com.stvd.nodes.Complement;
+import com.stvd.nodes.Difference;
+import com.stvd.nodes.Intersect;
+import com.stvd.nodes.Union;
 import com.stvd.util.ParserFailureException;
 
 public class Parser {
@@ -20,6 +25,22 @@ public class Parser {
         ExpressionValidator.checkIsExecutableExpression(polishExp);
 
         return polishExp;
+    }
+
+    /**
+     * returns and instance of the operator that corresponds to
+     * the given character.
+     * 
+     * @param str, the operator
+     * @return, an instance of the operator
+     */
+    public static BTNode parseOperator(String str) {
+        return switch (str) {
+            case "\u222A" -> new Union();
+            case "\u2229" -> new Intersect();
+            case "\\" -> new Difference();
+            default -> new Complement();   // default case is "~"
+        };
     }
 
     /**

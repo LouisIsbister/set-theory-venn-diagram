@@ -32,7 +32,7 @@ public class ExpressionTree {
     public ExpressionTree(String expr) throws ParserFailureException {
         EXPR_STRING = expr;
         expression = Parser.parse(expr);
-        root = parseTree();
+        root = generateTree();
         propagateSetNodes();
     }
 
@@ -59,21 +59,20 @@ public class ExpressionTree {
      * 
      * @return, the root node of the binary tree
      */
-    private BTNode parseTree() {
+    private BTNode generateTree() {
         if (expression.isEmpty()) {
             return null;
         }
 
         String next = expression.poll();
         if (ExpressionValidator.isOperator(next)) {
-            BTNode node = parseOperator(next);
-            node.setLeft(parseTree());
+            BTNode node = Parser.parseOperator(next);
+            node.setLeft(generateTree());
 
             // if the operator is not a complement then set the right node
             if (!(node instanceof Complement)) {
-                node.setRight(parseTree());
+                node.setRight(generateTree());
             }
-
             return node;
         } else {    // found a set/leaf node
             next = next.toLowerCase();
@@ -82,22 +81,6 @@ public class ExpressionTree {
             }
             return setNodes.get(next);
         }
-    }
-
-    /**
-     * returns and instance of the operator that corresponds to
-     * the given character.
-     * 
-     * @param str, the operator
-     * @return, an instance of the operator
-     */
-    private BTNode parseOperator(String str) {
-        return switch (str) {
-            case "\u222A" -> new Union();
-            case "\u2229" -> new Intersect();
-            case "\\" -> new Difference();
-            default -> new Complement();   // default case is "~"
-        };
     }
 
     /**

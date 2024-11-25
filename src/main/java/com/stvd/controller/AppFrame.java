@@ -39,6 +39,7 @@ public class AppFrame extends JFrame {
         exprHistory = new ArrayList<>();
         
         WINDOW.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        WINDOW.setResizable(false);
         WINDOW.initialiseMenu();
         WINDOW.getContentPane().add(guiPanel);
         WINDOW.pack();
