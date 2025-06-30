@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 
 import com.stvd.controller.AppPanel;
 import com.stvd.util.Coordinate;
-import com.stvd.util.Store;
+import com.stvd.util.AppUtil;
 
 public class Complement extends BTNode {
 
@@ -32,7 +32,7 @@ public class Complement extends BTNode {
     }
 
     public String toString() {
-        return Store.COMPLEMENT;
+        return AppUtil.COMPLEMENT;
     }
 
 }

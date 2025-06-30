@@ -9,7 +9,7 @@ import com.stvd.nodes.Difference;
 import com.stvd.nodes.Intersect;
 import com.stvd.nodes.Union;
 import com.stvd.util.ParserFailureException;
-import com.stvd.util.Store;
+import com.stvd.util.AppUtil;
 
 public class Parser {
 
@@ -37,9 +37,9 @@ public class Parser {
      */
     public static BTNode parseOperator(String str) {
         return switch (str) {
-            case Store.UNION      -> new Union();
-            case Store.INTERSECT  -> new Intersect();
-            case Store.DIFFERENCE -> new Difference();
+            case AppUtil.UNION      -> new Union();
+            case AppUtil.INTERSECT  -> new Intersect();
+            case AppUtil.DIFFERENCE -> new Difference();
             default -> new Complement();   // default case is "~"
         };
     }

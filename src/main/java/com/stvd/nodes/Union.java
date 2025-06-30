@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.stvd.util.Coordinate;
-import com.stvd.util.Store;
+import com.stvd.util.AppUtil;
 
 public class Union extends BTNode {
 
@@ -23,7 +23,7 @@ public class Union extends BTNode {
     }
 
     public String toString() {
-        return Store.UNION;
+        return AppUtil.UNION;
     }
 
 }

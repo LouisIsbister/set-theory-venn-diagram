@@ -3,6 +3,7 @@ package com.stvd.controller;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import com.stvd.parsing.*;
+import com.stvd.util.AppUtil;
 
 public class AppFrame extends JFrame {
 
@@ -32,10 +34,9 @@ public class AppFrame extends JFrame {
 
 
     public static void start() {
+        window = new AppFrame();
         guiPanel = new AppPanel();
         exprHistory = new ArrayList<>();
-
-        window = new AppFrame();
 
         initialiseMenu();
 
@@ -57,29 +58,23 @@ public class AppFrame extends JFrame {
      * see the home page, and exit the application
      */
     private static void initialiseMenu() {
-        JMenuItem newExpr = new JMenuItem("Enter new expression");
-        newExpr.addActionListener(e -> askForExpression());
+        JMenuItem newExpr = createMenuItem("Enter new expression", e -> askForExpression());
+        JMenuItem expressionHistory = createMenuItem("View previous expressions", e -> displayExpressionHistory());
+        JMenuItem homePage = createMenuItem("Home page", e -> guiPanel.createDefaultView());
+        JMenuItem exit = createMenuItem("Exit", e -> window.dispose());
 
-        JMenuItem expressionHistory = new JMenuItem("View previous expressions");
-        expressionHistory.addActionListener(e -> displayExpressionHistory());
-
-        JMenuItem homePage = new JMenuItem("Home page");
-        homePage.addActionListener(e -> guiPanel.createDefaultView());
-
-        JMenuItem exit = new JMenuItem("Exit");
-        exit.addActionListener(e -> window.dispose());
+        JMenu menu = new JMenu("Menu");
+        AppUtil.addComponentsTo(menu, List.of(newExpr, expressionHistory, homePage, exit));
 
         JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu("Menu");
-
-        menu.add(newExpr);
-        menu.add(expressionHistory);
-        menu.add(homePage);
-        menu.add(exit);
-
         menuBar.add(menu);
-
         window.setJMenuBar(menuBar);
+    }
+
+    private static JMenuItem createMenuItem(String title, ActionListener e) {
+        JMenuItem item = new JMenuItem(title);
+        item.addActionListener(e);
+        return item;
     }
 
     /**
@@ -125,8 +120,7 @@ public class AppFrame extends JFrame {
         // button to dispose the dialog box when user is satisfied
         contiueButton.addActionListener(e -> dialogBox.dispose());
 
-        panel.add(errorLabel);
-        panel.add(contiueButton);
+        AppUtil.addComponentsTo(panel, List.of(errorLabel, contiueButton));
 
         dialogBox.add(panel);
         dialogBox.pack();
@@ -200,9 +194,8 @@ public class AppFrame extends JFrame {
                 dialog.dispose();
                 askForExpression(tree.EXPR_STRING);
             });
-            
-            add(redoButton);
-            add(delete);
+
+            AppUtil.addComponentsTo(this, List.of(redoButton, delete));
         }
 
     }

@@ -4,7 +4,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.stvd.util.Coordinate;
-import com.stvd.util.Store;
+import com.stvd.util.AppUtil;
 
 public class Intersect extends BTNode {
 
@@ -23,7 +23,7 @@ public class Intersect extends BTNode {
     }
 
     public String toString() {
-        return Store.INTERSECT;
+        return AppUtil.INTERSECT;
     }
 
 }

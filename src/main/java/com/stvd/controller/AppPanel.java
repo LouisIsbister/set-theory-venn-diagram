@@ -17,8 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import com.stvd.nodes.BTSetNode;
+import com.stvd.util.AppUtil;
 import com.stvd.util.Coordinate;
-import com.stvd.util.Store;
 
 /**
  * panel that displays the Venn diagrams
@@ -63,13 +63,12 @@ public class AppPanel extends JPanel {
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setFont(new Font("Monospaced", 1, 20));
         
-        JLabel content = new JLabel(Store.LANDING_PAGE_TEXT);
+        JLabel content = new JLabel(AppUtil.LANDING_PAGE_TEXT);
         content.setPreferredSize(new Dimension(WIDTH - 20, HEIGHT - label.getHeight()));
         content.setVerticalAlignment(SwingConstants.NORTH);
         content.setFont(new Font("Monospaced", 0, 14));
 
-        add(label);
-        add(content);
+        AppUtil.addComponentsTo(this, List.of(label, content));
     }
 
     /**

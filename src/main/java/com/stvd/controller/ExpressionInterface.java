@@ -3,6 +3,7 @@ package com.stvd.controller;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -11,8 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.stvd.parsing.Parser;
+import com.stvd.util.AppUtil;
 import com.stvd.util.ParserFailureException;
-import com.stvd.util.Store;
 
 public class ExpressionInterface extends JDialog {
 
@@ -40,7 +41,7 @@ public class ExpressionInterface extends JDialog {
         setVisible(true);
     }
 
-   /**
+    /**
      * Adds the various buttons that allow the user to input the math notation 
      * into their expressions 
      */
@@ -50,13 +51,13 @@ public class ExpressionInterface extends JDialog {
 
         confirmButton.addActionListener(e -> {
             String text = expressionField.getText();
-            
-            if (!text.isBlank()) {
-                boolean isValidExpression = AppFrame.executeExpression(text);
-                // if the expression was valid, then dispose of the interface
-                if (isValidExpression) {
-                    dispose();
-                }
+            if (text.isBlank()) {
+                return;
+            }
+
+            boolean isValidExpression = AppFrame.executeExpression(text);
+            if (isValidExpression) { // if the expression was valid, then dispose of the interface
+                dispose();
             }
         });
 
@@ -75,34 +76,27 @@ public class ExpressionInterface extends JDialog {
             displayExpression(execStr);
         });
 
-        panel.add(expressionField);
-        panel.add(showEvaluation);
-        panel.add(confirmButton);
-
         // --- operator buttons
+        
+        JButton intersect  = createSetButton(AppUtil.INTERSECT, 10);
+        JButton union      = createSetButton(AppUtil.UNION, 70);
+        JButton difference = createSetButton(AppUtil.DIFFERENCE, 130);
+        JButton complement = createSetButton(AppUtil.COMPLEMENT, 190);
 
-        JButton intersect = new JButton(Store.INTERSECT);
-        intersect.setBounds(10, 40, 50, 50);
-        intersect.addActionListener(e -> updateExprField(Store.INTERSECT));
-
-        JButton union = new JButton(Store.UNION);
-        union.setBounds(70, 40, 50, 50);
-        union.addActionListener(e -> updateExprField(Store.UNION));
-
-        JButton difference = new JButton(Store.DIFFERENCE);
-        difference.setBounds(130, 40, 50, 50);
-        difference.addActionListener(e -> updateExprField(Store.DIFFERENCE));
-
-        JButton complement = new JButton(Store.COMPLEMENT);
-        complement.setBounds(190, 40, 50, 50);
-        complement.addActionListener(e -> updateExprField(Store.COMPLEMENT));
-
-        panel.add(intersect);
-        panel.add(union);
-        panel.add(difference);
-        panel.add(complement);
+        AppUtil.addComponentsTo(panel, List.of(
+            expressionField, showEvaluation, confirmButton,
+            intersect, union, difference, complement
+        ));
 
         add(panel);
+    }
+
+    private JButton createSetButton(String buttonStr, int x) {
+        JButton button = new JButton(buttonStr);
+        button.setBounds(x, 40, 50, 50);
+        button.addActionListener(e -> updateExprField(buttonStr));
+
+        return button;
     }
    
     /**
