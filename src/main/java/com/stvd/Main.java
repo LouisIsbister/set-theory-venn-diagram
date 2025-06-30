@@ -1,4 +1,6 @@
-package com.stvd.controller;
+package com.stvd;
+
+import com.stvd.controller.AppFrame;
 
 public class Main {
 

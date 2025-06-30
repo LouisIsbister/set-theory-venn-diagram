@@ -10,28 +10,22 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.stvd.parsing.Parser;
+import com.stvd.util.ParserFailureException;
+import com.stvd.util.Store;
+
 public class ExpressionInterface extends JDialog {
 
-    /**
-     * the parent frame component
-     */
-    private AppFrame frame;
-
-    /**
-     * panel to display dialog box contents
-     */
+    /* panel to display dialog box contents */
     private JPanel panel;
 
-     /**
-     * text field to enter an experssion
-     */
+    /* text field to enter an experssion */
     private JTextField expressionField;
 
-    public ExpressionInterface(AppFrame frame,  String defaultExpr) {
-        super(frame, "Enter an expression", true);
-        this.frame = frame;
+    public ExpressionInterface(String defaultExpr) {
+        super(AppFrame.window(), "Enter an expression", true);
+
         this.panel = new JPanel(); 
-        // set the default string in the text field, used for redoing an expr
         this.expressionField = new JTextField(defaultExpr);
         expressionField.setBounds(10, 10, 230, 25);
         
@@ -58,7 +52,7 @@ public class ExpressionInterface extends JDialog {
             String text = expressionField.getText();
             
             if (!text.isBlank()) {
-                boolean isValidExpression = frame.executeExpression(text);
+                boolean isValidExpression = AppFrame.executeExpression(text);
                 // if the expression was valid, then dispose of the interface
                 if (isValidExpression) {
                     dispose();
@@ -66,14 +60,19 @@ public class ExpressionInterface extends JDialog {
             }
         });
 
-        JButton showEvaluation = new JButton("CPN Representation");
+        JButton showEvaluation = new JButton("Execution Representation");
         showEvaluation.setBounds(20, 135, 210, 25);
         showEvaluation.addActionListener(e -> {
             String text = expressionField.getText();
-            String cpnStr = frame.pnRepresentation(text);
-            if (!cpnStr.isBlank()) {
-                displayPNExpression(cpnStr);
+            String execStr = "";
+            try {
+                execStr = Parser.getExecRepresentation(text);
+            } catch(ParserFailureException pfe) {
+                AppFrame.displayException(pfe, execStr);
+                return;
             }
+
+            displayExpression(execStr);
         });
 
         panel.add(expressionField);
@@ -82,21 +81,21 @@ public class ExpressionInterface extends JDialog {
 
         // --- operator buttons
 
-        JButton intersect = new JButton("\u2229");
+        JButton intersect = new JButton(Store.INTERSECT);
         intersect.setBounds(10, 40, 50, 50);
-        intersect.addActionListener(e -> updateExprField("\u2229"));
+        intersect.addActionListener(e -> updateExprField(Store.INTERSECT));
 
-        JButton union = new JButton("\u222A");
+        JButton union = new JButton(Store.UNION);
         union.setBounds(70, 40, 50, 50);
-        union.addActionListener(e -> updateExprField("\u222A"));
+        union.addActionListener(e -> updateExprField(Store.UNION));
 
-        JButton difference = new JButton("\\");
+        JButton difference = new JButton(Store.DIFFERENCE);
         difference.setBounds(130, 40, 50, 50);
-        difference.addActionListener(e -> updateExprField("\\"));
+        difference.addActionListener(e -> updateExprField(Store.DIFFERENCE));
 
-        JButton complement = new JButton("~");
+        JButton complement = new JButton(Store.COMPLEMENT);
         complement.setBounds(190, 40, 50, 50);
-        complement.addActionListener(e -> updateExprField("~"));
+        complement.addActionListener(e -> updateExprField(Store.COMPLEMENT));
 
         panel.add(intersect);
         panel.add(union);
@@ -123,17 +122,17 @@ public class ExpressionInterface extends JDialog {
     }
 
     /**
-     * @param pnStr, polish notation form of expression
+     * @param execStr, exection form of expression
      */
-    private void displayPNExpression(String pnStr) {
-        JDialog dialog = new JDialog(this, "CPN Representation", true);
-        JPanel newPanel = new JPanel(); 
-        JLabel label = new JLabel(pnStr);
+    private void displayExpression(String execStr) {
+        JDialog dialog = new JDialog(this, "Execution Representation", true);
+        JPanel newPanel = new JPanel();
+        JLabel label = new JLabel(execStr);
         label.setFont(new Font("Monospaced", 1, 15));
 
         newPanel.setLayout(new FlowLayout());
         newPanel.add(label);
-        int width = pnStr.length() * 12 + 20;
+        int width = execStr.length() * 12 + 20;
         newPanel.setPreferredSize(new Dimension(width, 40));
 
         dialog.add(newPanel);

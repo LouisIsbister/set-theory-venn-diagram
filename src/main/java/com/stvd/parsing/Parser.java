@@ -9,6 +9,7 @@ import com.stvd.nodes.Difference;
 import com.stvd.nodes.Intersect;
 import com.stvd.nodes.Union;
 import com.stvd.util.ParserFailureException;
+import com.stvd.util.Store;
 
 public class Parser {
 
@@ -22,8 +23,8 @@ public class Parser {
         ExpressionValidator.checkBracketFormatting(expr);
 
         Queue<String> polishExp = toPolishNotation(expr, new ArrayDeque<>());
-        ExpressionValidator.checkIsExecutableExpression(polishExp);
 
+        ExpressionValidator.checkIsExecutableExpression(polishExp);
         return polishExp;
     }
 
@@ -36,9 +37,9 @@ public class Parser {
      */
     public static BTNode parseOperator(String str) {
         return switch (str) {
-            case "\u222A" -> new Union();
-            case "\u2229" -> new Intersect();
-            case "\\" -> new Difference();
+            case Store.UNION      -> new Union();
+            case Store.INTERSECT  -> new Intersect();
+            case Store.DIFFERENCE -> new Difference();
             default -> new Complement();   // default case is "~"
         };
     }
@@ -93,13 +94,58 @@ public class Parser {
             bracketBalance += ch == '(' ? 1 : 0;
             bracketBalance += ch == ')' ? -1 : 0;
 
-            // if an operator has been found with matching brackets, and is not a complement
-            // (should always be index 0)
+            // if an operator has been found with matching brackets, and is not a complement (should always be index 0)
             if (ExpressionValidator.isOperator(String.valueOf(ch)) && bracketBalance == 0 && ch != '~') {
                 return i;
             }
         }
         return 0;
+    }
+
+
+    // Parser utils
+
+
+    /**
+     * Returns the execution representation of the provided expression,
+     * giving the user insight into what is actually happening. For example,
+     * a ∪ b ∩ c -> (a ∪ (b ∩ c))
+     * 
+     * @param expr, the user provided expression
+     * @return, exec string string 
+     * @throws ParserFailureException 
+     */
+    public static String getExecRepresentation(String expr) throws ParserFailureException {
+        Queue<String> expression = Parser.parse(expr);
+        return recursiveBuilder(expression);
+    }
+
+    /**
+     * recursively rebuild the the original expression, adding
+     * brackets to show precedence
+     * 
+     * @param expression, current/root node of subtree
+     * @return execution string
+     */
+    private static String recursiveBuilder(Queue<String> expression) {
+        if (expression.isEmpty()) {
+            return "";
+        }
+
+        String elem = expression.poll();
+        if (ExpressionValidator.isOperator(elem)) {
+            String left = recursiveBuilder(expression);
+            String right = new String();
+
+            if (!elem.equals("~")) {    // complement should only have a left child node!
+                right = recursiveBuilder(expression);
+            } else {
+                return String.format("%s%s", elem, left);
+            }
+
+            return String.format("(%s %s %s)", left, elem, right);
+        }
+        return elem;
     }
 
 }

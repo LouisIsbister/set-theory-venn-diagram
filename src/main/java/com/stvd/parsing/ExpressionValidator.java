@@ -81,7 +81,7 @@ public class ExpressionValidator {
                 throwBracketException("Brackets must contain an expression.", expr, i + 1);
             }
 
-            // if an oeprator immediately follows another an isn't ~
+            // if an operator immediately follows another that isn't ~
             if (isOperator(String.valueOf(currentCh)) && isOperator(String.valueOf(nextCh)) && nextCh != '~') {
                 throw new ParserFailureException(
                     "Operator: " + nextCh + " cannot immediately<br>follow " + currentCh);

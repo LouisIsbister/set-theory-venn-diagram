@@ -14,19 +14,13 @@ public class ExpressionTree {
 
     public final String EXPR_STRING; 
 
-    /**
-     * root node of the binary tree
-     */
+    /* root node of the binary tree */
     private BTNode root;
 
-    /**
-     * expression in Polish Notation form
-     */
+    /* expression in Polish Notation form */
     private Queue<String> expression;
 
-    /**
-     * Map of all the sets in the expression
-     */
+    /* Map of all the sets in the expression */
     private Map<String, BTSetNode> setNodes = new HashMap<>();
 
     public ExpressionTree(String expr) throws ParserFailureException {

@@ -18,33 +18,37 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import com.stvd.parsing.*;
-import com.stvd.util.*;
 
 public class AppFrame extends JFrame {
 
-    /**
-     * the panel that displays the diagrams
-     */
+    /* The apps main window */
+    private static AppFrame window;
+
+    /* the panel that displays the diagrams */
     private static AppPanel guiPanel;
 
-    /**
-     * all the executed expressions so far
-     */
+    /* all the executed expressions so far */
     private static List<ExpressionTree> exprHistory;
 
-    private static final AppFrame WINDOW = new AppFrame() {};
 
     public static void start() {
         guiPanel = new AppPanel();
         exprHistory = new ArrayList<>();
-        
-        WINDOW.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        WINDOW.setResizable(false);
-        WINDOW.initialiseMenu();
-        WINDOW.getContentPane().add(guiPanel);
-        WINDOW.pack();
-        WINDOW.setLocationRelativeTo(null);
-        WINDOW.setVisible(true);
+
+        window = new AppFrame();
+
+        initialiseMenu();
+
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false);
+        window.getContentPane().add(guiPanel);
+        window.pack();
+        window.setLocationRelativeTo(null);
+        window.setVisible(true);
+    }
+
+    public static AppFrame window() {
+        return window;
     }
 
     /**
@@ -52,18 +56,18 @@ public class AppFrame extends JFrame {
      * to allow the user to enter a new expression, view previous expressions, 
      * see the home page, and exit the application
      */
-    private void initialiseMenu() {
+    private static void initialiseMenu() {
         JMenuItem newExpr = new JMenuItem("Enter new expression");
-        newExpr.addActionListener(e -> this.askForExpression(new String()));
+        newExpr.addActionListener(e -> askForExpression());
 
         JMenuItem expressionHistory = new JMenuItem("View previous expressions");
-        expressionHistory.addActionListener(e -> this.displayExpressionHistory());
+        expressionHistory.addActionListener(e -> displayExpressionHistory());
 
         JMenuItem homePage = new JMenuItem("Home page");
         homePage.addActionListener(e -> guiPanel.createDefaultView());
 
         JMenuItem exit = new JMenuItem("Exit");
-        exit.addActionListener(e -> this.dispose());
+        exit.addActionListener(e -> window.dispose());
 
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("Menu");
@@ -74,7 +78,8 @@ public class AppFrame extends JFrame {
         menu.add(exit);
 
         menuBar.add(menu);
-        setJMenuBar(menuBar);
+
+        window.setJMenuBar(menuBar);
     }
 
     /**
@@ -83,8 +88,11 @@ public class AppFrame extends JFrame {
      * 
      * @param defString, default expression in the expression field
      */
-    private void askForExpression(String defString) {
-        new ExpressionInterface(this, defString);
+    private static void askForExpression(String defString) {
+        new ExpressionInterface(defString);
+    }
+    private static void askForExpression() {
+        new ExpressionInterface("");
     }
 
     /**
@@ -94,8 +102,8 @@ public class AppFrame extends JFrame {
      * 
      * @param err, the exception to be displayed
      */
-    private void displayException(Exception err, String expr) {
-        JDialog dialogBox = new JDialog(this, "Error!", true);
+    public static void displayException(Exception err, String expr) {
+        JDialog dialogBox = new JDialog(window, "Error!", true);
 
         JPanel panel = new JPanel();
         final int WIDTH = expr.length() > 30 ? expr.length() * 12 : 350;
@@ -122,15 +130,15 @@ public class AppFrame extends JFrame {
 
         dialogBox.add(panel);
         dialogBox.pack();
-        dialogBox.setLocationRelativeTo(this);
+        dialogBox.setLocationRelativeTo(window);
         dialogBox.setVisible(true);
     }
 
     /**
      * displays all the expressions the current user has tested
      */
-    private void displayExpressionHistory() {
-        JDialog dialogBox = new JDialog(this, "Your Previous Expressions", true);
+    private static void displayExpressionHistory() {
+        JDialog dialogBox = new JDialog(window, "Your Previous Expressions", true);
         dialogBox.setResizable(false);
 
         final int PANEL_HEIGHT = exprHistory.size() * HistoryExpr.H_EXPR_HEIGHT + 25;
@@ -157,19 +165,19 @@ public class AppFrame extends JFrame {
         dialogBox.add(scroller);
         dialogBox.setPreferredSize(new Dimension(AppPanel.WIDTH + 10, PANEL_HEIGHT > 300 ? 300 : PANEL_HEIGHT + 40));
         dialogBox.pack();
-        dialogBox.setLocationRelativeTo(this);
+        dialogBox.setLocationRelativeTo(window);
         dialogBox.setVisible(true);
     }
 
-    private class HistoryExpr extends JLabel {
+    private static class HistoryExpr extends JLabel {
 
         static final int H_EXPR_WIDTH = AppPanel.WIDTH - 20;
         static final int H_EXPR_HEIGHT = 40;
 
         public HistoryExpr(ExpressionTree tree, JDialog dialog) {
-            super(tree.EXPR_STRING.length() <= 26 ? 
+            super(tree.EXPR_STRING.length() <= 25 ? 
                     tree.EXPR_STRING : 
-                    tree.EXPR_STRING.substring(0, 26) + "...");
+                    tree.EXPR_STRING.substring(0, 25) + "...");
             setPreferredSize(new Dimension(H_EXPR_WIDTH, H_EXPR_HEIGHT));
             setFont(new Font("Monospaced", 1, 15));
             setLayout(null);
@@ -211,7 +219,7 @@ public class AppFrame extends JFrame {
      * @param expr, the expression to be parsed
      * @return, whether the expression evaluation was successful
      */
-    public boolean executeExpression(String expr) {
+    public static boolean executeExpression(String expr) {
         ExpressionTree tree;
         try {
             tree = new ExpressionTree(expr);
@@ -231,45 +239,6 @@ public class AppFrame extends JFrame {
         return true;
     }
 
-    /**
-     * Returns the Polish Notation form of the expression.
-     * This is how the expression is executed giving the user insight
-     * into what is actually happening.
-     * 
-     * @param expr, the user provided expression
-     * @return, cpn string 
-     */
-    public String pnRepresentation(String expr) {
-        try {
-            java.util.Queue<String> expression = Parser.parse(expr);
-            return recursiveBuilder(expression);
-        } catch (ParserFailureException e) {
-            displayException(e, expr);
-            return new String();
-        }
-    }
-
-    /**
-     * recursively build the PN string representation of the expression 
-     * 
-     * @param expression, current/root node of subtree
-     * @return cpn string
-     */
-    private static String recursiveBuilder(java.util.Queue<String> expression) {
-        if (expression.isEmpty()) {
-            return null;
-        }
-
-        String elem = expression.poll();
-        if (ExpressionValidator.isOperator(elem)) {
-            String left = recursiveBuilder(expression);
-            String right = new String();
-            if (!elem.equals("~")) {    // complement should only have a left child node!
-                right = " " + recursiveBuilder(expression);
-            }
-            return elem + "(" + left + right + ")";
-        }
-        return elem;
-    }
+    
 
 }

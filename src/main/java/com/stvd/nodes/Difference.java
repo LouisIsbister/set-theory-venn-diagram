@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.stvd.util.Coordinate;
+import com.stvd.util.Store;
 
 public class Difference extends BTNode {
 
@@ -23,7 +24,7 @@ public class Difference extends BTNode {
     }
 
     public String toString() {
-        return "\\";
+        return Store.DIFFERENCE;
     }
 
 }

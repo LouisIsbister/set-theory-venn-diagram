@@ -18,6 +18,7 @@ import javax.swing.SwingConstants;
 
 import com.stvd.nodes.BTSetNode;
 import com.stvd.util.Coordinate;
+import com.stvd.util.Store;
 
 /**
  * panel that displays the Venn diagrams
@@ -33,10 +34,9 @@ public class AppPanel extends JPanel {
      */
     private Set<Coordinate> coords = new HashSet<>();
 
-    /**
-     * all the sets in the expression
-     */
+    /* all the sets in the expression */
     private Collection<BTSetNode> setNodes = new ArrayList<>();
+
 
     public AppPanel() {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -62,19 +62,8 @@ public class AppPanel extends JPanel {
         label.setPreferredSize(new Dimension(300, 75));
         label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setFont(new Font("Monospaced", 1, 20));
-
-        final String LANDING_PAGE_TEXT = """
-            <html>To enter your own expressions navigate to 'Menu -> Enter new Expression'
-            <br><br>Execute the expression by pressing 'Confirm Expression', to view the 
-                    execution structure of the expression press 'CPN Representation'
-            <br><br>Expressions that have been successfully executed can be re-executed 
-                    by navigating to 'Menu -> View previous expressions', and click 'Redo' 
-                    on the expression to re-open it in the expression interface
-            <br><br>To view this page again navigate to 'Menu -> Home page', and to exit 
-                    this application simply navigate to 'Menu -> Exit'
-            </html>""";
         
-        JLabel content = new JLabel(LANDING_PAGE_TEXT);
+        JLabel content = new JLabel(Store.LANDING_PAGE_TEXT);
         content.setPreferredSize(new Dimension(WIDTH - 20, HEIGHT - label.getHeight()));
         content.setVerticalAlignment(SwingConstants.NORTH);
         content.setFont(new Font("Monospaced", 0, 14));
