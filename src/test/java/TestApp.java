@@ -12,7 +12,7 @@ import com.stvd.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Tests {
+public class TestApp {
 
     private static Map<String, List<String>> expectedParsingFormat;
     private static List<String> badBracketExpressions;
@@ -39,11 +39,11 @@ public class Tests {
         );
 
         unexecutableExpressions = List.of(
-            TestUtil.generateQueue("a", "∪","∩"),
-            TestUtil.generateQueue("∪", "b", "∩", "c"),
-            TestUtil.generateQueue("~", "a", "a"),
-            TestUtil.generateQueue("a", "\\", "b",  "~", "c"), 
-            TestUtil.generateQueue("∪", "~", "a")
+            Utilities.generateQueue("a", "∪","∩"),
+            Utilities.generateQueue("∪", "b", "∩", "c"),
+            Utilities.generateQueue("~", "a", "a"),
+            Utilities.generateQueue("a", "\\", "b",  "~", "c"), 
+            Utilities.generateQueue("∪", "~", "a")
         );
     }
 
@@ -94,8 +94,8 @@ public class Tests {
     public void testExpressionExecution1() throws ParserFailureException {
         // a ∩ b
         ExpressionTree tree = new ExpressionTree("a ∩ b");
-        final Set<Coordinate> A = TestUtil.retrieveSetNodeData(tree, "a");
-        final Set<Coordinate> B = TestUtil.retrieveSetNodeData(tree, "b");
+        final Set<Coordinate> A = Utilities.retrieveSetNodeData(tree, "a");
+        final Set<Coordinate> B = Utilities.retrieveSetNodeData(tree, "b");
 
         Set<Coordinate> res = tree.execute();
         for (Coordinate coord : res) {
@@ -108,9 +108,9 @@ public class Tests {
     public void testExpressionExecution2() throws ParserFailureException {
         // a \ (b ∪ c)
         ExpressionTree tree = new ExpressionTree("a \\ (b ∪ c)");
-        final Set<Coordinate> A = TestUtil.retrieveSetNodeData(tree, "a");
-        final Set<Coordinate> B = TestUtil.retrieveSetNodeData(tree, "b");
-        final Set<Coordinate> C = TestUtil.retrieveSetNodeData(tree, "c");
+        final Set<Coordinate> A = Utilities.retrieveSetNodeData(tree, "a");
+        final Set<Coordinate> B = Utilities.retrieveSetNodeData(tree, "b");
+        final Set<Coordinate> C = Utilities.retrieveSetNodeData(tree, "c");
 
         Set<Coordinate> res = tree.execute();
         for (Coordinate coord : res) {
@@ -124,8 +124,8 @@ public class Tests {
     public void testExpressionExecution3() throws ParserFailureException {
         // ~(a ∪ b)
         ExpressionTree tree = new ExpressionTree("~(a ∪ b)");
-        final Set<Coordinate> A = TestUtil.retrieveSetNodeData(tree, "a");
-        final Set<Coordinate> B = TestUtil.retrieveSetNodeData(tree, "b");
+        final Set<Coordinate> A = Utilities.retrieveSetNodeData(tree, "a");
+        final Set<Coordinate> B = Utilities.retrieveSetNodeData(tree, "b");
 
         Set<Coordinate> res = tree.execute();
         for (Coordinate coord : res) {
@@ -138,8 +138,8 @@ public class Tests {
     public void testExpressionExecution4() throws ParserFailureException {
         // ~a ∩ b
         ExpressionTree tree = new ExpressionTree("~a ∩ b");
-        final Set<Coordinate> A = TestUtil.retrieveSetNodeData(tree, "a");
-        final Set<Coordinate> B = TestUtil.retrieveSetNodeData(tree, "b");
+        final Set<Coordinate> A = Utilities.retrieveSetNodeData(tree, "a");
+        final Set<Coordinate> B = Utilities.retrieveSetNodeData(tree, "b");
 
         Set<Coordinate> res = tree.execute();
         for (Coordinate coord : res) {
@@ -152,10 +152,10 @@ public class Tests {
     public void testExpressionExecution5() throws ParserFailureException {
         // a ∩ b ∩ ~(c ∪ d)
         ExpressionTree tree = new ExpressionTree("a ∩ b ∩ ~(c ∪ d)");
-        final Set<Coordinate> A = TestUtil.retrieveSetNodeData(tree, "a");
-        final Set<Coordinate> B = TestUtil.retrieveSetNodeData(tree, "b");
-        final Set<Coordinate> C = TestUtil.retrieveSetNodeData(tree, "c");
-        final Set<Coordinate> D = TestUtil.retrieveSetNodeData(tree, "d");
+        final Set<Coordinate> A = Utilities.retrieveSetNodeData(tree, "a");
+        final Set<Coordinate> B = Utilities.retrieveSetNodeData(tree, "b");
+        final Set<Coordinate> C = Utilities.retrieveSetNodeData(tree, "c");
+        final Set<Coordinate> D = Utilities.retrieveSetNodeData(tree, "d");
 
         Set<Coordinate> res = tree.execute();
         for (Coordinate coord : res) {
@@ -170,9 +170,9 @@ public class Tests {
     public void testExpressionExecution6() throws ParserFailureException {
         // a ∪ (b ∩ c)
         ExpressionTree tree = new ExpressionTree("a ∪ (b ∩ c)");
-        final Set<Coordinate> A = TestUtil.retrieveSetNodeData(tree, "a");
-        final Set<Coordinate> B = TestUtil.retrieveSetNodeData(tree, "b");
-        final Set<Coordinate> C = TestUtil.retrieveSetNodeData(tree, "c");
+        final Set<Coordinate> A = Utilities.retrieveSetNodeData(tree, "a");
+        final Set<Coordinate> B = Utilities.retrieveSetNodeData(tree, "b");
+        final Set<Coordinate> C = Utilities.retrieveSetNodeData(tree, "c");
 
         Set<Coordinate> res = tree.execute();
         for (Coordinate coord : res) {

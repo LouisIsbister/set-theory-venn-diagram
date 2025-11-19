@@ -12,7 +12,7 @@ import com.stvd.nodes.BTSetNode;
 import com.stvd.parsing.ExpressionTree;
 import com.stvd.util.*;
 
-public class TestUtil {
+public class Utilities {
 
     /**
      * @param args elements to be added to the queue

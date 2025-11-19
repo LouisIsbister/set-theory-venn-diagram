@@ -5,18 +5,7 @@ e.g. `(c ∩ d) ∪ (a \ (b ∩ e))`
 ![Screenshot 2024-06-18 165959](https://github.com/LouisIsbister/set-theory-venn-diagram/assets/104889878/3d77d2b2-20f6-4fb0-b45e-75d6bc1ec99c)
 
 
-## Building and Running the Program:
-You can build and run the project using Maven by running the following commands from the root project directory:  
-
-```
-mvn clean install
-mvn exec:java
-```
-
-If you do not have Maven installed you can execute the `.jar` file that is located in the `bin` directory using the command:  
-
-`java -jar bin\Set-Theory-Venn-Diagram-1.0-SNAPSHOT.jar`  
-
+## Running the Program:
 When the program is executed a window will pop up where you can navigate to the "menu" icon in the top left-hand corner. To enter your own expressions click on "Enter new expression", this will prompt a dialog box where you can enter your expression. Once you have entered your expression, click "confirm," this will parse and display your expression if it is valid, otheriwse it will give you some feedback on what went wrong.
 
 
