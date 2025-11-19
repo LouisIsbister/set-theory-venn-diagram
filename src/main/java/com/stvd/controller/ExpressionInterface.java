@@ -17,14 +17,12 @@ import com.stvd.util.ParserFailureException;
 
 public class ExpressionInterface extends JDialog {
 
-    /* panel to display dialog box contents */
     private JPanel panel;
 
-    /* text field to enter an experssion */
     private JTextField expressionField;
 
-    public ExpressionInterface(String defaultExpr) {
-        super(AppFrame.window(), "Enter an expression", true);
+    public ExpressionInterface(AppFrame ownerWindow, String defaultExpr) {
+        super(ownerWindow, "Enter an expression", true);
 
         this.panel = new JPanel(); 
         this.expressionField = new JTextField(defaultExpr);
@@ -34,18 +32,19 @@ public class ExpressionInterface extends JDialog {
         panel.setPreferredSize(new Dimension(250, 170));
         panel.setLayout(null);
 
-        addButtons();
+        addButtons(ownerWindow);
 
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
+    
     /**
      * Adds the various buttons that allow the user to input the math notation 
      * into their expressions 
      */
-    private void addButtons() {
+    private void addButtons(AppFrame ownerWindow) {
         JButton confirmButton = new JButton("Confirm Expression");
         confirmButton.setBounds(50, 100, 150, 25);
 
@@ -55,21 +54,21 @@ public class ExpressionInterface extends JDialog {
                 return;
             }
 
-            boolean isValidExpression = AppFrame.executeExpression(text);
+            boolean isValidExpression = ownerWindow.executeExpression(text);
             if (isValidExpression) { // if the expression was valid, then dispose of the interface
                 dispose();
             }
         });
 
-        JButton showEvaluation = new JButton("Execution Representation");
-        showEvaluation.setBounds(20, 135, 210, 25);
-        showEvaluation.addActionListener(e -> {
+        JButton showEvaluationButton = new JButton("Execution Representation");
+        showEvaluationButton.setBounds(20, 135, 210, 25);
+        showEvaluationButton.addActionListener(e -> {
             String text = expressionField.getText();
             String execStr = "";
             try {
                 execStr = Parser.getExecRepresentation(text);
             } catch(ParserFailureException pfe) {
-                AppFrame.displayException(pfe, execStr);
+                ownerWindow.displayException(pfe, execStr);
                 return;
             }
 
@@ -77,19 +76,22 @@ public class ExpressionInterface extends JDialog {
         });
 
         // --- operator buttons
-        
-        JButton intersect  = createSetButton(AppUtil.INTERSECT, 10);
-        JButton union      = createSetButton(AppUtil.UNION, 70);
-        JButton difference = createSetButton(AppUtil.DIFFERENCE, 130);
-        JButton complement = createSetButton(AppUtil.COMPLEMENT, 190);
 
-        AppUtil.addComponentsTo(panel, List.of(
-            expressionField, showEvaluation, confirmButton,
-            intersect, union, difference, complement
-        ));
+        AppUtil.addComponentsTo(
+                panel, 
+                List.of(
+                    expressionField, 
+                    showEvaluationButton, 
+                    confirmButton,
+                    createSetButton(AppUtil.INTERSECT, 10), 
+                    createSetButton(AppUtil.UNION, 70), 
+                    createSetButton(AppUtil.DIFFERENCE, 130), 
+                    createSetButton(AppUtil.COMPLEMENT, 190)
+                ));
 
         add(panel);
     }
+
 
     private JButton createSetButton(String buttonStr, int x) {
         JButton button = new JButton(buttonStr);
@@ -99,6 +101,7 @@ public class ExpressionInterface extends JDialog {
         return button;
     }
    
+
     /**
      * Inserts the the operator into the textfield for the user to see. 
      * 
@@ -114,6 +117,7 @@ public class ExpressionInterface extends JDialog {
         expressionField.requestFocus();
         expressionField.setCaretPosition(pos + insertString.length());
     }
+
 
     /**
      * @param execStr, exection form of expression

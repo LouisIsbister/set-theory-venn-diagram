@@ -1,4 +1,4 @@
-package com.stvd.nodes;
+package com.stvd.expressiontree;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -6,25 +6,24 @@ import java.util.stream.Collectors;
 import com.stvd.util.Coordinate;
 import com.stvd.util.AppUtil;
 
-public class Difference extends BTNode {
+public class Intersect extends BTNode {
 
     /**
-     * Returns all the values in left that are not
-     * in right.
+     * Returns all the values in left and right nodes.
      * 
-     * @return the difference between left and right nodes
+     * @return the intersect of left and right nodes
      */
     @Override
     public Set<Coordinate> evaluate() {
         Set<Coordinate> leftSet = left().evaluate();
         Set<Coordinate> rightSet = right().evaluate();
         return leftSet.stream()
-                .filter(elem -> !rightSet.contains(elem))
+                .filter(elem -> rightSet.contains(elem))
                 .collect(Collectors.toSet());
     }
 
     public String toString() {
-        return AppUtil.DIFFERENCE;
+        return AppUtil.INTERSECT;
     }
 
 }

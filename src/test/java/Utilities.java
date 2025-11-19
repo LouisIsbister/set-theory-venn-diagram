@@ -8,8 +8,8 @@ import java.util.Set;
 
 import org.junit.jupiter.api.function.Executable;
 
-import com.stvd.nodes.BTSetNode;
-import com.stvd.parsing.ExpressionTree;
+import com.stvd.expressiontree.BTSetNode;
+import com.stvd.expressiontree.ExpressionTree;
 import com.stvd.util.*;
 
 public class Utilities {

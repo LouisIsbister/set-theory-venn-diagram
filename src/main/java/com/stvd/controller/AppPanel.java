@@ -16,25 +16,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import com.stvd.nodes.BTSetNode;
+import com.stvd.expressiontree.BTSetNode;
 import com.stvd.util.AppUtil;
 import com.stvd.util.Coordinate;
 
-/**
- * panel that displays the Venn diagrams
- */
+
 public class AppPanel extends JPanel {
 
     public static final int WIDTH = 500;
     public static final int HEIGHT = 500;
 
-    /**
-     * all the coordinates that are part of the
-     * data set.
-     */
     private Set<Coordinate> coords = new HashSet<>();
-
-    /* all the sets in the expression */
     private Collection<BTSetNode> setNodes = new ArrayList<>();
 
 
@@ -46,6 +38,7 @@ public class AppPanel extends JPanel {
         createDefaultView();
     }
 
+
     public void updateDisplayData(Set<Coordinate> coords, Collection<BTSetNode> setNodes) {
         this.coords = coords;
         this.setNodes = setNodes;
@@ -53,6 +46,7 @@ public class AppPanel extends JPanel {
         revalidate();
         repaint();
     }
+
 
     public void createDefaultView() {
         // clear the current drawings on the panel
@@ -70,6 +64,7 @@ public class AppPanel extends JPanel {
 
         AppUtil.addComponentsTo(this, List.of(label, content));
     }
+
 
     /**
      * draw the diagrams

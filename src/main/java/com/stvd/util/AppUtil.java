@@ -6,18 +6,6 @@ import java.awt.Component;
 
 public class AppUtil {
 
-    /**
-     * Given a container (i.e. JFrame, JLabel, JPanel etc) add each component 
-     * from a list of components to said container
-     * @param container
-     * @param components
-     */
-    public static void addComponentsTo(Container container, List<Component> components) {
-        for (Component c : components) {
-            container.add(c);
-        }
-    }
-
     public static final String INTERSECT  = "\u2229";
     public static final String UNION      = "\u222A";
     public static final String DIFFERENCE = "\\";
@@ -33,5 +21,17 @@ public class AppUtil {
             <br><br>To view this page again navigate to 'Menu -> Home page', and to exit 
                     this application simply navigate to 'Menu -> Exit'
             </html>""";
+
+    /**
+     * Given a container (i.e. JFrame, JLabel, JPanel etc) add each component 
+     * from a list of components to said container
+     * @param container
+     * @param components
+     */
+    public static void addComponentsTo(Container container, List<Component> components) {
+        for (Component c : components) {
+            container.add(c);
+        }
+    }
 
 }

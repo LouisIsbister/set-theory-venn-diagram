@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import com.stvd.expressiontree.ExpressionTree;
 import com.stvd.parsing.*;
 import com.stvd.util.*;
 
@@ -16,7 +17,7 @@ public class TestApp {
 
     private static Map<String, List<String>> expectedParsingFormat;
     private static List<String> badBracketExpressions;
-    private static List<String> badCharacterExpressions;
+    private static List<String> badSequenceExpressions;
     private static List<Queue<String>> unexecutableExpressions;
      
     static {
@@ -29,13 +30,12 @@ public class TestApp {
         );
 
         badBracketExpressions = List.of(
-            "(a ∪ (b ∩ c)", "a ∪ () (b ∩ c)", "a)",
-            "(((a ∪ (b ∩ c)))"
+            "(a ∪ (b ∩ c)", "(((a ∪ (b ∩ c)))", "a)"
         );
 
-        badCharacterExpressions = List.of(
+        badSequenceExpressions = List.of(
             "a ∪ (b ∩ cc)",  "a ∪ (b + c)", "a - b",
-            "a \t b"
+            "a \t b",  "a ∪ () (b ∩ c)"
         );
 
         unexecutableExpressions = List.of(
@@ -67,16 +67,16 @@ public class TestApp {
     public void testInvalidBracketFormatting() {
         for (String expr : badBracketExpressions) {
             assertThrows(ParserFailureException.class, () -> {
-                ExpressionValidator.checkBracketFormatting(expr);
+                ExpressionValidator.checkBracketBalance(expr);
             });
         }
     }
 
     @Test
     public void testInvalidCharacters() throws NoSuchMethodException, SecurityException {
-        for (String expr : badCharacterExpressions) {
+        for (String expr : badSequenceExpressions) {
             assertThrows(ParserFailureException.class, () -> {
-                ExpressionValidator.checkCharacters(expr);
+                ExpressionValidator.checkCharacterSequences(expr);
             });
         }
     }

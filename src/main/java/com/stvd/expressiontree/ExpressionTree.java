@@ -1,4 +1,4 @@
-package com.stvd.parsing;
+package com.stvd.expressiontree;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,35 +7,35 @@ import java.util.Queue;
 import java.util.Set;
 
 import com.stvd.controller.AppPanel;
-import com.stvd.nodes.*;
+import com.stvd.parsing.ExpressionValidator;
+import com.stvd.parsing.Parser;
 import com.stvd.util.*;
 
 public class ExpressionTree {
 
-    public final String EXPR_STRING; 
+    public final String EXPR_STRING;
 
-    /* root node of the binary tree */
-    private BTNode root;
+    private BTNode tree;
 
-    /* expression in Polish Notation form */
-    private Queue<String> expression;
-
-    /* Map of all the sets in the expression */
     private Map<String, BTSetNode> setNodes = new HashMap<>();
+
 
     public ExpressionTree(String expr) throws ParserFailureException {
         EXPR_STRING = expr;
-        expression = Parser.parse(expr);
-        root = generateTree();
+
+        Queue<String> expression = Parser.parse(expr);
+        tree = generateTree(expression);
         propagateSetNodes();
     }
+
 
     /**
      * @return the resulting set of data when executing the expression
      */
     public Set<Coordinate> execute() {
-        return root.evaluate();
+        return tree.evaluate();
     }
+
 
     /**
      * @return, the collection of set nodes
@@ -43,6 +43,7 @@ public class ExpressionTree {
     public Collection<BTSetNode> setNodes() {
         return setNodes.values();
     }
+
 
     /**
      * This method recursively builds the binary tree of the expression.
@@ -52,30 +53,28 @@ public class ExpressionTree {
      * Otherwise, find or create a new set node (leaf) and return it.
      * 
      * @return, the root node of the binary tree
+     * @throws ParserFailureException 
      */
-    private BTNode generateTree() {
-        if (expression.isEmpty()) {
+    private BTNode generateTree(Queue<String> expr) throws ParserFailureException {
+        if (expr.isEmpty())
             return null;
-        }
 
-        String next = expression.poll();
+        String next = expr.poll();
         if (ExpressionValidator.isOperator(next)) {
             BTNode node = Parser.parseOperator(next);
-            node.setLeft(generateTree());
+            node.setLeft(generateTree(expr));
 
-            // if the operator is not a complement then set the right node
-            if (!(node instanceof Complement)) {
-                node.setRight(generateTree());
-            }
+            if (ExpressionValidator.isBinaryOperator(next))
+                node.setRight(generateTree(expr));
+
             return node;
         } else {    // found a set/leaf node
             next = next.toLowerCase();
-            if (!setNodes.containsKey(next)) {
-                setNodes.put(next, new BTSetNode(next));
-            }
+            setNodes.putIfAbsent(next, new BTSetNode(next));
             return setNodes.get(next);
         }
     }
+
 
     /**
      * Given two expression trees, check if they are equivalent, i.e. they 
@@ -90,6 +89,7 @@ public class ExpressionTree {
         Set<Coordinate> t2Coords = tree2.execute();
         return t1Coords.containsAll(t2Coords) && t2Coords.containsAll(t1Coords);
     }
+
 
     /**
      * This method determines and initializes the central coordinate of a set.

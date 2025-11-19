@@ -18,64 +18,58 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-import com.stvd.parsing.*;
+import com.stvd.expressiontree.ExpressionTree;
 import com.stvd.util.AppUtil;
 
 public class AppFrame extends JFrame {
 
-    /* The apps main window */
-    private static AppFrame window;
+    private AppPanel windowPanel;
+    private List<ExpressionTree> exprHistory;
 
-    /* the panel that displays the diagrams */
-    private static AppPanel guiPanel;
-
-    /* all the executed expressions so far */
-    private static List<ExpressionTree> exprHistory;
-
-
-    public static void start() {
-        window = new AppFrame();
-        guiPanel = new AppPanel();
+    public AppFrame() {
+        windowPanel = new AppPanel();
         exprHistory = new ArrayList<>();
 
         initialiseMenu();
 
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setResizable(false);
-        window.getContentPane().add(guiPanel);
-        window.pack();
-        window.setLocationRelativeTo(null);
-        window.setVisible(true);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
+        this.getContentPane().add(windowPanel);
+        this.pack();
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
     }
 
-    public static AppFrame window() {
-        return window;
-    }
 
     /**
      * Creates a new menu bar for the frame. Adds a new menu that contains menu items
      * to allow the user to enter a new expression, view previous expressions, 
      * see the home page, and exit the application
      */
-    private static void initialiseMenu() {
-        JMenuItem newExpr = createMenuItem("Enter new expression", e -> askForExpression());
-        JMenuItem expressionHistory = createMenuItem("View previous expressions", e -> displayExpressionHistory());
-        JMenuItem homePage = createMenuItem("Home page", e -> guiPanel.createDefaultView());
-        JMenuItem exit = createMenuItem("Exit", e -> window.dispose());
-
+    private void initialiseMenu() {
         JMenu menu = new JMenu("Menu");
-        AppUtil.addComponentsTo(menu, List.of(newExpr, expressionHistory, homePage, exit));
+        AppUtil.addComponentsTo(
+                menu,
+                List.of(
+                    createMenuItem("Enter new expression",      e -> askForExpression()),
+                    createMenuItem("View previous expressions", e -> displayExpressionHistory()),
+                    createMenuItem("Home page",                 e -> windowPanel.createDefaultView()),
+                    createMenuItem("Exit",                      e -> this.dispose())
+                ));
 
         JMenuBar menuBar = new JMenuBar();
         menuBar.add(menu);
-        window.setJMenuBar(menuBar);
+
+        this.setJMenuBar(menuBar);
     }
 
-    private static JMenuItem createMenuItem(String title, ActionListener e) {
+
+    private JMenuItem createMenuItem(String title, ActionListener e) {
         JMenuItem item = new JMenuItem(title);
         item.addActionListener(e);
         return item;
     }
+
 
     /**
      * Creates a new expression interface that allows the user
@@ -83,12 +77,13 @@ public class AppFrame extends JFrame {
      * 
      * @param defString, default expression in the expression field
      */
-    private static void askForExpression(String defString) {
-        new ExpressionInterface(defString);
+    private void askForExpression(String defString) {
+        new ExpressionInterface(this, defString);
     }
-    private static void askForExpression() {
-        new ExpressionInterface("");
+    private void askForExpression() {
+        askForExpression("");
     }
+
 
     /**
      * Creates a new JDialog box popup that contains
@@ -97,42 +92,58 @@ public class AppFrame extends JFrame {
      * 
      * @param err, the exception to be displayed
      */
-    public static void displayException(Exception err, String expr) {
-        JDialog dialogBox = new JDialog(window, "Error!", true);
+    public void displayException(Exception ex, String expr) {
+        JDialog dialogBox = new JDialog(this, "Error!", true);
+
+        final int DEFAULT_EXC_PANEL_HEIGHT = 175;
+        final int DEFAULT_EXC_PANEL_WIDTH = 350;
+
+        final int EXPR_WIDTH = expr.length() * 12;
+        final int WIDTH = Math.max(DEFAULT_EXC_PANEL_WIDTH, EXPR_WIDTH);
 
         JPanel panel = new JPanel();
-        final int WIDTH = expr.length() > 30 ? expr.length() * 12 : 350;
-        panel.setPreferredSize(new Dimension(WIDTH, 175));
+        panel.setPreferredSize(new Dimension(WIDTH, DEFAULT_EXC_PANEL_HEIGHT));
         panel.setLayout(null);
         panel.setVisible(true);
 
-        final String ERROR_MSG = "<html><center>----- Error -----" +
-                "<br>Expression evaluation failed<br>Threw: <b>" + err.getClass().getSimpleName() + 
-                "</b><br>Cause: <b>" + err.getMessage() + "</center></html>";
 
-        JLabel errorLabel = new JLabel(ERROR_MSG);
+        JLabel errorLabel = new JLabel(formatExceptionMsg(ex));
         errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
         errorLabel.setBounds(0, 0, WIDTH, 130);
         errorLabel.setFont(new Font("Monospaced", 4, 14));
 
         JButton contiueButton = new JButton("Continue");
         contiueButton.setBounds(WIDTH / 2 - 75, 130, 150, 25);
-        // button to dispose the dialog box when user is satisfied
         contiueButton.addActionListener(e -> dialogBox.dispose());
 
         AppUtil.addComponentsTo(panel, List.of(errorLabel, contiueButton));
 
         dialogBox.add(panel);
         dialogBox.pack();
-        dialogBox.setLocationRelativeTo(window);
+        dialogBox.setLocationRelativeTo(this);
         dialogBox.setVisible(true);
     }
+
+
+    private static String formatExceptionMsg(Exception e) {
+        return String.format("""
+                <html><center>
+                ----- Error -----
+                <br>Expression evaluation failed 
+                <br>Threw: <b>%s</b>
+                <br>Cause: <b>%s</b>
+                </center></html>
+                """, 
+                e.getClass().getSimpleName(), 
+                e.getMessage());
+    }
+
 
     /**
      * displays all the expressions the current user has tested
      */
-    private static void displayExpressionHistory() {
-        JDialog dialogBox = new JDialog(window, "Your Previous Expressions", true);
+    private void displayExpressionHistory() {
+        JDialog dialogBox = new JDialog(this, "Your Previous Expressions", true);
         dialogBox.setResizable(false);
 
         final int PANEL_HEIGHT = exprHistory.size() * HistoryExpr.H_EXPR_HEIGHT + 25;
@@ -159,11 +170,11 @@ public class AppFrame extends JFrame {
         dialogBox.add(scroller);
         dialogBox.setPreferredSize(new Dimension(AppPanel.WIDTH + 10, PANEL_HEIGHT > 300 ? 300 : PANEL_HEIGHT + 40));
         dialogBox.pack();
-        dialogBox.setLocationRelativeTo(window);
+        dialogBox.setLocationRelativeTo(this);
         dialogBox.setVisible(true);
     }
 
-    private static class HistoryExpr extends JLabel {
+    private class HistoryExpr extends JLabel {
 
         static final int H_EXPR_WIDTH = AppPanel.WIDTH - 20;
         static final int H_EXPR_HEIGHT = 40;
@@ -212,7 +223,7 @@ public class AppFrame extends JFrame {
      * @param expr, the expression to be parsed
      * @return, whether the expression evaluation was successful
      */
-    public static boolean executeExpression(String expr) {
+    public boolean executeExpression(String expr) {
         ExpressionTree tree;
         try {
             tree = new ExpressionTree(expr);
@@ -221,7 +232,7 @@ public class AppFrame extends JFrame {
             return false;
         }
 
-        guiPanel.updateDisplayData(tree.execute(), tree.setNodes());
+        windowPanel.updateDisplayData(tree.execute(), tree.setNodes());
 
         // check whether the user has already entered an expression with the same outcome
         // if they haven't add it to expression history

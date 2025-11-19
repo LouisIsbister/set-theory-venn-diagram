@@ -1,4 +1,4 @@
-package com.stvd.nodes;
+package com.stvd.expressiontree;
 
 import java.util.Set;
 import java.util.stream.Collectors;
