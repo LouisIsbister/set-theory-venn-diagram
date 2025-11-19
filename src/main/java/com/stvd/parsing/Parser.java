@@ -32,7 +32,6 @@ public class Parser {
         return polishExp;
     }
 
-
     private static String removeWhiteSpace(String expr) {
         StringBuilder sb = new StringBuilder();
         for (char c : expr.toCharArray()) {
@@ -74,7 +73,7 @@ public class Parser {
 
         // strip preceding and trailing brackets so long as it maintains bracket balance
         while (str.charAt(0) == '(' && str.charAt(str.length() - 1) == ')' &&
-                ExpressionValidator.bracketBalance(str.substring(1, str.length() - 1)).balance() == 0)
+                ExpressionValidator.computeBracketBalance(str.substring(1, str.length()-1)).balance() == 0)
             str = str.substring(1, str.length() - 1);
 
         int splitIdx = getSplitIndex(str);
@@ -127,8 +126,9 @@ public class Parser {
                 return i;
         }
 
-        // at this point we know there cannot be any binary operators in the expression,
-        // yet |`str`| must be > 1, so we have a unary expression.
+        // at this point we know any binary operators in the expression are enclosed in brackets,
+        // as such, given the expressions are always stripped of brackets and |`str`| is > 1 
+        // then we so we have a unary expression.
 
         assert str.length() >= 2 && ExpressionValidator.isUnaryOperator(str.charAt(0) + "") : str;
         return 0;

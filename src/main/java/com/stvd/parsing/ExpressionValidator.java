@@ -66,7 +66,7 @@ public class ExpressionValidator {
      * @throws ParserFailureException
      */
     public static void checkBracketBalance(String expr) throws ParserFailureException {
-        BracketBalanceInfo bracketBalance = bracketBalance(expr);
+        BracketBalanceInfo bracketBalance = computeBracketBalance(expr);
         int balance = bracketBalance.balance();
         if (bracketBalance.balance() == 0)
             return;
@@ -83,7 +83,7 @@ public class ExpressionValidator {
      * @param str
      * @return
      */
-    public static BracketBalanceInfo bracketBalance(String str){
+    public static BracketBalanceInfo computeBracketBalance(String str){
         char[] arr = str.toCharArray();
         int balance = 0;
         for (int i = 0; i < arr.length; i++) {
